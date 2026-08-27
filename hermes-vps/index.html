@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คอร์ส Hermes VPS — เพจคำคมอัตโนมัติ</title>
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/onepage.css">
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════════ เมนู ═══════════ -->
+<nav class="sidebar">
+  <details open>
+    <summary>สารบัญคอร์ส</summary>
+    <div class="course-title">🤖 Hermes VPS</div>
+    <div class="course-sub">ระบบ AI Agent รันเพจคำคม<br>โพสต์เอง วันละ 2 โพสต์</div>
+
+    <input id="course-search" class="course-search" type="text" placeholder="🔍 ค้นในบทเรียน… เช่น fallback">
+    <div id="course-search-results" class="cs-results"></div>
+
+    <div class="nav-group">Phase 0 — ภาพรวม</div>
+    <a href="#lesson-01"><span class="dot done"></span>01 · VPS + แผนที่ระบบ</a>
+
+    <div class="nav-group">Phase 1 — เข้าเครื่อง</div>
+    <a href="#lesson-02"><span class="dot done"></span>02 · SSH เข้า VPS ครั้งแรก</a>
+    <a href="#lesson-03"><span class="dot current"></span>03 · Docker แบบเห็นภาพ</a>
+
+    <div class="nav-group">Phase 2 — ติดตั้ง Hermes</div>
+    <a href="#lesson-04"><span class="dot"></span>04 · ติดตั้ง Hermes + LLM</a>
+    <a href="#lesson-05"><span class="dot"></span>05 · ต่อ Telegram</a>
+    <a href="#lesson-06"><span class="dot"></span>06 · Domain ฟรี + HTTPS</a>
+
+    <div class="nav-group">Phase 3 — ใช้ Hermes ให้เป็น</div>
+    <a href="#lesson-07"><span class="dot"></span>07 · Cron ตั้งงานอัตโนมัติ</a>
+    <a href="#lesson-08"><span class="dot"></span>08 · Skills &amp; Memory</a>
+
+    <div class="nav-group">Phase 4 — ★ ระบบเพจคำคม</div>
+    <a href="#lesson-09"><span class="dot"></span>09 · ออกแบบระบบ</a>
+    <a href="#lesson-10"><span class="dot"></span>10 · หาคำคม + เลือกใน Telegram</a>
+    <a href="#lesson-11"><span class="dot"></span>11 · ทำรูปคำคมอัตโนมัติ</a>
+    <a href="#lesson-12"><span class="dot"></span>12 · สร้างเพจ + Facebook API</a>
+    <a href="#lesson-13"><span class="dot"></span>13 · โพสต์อัตโนมัติครบวงจร</a>
+
+    <div class="nav-group">Phase 5 — ดูแลระยะยาว</div>
+    <a href="#lesson-14"><span class="dot"></span>14 · Backup &amp; คุมค่าใช้จ่าย</a>
+
+    <div class="nav-group">🎁 บทแถม</div>
+    <a href="#lesson-15"><span class="dot"></span>15 · วางแผนทั้งสัปดาห์</a>
+    <a href="#lesson-16"><span class="dot"></span>16 · ติดตั้ง skill เสริม</a>
+    <a href="#lesson-17"><span class="dot"></span>17 · คัดโมเดลฟรี &amp; ศาสตร์การจ่าย</a>
+
+    <div class="nav-group">Reference</div>
+    <a href="#glossary"><span class="dot done"></span>📚 Glossary ศัพท์</a>
+    <a href="#commands"><span class="dot done"></span>⌨️ คำสั่ง Linux</a>
+    <a href="#playbook"><span class="dot done"></span>🛠 เทคนิค &amp; Workflow</a>
+  </details>
+</nav>
+
+<!-- ═══════════ เนื้อหา ═══════════ -->
+<main class="content">
+<div class="page">
+
+<!-- ─────────── บทที่ 01 ─────────── -->
+<section class="lesson" id="lesson-01">
+  <p class="lesson-kicker">บทที่ 01 · Phase 0 — เห็นภาพรวม</p>
+  <h1>VPS คืออะไร + แผนที่ระบบที่เรากำลังจะสร้าง</h1>
+  <p class="lesson-lede">~10 นาที — จบแล้วคุณจะอธิบายได้ว่าเงินค่า VPS ซื้ออะไร และชี้แผนผังระบบเพจคำคมของตัวเองได้ทุกชิ้น</p>
+
+  <h2>ทำไมเพจอัตโนมัติต้องมี VPS</h2>
+  <p>เป้าหมายของคุณคือระบบที่<strong>โพสต์เองวันละ 2 ครั้ง (08:00 และ 19:00) ทุกวัน ไม่มีวันหยุด</strong> — แปลว่าต้องมีคอมพิวเตอร์สักเครื่องเปิดรอทำงานตลอด 24 ชั่วโมง</p>
+  <p>คอมที่บ้านทำแบบนั้นไม่ไหว: เปลืองไฟ, ปิดเครื่องเมื่อไหร่ระบบตาย, เน็ตบ้านหลุดระบบก็หยุด คำตอบคือ <strong>VPS</strong> (Virtual Private Server) — "คอมพิวเตอร์เช่า" ที่ตั้งอยู่ใน data center ของ Hostinger เปิดตลอดเวลา ไฟไม่ดับ เน็ตแรง และเราคุมมันได้เต็มที่เหมือนเครื่องตัวเอง</p>
+
+  <div class="callout">
+    <span class="label">อุปมาที่ช่วยจำ</span>
+    <p>VPS เหมือน<strong>เช่าห้องในคอนโด</strong> — ตึก (เครื่องเซิร์ฟเวอร์จริง) มีเจ้าของดูแลโครงสร้าง แต่ห้องของคุณเป็นพื้นที่ส่วนตัว มีกุญแจของตัวเอง จะจัดห้องยังไงก็ได้ ส่วน shared hosting แบบถูกสุดคือ<strong>เช่าเตียงในห้องรวม</strong> — ถูกกว่าแต่ทำอะไรเองแทบไม่ได้ (อุปมาจาก <a href="https://www.hostinger.com/tutorials/what-is-vps-hosting">บทความของ Hostinger เอง</a>)</p>
+  </div>
+
+  <p>สรุป: เงินค่า VPS รายเดือนซื้อ <strong>เครื่องคอมที่ไม่เคยปิด + สิทธิ์ควบคุมเต็ม + ที่อยู่ถาวรบนอินเทอร์เน็ต (IP address)</strong></p>
+
+  <h2>แผนที่ระบบของเรา — ดูให้จำ เพราะทั้งคอร์สคือการสร้างภาพนี้</h2>
+
+  <div class="minimap minimap-hero" data-active="all"></div>
+
+  <p>อ่านจากซ้ายไปขวา: ทุกอย่างสีส้มอาศัยอยู่บน VPS ทำงานเองตามนาฬิกา คุณ (สีเขียว) เป็นมนุษย์คนเดียวในระบบ และ Facebook (น้ำเงินขวาล่าง) คือปลายทาง</p>
+
+  <h2>แต่ละบทของคอร์สสร้างชิ้นไหน</h2>
+  <table>
+    <tr><th>ชิ้นส่วนในแผนผัง</th><th>บทที่สร้าง</th></tr>
+    <tr><td>เข้าไปสั่งงานกล่องส้มใหญ่ (VPS/Ubuntu) ให้เป็น</td><td>02–03</td></tr>
+    <tr><td>ตัว Hermes Agent + ต่อ Telegram + โดเมน</td><td>04–06</td></tr>
+    <tr><td>นาฬิกาปลุก (cron) + สอนงาน (skills)</td><td>07–08</td></tr>
+    <tr><td>งานเช้า, คิวโพสต์, ทำรูป, ต่อ Facebook — ครบวงจร</td><td>09–13</td></tr>
+    <tr><td>ดูแลไม่ให้พัง + คุมค่าใช้จ่าย</td><td>14</td></tr>
+  </table>
+
+  <h2>ทบทวนความจำ (ตอบจากหัว ไม่เลื่อนกลับขึ้นไปดู)</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 01 — 4 ข้อ</div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">1. เหตุผลหลักที่ระบบเพจอัตโนมัติต้องรันบน VPS แทนคอมที่บ้าน คือ?</div>
+      <button class="quiz-opt">เครื่องแรงกว่าคอมบ้านมาก</button>
+      <button class="quiz-opt">ราคาถูกกว่าซื้อคอมเครื่องใหม่</button>
+      <button class="quiz-opt">เปิดทำงานตลอดเวลาไม่มีวันปิด</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. อุปมาของ VPS ที่ใกล้เคียงที่สุดคือ?</div>
+      <button class="quiz-opt">เช่าห้องส่วนตัวในคอนโดหนึ่งตึก</button>
+      <button class="quiz-opt">เช่าเตียงนอนในห้องพักแบบรวม</button>
+      <button class="quiz-opt">ซื้อบ้านเดี่ยวพร้อมที่ดินของเรา</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">3. ในระบบของเรา มนุษย์ (คุณ) ต้องลงมือทำขั้นตอนไหน?</div>
+      <button class="quiz-opt">สั่งให้ระบบเริ่มหาคำคมทุกเช้า</button>
+      <button class="quiz-opt">กดเลือกคำคมที่ชอบใน Telegram</button>
+      <button class="quiz-opt">กดปุ่มโพสต์ลงเพจทุกครั้งตอนเย็น</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">4. "นาฬิกาปลุก" ที่ทำให้ Hermes ตื่นมาทำงาน 07:00 / 08:00 / 19:00 เรียกว่า?</div>
+      <button class="quiz-opt">ระบบที่มีชื่อเรียกว่า docker</button>
+      <button class="quiz-opt">ระบบที่มีชื่อเรียกว่า ssh</button>
+      <button class="quiz-opt">ระบบที่มีชื่อเรียกว่า cron</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <p>📖 แหล่งหลักของบทนี้: <a href="https://www.hostinger.com/tutorials/what-is-vps-hosting">What Is VPS Hosting? — Hostinger Tutorials</a> (อ่านครึ่งแรกพอ)</p>
+</section>
+
+<!-- ─────────── บทที่ 02 ─────────── -->
+<section class="lesson" id="lesson-02">
+  <p class="lesson-kicker">บทที่ 02 · Phase 1 — เข้าเครื่องให้เป็น</p>
+  <div class="minimap" data-active="vps" data-note="บทนี้: เปิดประตูเข้าเครื่อง VPS ด้วย SSH"></div>
+  <h1>SSH เข้า VPS ของคุณครั้งแรก</h1>
+  <p class="lesson-lede">บทนี้ลงมือกับเครื่องจริง — จบแล้วคุณจะเข้า VPS จาก PowerShell ได้เอง สำรวจเครื่องด้วยคำสั่งจริง และออกมาอย่างปลอดภัย (~20 นาที) · เปิด <a href="#commands">cheat sheet คำสั่ง</a> คู่ไปด้วย</p>
+
+  <h2>SSH คืออะไร ใน 3 บรรทัด</h2>
+  <p><strong>SSH (Secure Shell)</strong> คือวิธี "ยื่นมือเข้าไปพิมพ์คำสั่งบนเครื่องที่อยู่ไกล" ผ่านท่อเข้ารหัส — คุณพิมพ์บนคอมที่บ้าน แต่คำสั่งไปรันบน VPS ที่ data center สิ่งที่เห็นคือหน้าจอข้อความล้วน ไม่มีเมาส์ ไม่มีไอคอน นี่คือหน้าตาปกติของเซิร์ฟเวอร์ทั่วโลก</p>
+  <p>ข่าวดี: Windows 11 ของคุณมีคำสั่ง <code>ssh</code> ติดมาแล้วใน PowerShell ไม่ต้องลงโปรแกรมอะไรเพิ่ม</p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <rect x="15" y="40" width="180" height="70" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="105" y="68" font-size="15" font-weight="bold" fill="#1d4ed8" text-anchor="middle">💻 PowerShell</text>
+      <text x="105" y="92" font-size="13" fill="#555" text-anchor="middle">คอมของคุณที่บ้าน</text>
+      <rect x="445" y="40" width="180" height="70" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="535" y="68" font-size="15" font-weight="bold" fill="#b45309" text-anchor="middle">🖥 VPS</text>
+      <text x="535" y="92" font-size="13" fill="#555" text-anchor="middle">root@srv123456</text>
+      <line x1="195" y1="60" x2="445" y2="60" stroke="#15803d" stroke-width="2"/>
+      <line x1="195" y1="90" x2="445" y2="90" stroke="#15803d" stroke-width="2"/>
+      <text x="320" y="35" font-size="13" fill="#15803d" text-anchor="middle">🔒 ท่อเข้ารหัส SSH (พอร์ต 22)</text>
+      <text x="320" y="55" font-size="12" fill="#1a1a1a" text-anchor="middle">คำสั่งที่พิมพ์ →</text>
+      <text x="320" y="107" font-size="12" fill="#1a1a1a" text-anchor="middle">← ผลลัพธ์กลับมา</text>
+      <text x="320" y="135" font-size="12" fill="#555" text-anchor="middle">พิมพ์ที่บ้าน แต่คำสั่งไปรันบนเครื่องที่ data center</text>
+    </svg>
+    <figcaption>SSH คือการยื่นมือผ่านท่อเข้ารหัสไปพิมพ์บนเครื่องไกล</figcaption>
+  </figure>
+
+  <h2>ขั้นที่ 1 — หากุญแจ 3 ดอกใน hPanel</h2>
+  <p>เข้า <a href="https://hpanel.hostinger.com">hpanel.hostinger.com</a> → เมนู <strong>VPS</strong> → เลือกเครื่องของคุณ → แท็บ <strong>Overview</strong> → ส่วน <strong>SSH access</strong> จะเจอ 3 อย่างนี้ (<a href="https://www.hostinger.com/support/5723772-how-to-connect-to-your-vps-via-ssh-at-hostinger/">คู่มือทางการ</a>):</p>
+  <table>
+    <tr><th>สิ่งที่ต้องมี</th><th>หน้าตา</th><th>คืออะไร</th></tr>
+    <tr><td>IP address</td><td>เลข 4 ชุด เช่น <code>145.79.12.88</code></td><td>ที่อยู่เครื่องคุณบนอินเทอร์เน็ต</td></tr>
+    <tr><td>Username</td><td><code>root</code></td><td>ผู้ใช้สิทธิ์สูงสุดของเครื่อง</td></tr>
+    <tr><td>Password</td><td>ที่คุณตั้งตอนสร้าง VPS</td><td>hPanel ไม่โชว์ให้ดู — ถ้าลืม กดปุ่ม <strong>Change</strong> ใต้ Root password เพื่อตั้งใหม่ได้เลย</td></tr>
+  </table>
+
+  <h2>ขั้นที่ 2 — เข้าเครื่อง</h2>
+  <ol class="steps">
+    <li>เปิด <strong>PowerShell</strong> บน Windows (กด Start พิมพ์ powershell แล้ว Enter)</li>
+    <li>พิมพ์ (แทน IP ด้วยเลขจริงของคุณ):
+      <pre><code>ssh root@145.79.12.88</code></pre></li>
+    <li>ครั้งแรกจะมีคำถามยาวๆ ลงท้าย <code>Are you sure you want to continue connecting?</code> — พิมพ์ <code>yes</code> แล้ว Enter (เครื่องเราขอจำ "ลายนิ้วมือ" ของ VPS ไว้ เพื่อเตือนถ้าวันหน้ามีคนปลอมตัวเป็นเครื่องนี้)</li>
+    <li>ใส่รหัสผ่าน root — <strong>ตอนพิมพ์จะไม่มีอะไรขึ้นบนจอเลยแม้แต่ดอกจัน นี่คือเรื่องปกติ</strong> พิมพ์ให้จบแล้ว Enter</li>
+    <li>ถ้าเห็นข้อความต้อนรับของ Ubuntu และบรรทัดล่างสุดกลายเป็น <code>root@srv...:~#</code> — <strong>ยินดีด้วย คุณอยู่ในเครื่อง VPS แล้ว</strong> 🎉</li>
+  </ol>
+
+  <div class="callout info">
+    <span class="label">ทางหนีทีไล่</span>
+    <p>ถ้า PowerShell ติดอะไรก็ตาม hPanel มีปุ่ม <strong>Terminal</strong> ในหน้า VPS Overview — เปิด SSH ผ่านเบราว์เซอร์ที่ login เป็น root ให้เสร็จสรรพ (<a href="https://www.hostinger.com/support/7978544-how-to-use-the-browser-terminal-in-hostinger/">คู่มือ</a>) ใช้แก้ขัดได้เสมอ แต่ฝึก PowerShell ให้ชินไว้ เพราะเป็นทักษะที่ใช้ได้กับเซิร์ฟเวอร์ทุกเจ้าในโลก</p>
+  </div>
+
+  <h2>ขั้นที่ 3 — ภารกิจสำรวจเครื่อง (ทำจริงทีละคำสั่ง)</h2>
+  <p>รันทีละบรรทัด สังเกตผลก่อนไปบรรทัดถัดไป (ความหมายทุกคำสั่งอยู่ใน <a href="#commands">cheat sheet</a>):</p>
+  <pre><code>whoami          # ควรตอบ: root
+pwd             # ควรตอบ: /root  ← "บ้าน" ของเรา
+ls -la          # ดูของในบ้าน (เครื่องใหม่จะโล่งๆ)
+df -h           # ดิสก์เหลือเท่าไหร่ — ดูบรรทัดที่ลงท้ายด้วย /
+free -h         # RAM เหลือเท่าไหร่ — จด 2 ค่านี้ไว้ตอบผมหน่อย
+uptime          # เครื่องเปิดมานานแค่ไหน
+mkdir quote-page-test   # สร้างโฟลเดอร์ทดลอง
+ls              # เห็น quote-page-test ไหม?
+rm -r quote-page-test   # ลบทิ้ง (ใช้เสร็จเก็บกวาด)
+exit            # กลับบ้านอย่างปลอดภัย</code></pre>
+  <p>พิมพ์ <code>exit</code> แล้วเห็น <code>Connection to ... closed.</code> = จบภารกิจสมบูรณ์</p>
+
+  <div class="callout">
+    <span class="label">กฎเหล็กตั้งแต่วันแรก</span>
+    <p>คุณคือ <code>root</code> — สิทธิ์สูงสุด ลบทั้งเครื่องได้ในคำสั่งเดียวและ<strong>ไม่มีถังขยะกู้คืน</strong> กฎของคอร์ส: อย่ารันคำสั่งที่ก๊อปมาจากที่อื่นโดยไม่เข้าใจ ทุกคำสั่งในคอร์สนี้จะมีคำอธิบายเสมอ สงสัยเมื่อไหร่ให้ถามครูก่อนรัน</p>
+  </div>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 02 — 4 ข้อ</div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">1. ตอนพิมพ์รหัสผ่านใน SSH แล้วหน้าจอไม่ขึ้นอะไรเลย แปลว่า?</div>
+      <button class="quiz-opt">ปกติดี ระบบซ่อนรหัสไว้ พิมพ์ต่อได้เลย</button>
+      <button class="quiz-opt">คีย์บอร์ดค้าง ต้องปิดแล้วเปิดใหม่ก่อน</button>
+      <button class="quiz-opt">เน็ตหลุดแล้ว ต้องต่อใหม่อีกรอบหนึ่ง</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. คำสั่งที่ใช้ดูว่า RAM เหลือเท่าไหร่ คือ?</div>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า df -h</button>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า uptime</button>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า free -h</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">3. ทำไมต้องระวังเป็นพิเศษเมื่อ login เป็น root?</div>
+      <button class="quiz-opt">เพราะ root ใช้เน็ตแรงกว่าผู้ใช้ปกติ</button>
+      <button class="quiz-opt">เพราะสิทธิ์สูงสุด ลบอะไรก็หายถาวร</button>
+      <button class="quiz-opt">เพราะ root มีค่าใช้จ่ายแพงกว่าปกติ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">4. ออกจากเครื่อง VPS กลับมาเครื่องเราด้วยคำสั่ง?</div>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า exit</button>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า clear</button>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า stop</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <p>📖 แหล่งหลักของบทนี้: <a href="https://www.hostinger.com/support/5723772-how-to-connect-to-your-vps-via-ssh-at-hostinger/">How to connect to your VPS via SSH — Hostinger Support</a></p>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 02</span>
+    <p>เมื่อสำรวจเครื่องครบทุกคำสั่งแล้ว บอกครูในแชทว่า <strong>"จบบท 2"</strong> พร้อมแปะค่า RAM (จาก <code>free -h</code>) กับดิสก์ (จาก <code>df -h</code>) มาด้วย — จะได้เช็คว่าเครื่องพอสำหรับ Hermes ก่อนเปิดบทที่ 03: Docker · ติดตรงไหนก๊อป error มาถามได้ทันที</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 03 ─────────── -->
+<section class="lesson" id="lesson-03">
+  <p class="lesson-kicker">บทที่ 03 · Phase 1 — เข้าเครื่องให้เป็น</p>
+  <div class="minimap" data-active="docker" data-note="บทนี้: รู้จักกล่อง Docker ที่ทุกชิ้นอาศัยอยู่"></div>
+  <h1>Docker แบบเห็นภาพ</h1>
+  <p class="lesson-lede">~20 นาที — จบแล้วคุณจะอธิบายได้ว่า image / container / volume ต่างกันยังไง เช็คได้ว่าเครื่องคุณมี Docker หรือยัง และรัน container แรกในชีวิตด้วยมือตัวเอง</p>
+
+  <h2>วอร์มอัพ 30 วินาที (นึกจากบทก่อนๆ)</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">ทวนความจำ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">คำสั่งดูพื้นที่ดิสก์ที่คุณเพิ่งใช้ไปเมื่อกี้ คือ?</div>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า free -h</button>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า df -h</button>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า uptime</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">เหตุผลหลักที่ระบบเพจของเราต้องอยู่บน VPS ไม่ใช่คอมบ้าน?</div>
+      <button class="quiz-opt">มันเปิดทำงานตลอดเวลาไม่มีปิด</button>
+      <button class="quiz-opt">มันมีจอภาพใหญ่กว่าคอมบ้านเรา</button>
+      <button class="quiz-opt">มันติดตั้งวินโดวส์ได้หลายรุ่นกว่า</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <h2>Docker แก้ปัญหาอะไร</h2>
+  <p>ปกติการติดตั้งโปรแกรมบนเซิร์ฟเวอร์คือฝันร้าย: โปรแกรม A ต้องการเครื่องมือเวอร์ชันหนึ่ง โปรแกรม B ต้องการอีกเวอร์ชัน ลงๆ ถอนๆ ไปสักพักเครื่องรกจนพังทั้งระบบ</p>
+  <p><strong>Docker</strong> แก้ด้วยการห่อแต่ละโปรแกรม<em>พร้อมทุกอย่างที่มันต้องใช้</em>ไว้ใน "กล่อง" ที่แยกขาดจากกัน — กล่องหนึ่งพังก็ทิ้งแล้วสร้างใหม่ได้ใน 1 คำสั่ง โดยเครื่องหลักไม่สะเทือน Hermes ของเราจะอาศัยอยู่ในกล่องแบบนี้</p>
+
+  <h2>ศัพท์ 3 คำที่ต้องแม่น</h2>
+  <table>
+    <tr><th>คำ</th><th>คืออะไร</th><th>อุปมา</th></tr>
+    <tr><td><strong>Image</strong></td><td>แม่แบบของโปรแกรม — ไฟล์สำเร็จที่นักพัฒนาแพ็คมาให้ ดาวน์โหลดจากคลังกลางชื่อ <a href="https://hub.docker.com">Docker Hub</a></td><td>สูตรอาหาร + วัตถุดิบครบชุด</td></tr>
+    <tr><td><strong>Container</strong></td><td>กล่องที่กำลัง<em>รันจริง</em> สร้างขึ้นจาก image — image เดียวสร้างได้หลาย container</td><td>จานอาหารที่ปรุงเสิร์ฟแล้ว</td></tr>
+    <tr><td><strong>Volume</strong></td><td>ลิ้นชักเก็บข้อมูลถาวรที่อยู่<em>นอก</em> container — ลบ/อัปเดต container แล้วข้อมูลไม่หาย</td><td>ตู้เย็นข้างเตา — ล้างจานทิ้งแต่ของในตู้ยังอยู่</td></tr>
+  </table>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <rect x="20" y="30" width="170" height="65" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="105" y="57" font-size="15" font-weight="bold" fill="#1d4ed8" text-anchor="middle">📄 Image</text>
+      <text x="105" y="80" font-size="12" fill="#555" text-anchor="middle">แม่แบบ (สูตรอาหาร)</text>
+      <defs><marker id="dk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#555"/></marker></defs>
+      <line x1="190" y1="62" x2="265" y2="62" stroke="#555" stroke-width="2" marker-end="url(#dk)"/>
+      <text x="228" y="50" font-size="12" fill="#555" text-anchor="middle">docker run</text>
+      <rect x="270" y="30" width="180" height="65" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="360" y="57" font-size="15" font-weight="bold" fill="#b45309" text-anchor="middle">📦 Container</text>
+      <text x="360" y="80" font-size="12" fill="#555" text-anchor="middle">กล่องที่รันจริง (จานที่เสิร์ฟ)</text>
+      <rect x="270" y="125" width="180" height="55" rx="10" fill="#ecfdf3" stroke="#15803d" stroke-width="2"/>
+      <text x="360" y="148" font-size="14" font-weight="bold" fill="#15803d" text-anchor="middle">🗄 Volume</text>
+      <text x="360" y="168" font-size="12" fill="#555" text-anchor="middle">/opt/data — ข้อมูลถาวร</text>
+      <line x1="360" y1="95" x2="360" y2="125" stroke="#15803d" stroke-width="2" marker-end="url(#dk)"/>
+      <text x="470" y="115" font-size="12" fill="#15803d">อ่าน/เขียน</text>
+      <text x="470" y="150" font-size="12" fill="#1a1a1a">ลบ container ทิ้ง</text>
+      <text x="470" y="168" font-size="12" fill="#1a1a1a">→ ของใน volume ยังอยู่ ✓</text>
+      <text x="105" y="130" font-size="12" fill="#555" text-anchor="middle">image เดียว</text>
+      <text x="105" y="148" font-size="12" fill="#555" text-anchor="middle">สร้างได้หลาย container</text>
+    </svg>
+    <figcaption>สามคำที่ต้องแม่น: แม่แบบ → กล่องที่รัน → ลิ้นชักถาวร (ความจำของ Hermes อยู่ใน volume)</figcaption>
+  </figure>
+  <div class="callout">
+    <span class="label">ทำไม volume สำคัญกับเรา</span>
+    <p>ความจำของ Hermes, skills ที่เราสอนมัน, คิวโพสต์คำคม — ทั้งหมดต้องอยู่ใน volume ตอนอัปเดต Hermes เวอร์ชันใหม่ (ลบ container เก่า สร้างใหม่จาก image ใหม่) ข้อมูลพวกนี้จะได้รอดทุกครั้ง นี่คือคำตอบของคำถามในบท 01 ว่า "ทำไมข้อมูลไม่หายตอน update"</p>
+  </div>
+
+  <h2>Docker Manager ของ Hostinger คืออะไร</h2>
+  <p>คือหน้าเว็บใน hPanel ที่คุยกับ Docker แทนเรา — กดปุ่มแทนพิมพ์คำสั่ง และมี <strong>Catalog</strong> รวมแอปสำเร็จรูปให้กดติดตั้งทีเดียวจบ ซึ่ง <strong>Hermes Agent อยู่ใน catalog นี้</strong> (นี่คือวิธีที่เราจะติดตั้งในบทที่ 04) เงื่อนไขเดียว: เครื่องต้องมี Docker ลงไว้ก่อน (<a href="https://www.hostinger.com/support/12040815-how-to-deploy-your-first-container-with-hostinger-docker-manager/">คู่มือทางการ</a>)</p>
+
+  <h2>ภารกิจ — เช็คเครื่องคุณ แล้วรัน container แรก</h2>
+  <p>SSH เข้าเครื่อง (ทำเองได้แล้วนี่ครับ 😉) แล้วพิมพ์:</p>
+  <pre><code>docker --version</code></pre>
+  <p>ผลที่ได้จะพาไปทางใดทางหนึ่ง:</p>
+
+  <h3>ทาง A — ขึ้นเวอร์ชัน เช่น <code>Docker version 27.x.x</code> → เครื่องพร้อมแล้ว ไปต่อเลย</h3>
+  <ol class="steps">
+    <li>ดูว่ามีกล่องไหนรันอยู่บ้าง (เครื่องใหม่มักว่างเปล่า เห็นแค่หัวตาราง):
+      <pre><code>docker ps</code></pre></li>
+    <li>รัน container แรกในชีวิต — Docker จะหา image ชื่อ hello-world ในเครื่อง ไม่เจอ → ดาวน์โหลดจาก Docker Hub → สร้าง container → รัน:
+      <pre><code>docker run hello-world</code></pre>
+      เห็นข้อความ <code>Hello from Docker!</code> = สำเร็จ 🎉</li>
+    <li>ดูหลักฐานว่าเมื่อกี้เกิดอะไรขึ้น:
+      <pre><code>docker images   # เห็น image ชื่อ hello-world (แม่แบบที่โหลดมา)
+docker ps -a    # เห็น container ที่รันจบแล้ว (สถานะ Exited)</code></pre>
+      สังเกต: image ยังอยู่ แต่ container ทำงานเสร็จแล้ว "ดับ" ไป — คนละสิ่งกันชัดๆ</li>
+  </ol>
+
+  <h3>ทาง B — ขึ้น <code>docker: command not found</code> → ต้องลง Docker ก่อน</h3>
+  <p>เครื่องคุณยังไม่มี Docker วิธีที่ง่ายและสะอาดที่สุดตอนนี้ (เครื่องยังว่าง ไม่มีอะไรให้เสีย) คือเปลี่ยน OS เป็น template ที่มี Docker มาให้ (<a href="https://www.hostinger.com/tutorials/how-to-install-docker-on-ubuntu">คู่มือทางการ</a>):</p>
+  <ol class="steps">
+    <li>hPanel → VPS → <strong>OS &amp; Panel → Operating System</strong></li>
+    <li>เลือกแท็บ <strong>Application</strong> → เลือก <strong>Docker</strong> (บน Ubuntu 24.04) → กด <strong>Change OS</strong> รอ ~10 นาที</li>
+    <li>⚠️ <strong>การเปลี่ยน OS ล้างทุกอย่างในเครื่อง</strong> — ของคุณยังว่างอยู่เลยไม่เสียอะไร และระบบจะให้ตั้งรหัส root ใหม่ (จดไว้ด้วย)</li>
+    <li>SSH เข้าใหม่ — คราวนี้ PowerShell อาจโวยวายเป็นตัวแดงว่า <code>REMOTE HOST IDENTIFICATION HAS CHANGED</code> อย่าตกใจ: เครื่องถูกล้างใหม่ "ลายนิ้วมือ" เลยเปลี่ยน (จำจากบท 02 ได้ไหม) แก้ด้วยการลบลายนิ้วมือเก่าบนคอมเรา:
+      <pre><code>ssh-keygen -R 145.79.12.88   # แทนด้วย IP จริงของคุณ</code></pre>
+      แล้ว <code>ssh root@IP</code> ใหม่ ตอบ yes อีกรอบเหมือนครั้งแรก</li>
+    <li>กลับไปทำ<strong>ทาง A</strong> ให้จบ</li>
+  </ol>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 03 — 4 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. image กับ container ต่างกันยังไง?</div>
+      <button class="quiz-opt">image คือกล่องที่รัน ส่วน container คือแม่แบบ</button>
+      <button class="quiz-opt">image คือแม่แบบ ส่วน container คือกล่องที่รัน</button>
+      <button class="quiz-opt">สองอย่างนี้คือสิ่งเดียวกันแค่เรียกต่างกัน</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. ความจำและ skills ของ Hermes ต้องเก็บใน volume เพราะ?</div>
+      <button class="quiz-opt">volume ทำให้เครื่องเราประมวลผลเร็วขึ้น</button>
+      <button class="quiz-opt">volume ช่วยประหยัดพื้นที่ดิสก์ของเครื่อง</button>
+      <button class="quiz-opt">ข้อมูลจะรอดเมื่อลบหรืออัปเดต container</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. คำสั่งดูว่ามี container ไหนกำลังรันอยู่ คือ?</div>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า docker ps</button>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า docker images</button>
+      <button class="quiz-opt">คำสั่งที่พิมพ์ว่า docker --version</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">4. ตอนรัน docker run hello-world ครั้งแรก Docker ไปเอา image มาจากไหน?</div>
+      <button class="quiz-opt">สร้างขึ้นเองสดๆ ในเครื่องของเรา</button>
+      <button class="quiz-opt">ก๊อปมาจากเว็บไซต์ของทาง Hostinger</button>
+      <button class="quiz-opt">ดาวน์โหลดจากคลังกลางชื่อ Docker Hub</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <p>📖 แหล่งหลักของบทนี้: <a href="https://docs.docker.com/get-started/docker-overview/">Docker overview — Docker Docs</a> (แนวคิดจากต้นทาง) และ <a href="https://www.hostinger.com/tutorials/how-to-install-docker-on-ubuntu">How to install Docker on Ubuntu — Hostinger</a></p>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 03</span>
+    <p>บอกครูว่า <strong>"จบบท 3"</strong> พร้อมบอกว่าคุณเจอ<strong>ทาง A หรือ ทาง B</strong> และแปะผล <code>docker --version</code> มาด้วย — บทต่อไปคือของจริง: <strong>ติดตั้ง Hermes Agent</strong> 🤖</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 04 ─────────── -->
+<section class="lesson" id="lesson-04">
+  <p class="lesson-kicker">บทที่ 04 · Phase 2 — ติดตั้ง Hermes</p>
+  <div class="minimap" data-active="hermes,llm" data-note="บทนี้: ติดตั้งพนักงาน Hermes + ต่อสมอง LLM"></div>
+  <h1>ติดตั้ง Hermes Agent + ต่อสมอง (LLM)</h1>
+  <p class="lesson-lede">~30 นาที — จบแล้ว "พนักงาน" ของเพจคุณจะมีตัวตนจริงบน VPS และคุยกับคุณได้เป็นครั้งแรก</p>
+
+  <div class="callout info">
+    <span class="label">ก่อนเริ่ม ต้องผ่านบท 03 ทาง A แล้ว</span>
+    <p>คือ <code>docker --version</code> ขึ้นเวอร์ชันปกติ — เพราะ Docker Manager ที่ใช้ในบทนี้ทำงานบนเครื่องที่มี Docker เท่านั้น</p>
+  </div>
+
+  <h2>วอร์มอัพ (นึกจากบท 03)</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">ทวนความจำ</div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">ตอนอัปเดต Hermes เวอร์ชันใหม่ ความจำของมันไม่หาย เพราะเก็บอยู่ใน?</div>
+      <button class="quiz-opt">ที่เก็บถาวรซึ่งเรียกว่า volume</button>
+      <button class="quiz-opt">ที่เก็บถาวรซึ่งเรียกว่า image</button>
+      <button class="quiz-opt">ที่เก็บถาวรซึ่งเรียกว่า prompt</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <h2>ขั้นที่ 1 — เตรียม "สมอง" ก่อน (LLM API key)</h2>
+  <p>ตัว Hermes Agent เป็นแค่ร่างกาย — มันต้องต่อกับ LLM ถึงจะคิดได้ ตอนติดตั้งระบบจะถามหา provider ดังนั้นเตรียมคำตอบไว้ก่อน:</p>
+  <table>
+    <tr><th>ทางเลือก</th><th>เหมาะกับใคร</th><th>ต้องทำอะไร</th></tr>
+    <tr><td><strong>nexos.ai gateway</strong></td><td>คนที่แพ็กเกจ VPS แถมเครดิต nexos.ai มา (เช็คใน hPanel)</td><td>ไม่ต้องทำอะไร — ตัวติดตั้งกรอก key ให้อัตโนมัติ</td></tr>
+    <tr><td><strong>OpenRouter</strong> (แนะนำถ้าไม่มีเครดิตแถม)</td><td>อยากจ่ายที่เดียวแต่สลับใช้ได้หลายโมเดล</td><td>สมัครที่ <a href="https://openrouter.ai">openrouter.ai</a> → เติมเงิน ~$5 → สร้าง API key → ก๊อปเก็บไว้</td></tr>
+    <tr><td><strong>Anthropic / OpenAI ตรงๆ</strong></td><td>มีบัญชีของค่ายนั้นอยู่แล้ว</td><td>สร้าง API key จากหน้า console ของค่าย</td></tr>
+  </table>
+  <div class="callout">
+    <span class="label">API key = บัตรเครดิตย่อมๆ</span>
+    <p>ใครได้ key ไปก็เผาเงินคุณได้ — <strong>ห้ามแชร์ ห้ามโพสต์ ห้ามแปะในแชทสาธารณะ</strong> (ส่งให้ผมดูก็ไม่ต้องนะครับ ถ้าติดปัญหาแค่บอกอาการพอ) และตั้งเพดานการใช้จ่าย (spending limit) ในเว็บ provider ไว้เสมอ เดี๋ยวบทที่ 14 จะสอนคุมค่าใช้จ่ายละเอียดอีกที</p>
+  </div>
+
+  <h2>ขั้นที่ 2 — ติดตั้งจาก Catalog (ตาม<a href="https://www.hostinger.com/support/how-to-get-started-with-hermes-agent-on-hostinger-vps/">คู่มือทางการ</a>)</h2>
+  <ol class="steps">
+    <li>hPanel → VPS → <strong>Docker Manager</strong> → <strong>Catalog</strong> (หรือปุ่ม Compose → One click deploy)</li>
+    <li>ค้นหา <strong>Hermes Agent</strong> → กด <strong>Select</strong></li>
+    <li>ระบบให้ตั้ง <strong>admin username + password</strong> — ตั้งใหม่ อย่าซ้ำรหัส root แล้วจดเก็บ</li>
+    <li>กด Deploy แล้วรอ — Hostinger จะสร้าง container ของ Hermes พร้อมบริการที่ต้องใช้ (เช่น Traefik ตัวจัดการทางเข้าเว็บ) ให้เองทั้งหมด</li>
+    <li>เสร็จแล้วเปิด Hermes Project จากหน้า VPS → กดปุ่ม <strong>Open</strong> → ได้หน้า CLI ของ Hermes</li>
+  </ol>
+
+  <h2>ขั้นที่ 3 — Setup ครั้งแรก</h2>
+  <ol class="steps">
+    <li>เลือกโหมด <strong>Full setup</strong> (ไม่เอา Quick — เราอยากเห็นทุกตัวเลือกเพื่อเข้าใจระบบ)</li>
+    <li>เลือก LLM provider ตามที่เตรียมไว้ในขั้นที่ 1 แล้ววาง API key</li>
+    <li>เจอหัวข้อช่องทางสื่อสาร (Telegram/WhatsApp) — <strong>ข้ามไปก่อน</strong> เดี๋ยวบทที่ 05 ทำแบบละเอียด</li>
+    <li>เครื่องมือเสริมอื่นๆ (เช่น Web Search) — เปิดได้ถ้ามีเครดิต ไม่มีก็ข้าม เพิ่มทีหลังได้</li>
+  </ol>
+
+  <h2>ขั้นที่ 4 — ทดสอบคุยครั้งแรก 🎉</h2>
+  <p>พิมพ์ทักมันใน CLI เลย เช่น:</p>
+  <pre><code>สวัสดี แนะนำตัวหน่อยว่าเธอทำอะไรได้บ้าง</code></pre>
+  <p>ถ้ามันตอบกลับมา = สมองต่อติดแล้ว ลองอีกสักคำถามให้เห็นของจริง:</p>
+  <pre><code>เช็คหน่อยว่าตอนนี้เครื่องที่เธอรันอยู่เหลือพื้นที่ดิสก์เท่าไหร่</code></pre>
+  <p>มันจะรัน <code>df -h</code> ให้เอง — คำสั่งเดียวกับที่คุณพิมพ์มือในบท 02 นั่นแหละ นี่คือความหมายของคำว่า <strong>agent</strong>: ไม่ได้แค่ตอบ แต่ลงมือทำ</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 04 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. ทำไม Hermes ต้องมี API key ของ LLM provider?</div>
+      <button class="quiz-opt">เอาไว้ยืนยันตัวตนกับทาง Hostinger</button>
+      <button class="quiz-opt">ตัว agent ต้องเช่า "สมอง" จากภายนอก</button>
+      <button class="quiz-opt">เอาไว้ปลดล็อกฟีเจอร์เสริมของ Docker</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. ข้อไหนคือวิธีปฏิบัติต่อ API key ที่ถูกต้อง?</div>
+      <button class="quiz-opt">แปะไว้ในโพสต์เพจเผื่อว่าตัวเองลืม</button>
+      <button class="quiz-opt">ส่งให้เพื่อนช่วยเก็บไว้อีกคนกันหาย</button>
+      <button class="quiz-opt">เก็บเป็นความลับและตั้งเพดานใช้จ่าย</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. สิ่งที่ทำให้ Hermes เป็น "agent" ไม่ใช่แค่แชทบอทตอบคำถาม คือ?</div>
+      <button class="quiz-opt">มันลงมือรันคำสั่งทำงานจริงได้เอง</button>
+      <button class="quiz-opt">มันตอบข้อความได้เร็วกว่าแชทบอท</button>
+      <button class="quiz-opt">มันเก็บบทสนทนาไว้ได้นานกว่าปกติ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <p>📖 แหล่งหลักของบทนี้: <a href="https://www.hostinger.com/support/how-to-get-started-with-hermes-agent-on-hostinger-vps/">How to get started with Hermes Agent on Hostinger VPS — Hostinger Support</a></p>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 04</span>
+    <p>บอกครูว่า <strong>"จบบท 4"</strong> + เลือก LLM provider ตัวไหน + Hermes ตอบอะไรตอนให้มันเช็คดิสก์ — แล้วไปต่อบท 05: พามันเข้า Telegram ในมือถือคุณ</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 05 ─────────── -->
+<section class="lesson" id="lesson-05">
+  <p class="lesson-kicker">บทที่ 05 · Phase 2 — ติดตั้ง Hermes</p>
+  <div class="minimap" data-active="you,hermes" data-note="บทนี้: ต่อสาย Telegram ระหว่างคุณกับ Hermes"></div>
+  <h1>ต่อ Telegram — สั่งงาน Hermes จากมือถือ</h1>
+  <p class="lesson-lede">~20 นาที — จบแล้วคุณจะสั่งงาน "พนักงาน" ได้จากทุกที่ผ่านแอปแชทในกระเป๋า และนี่คือช่องทางที่ระบบจะส่งคำคมมาให้คุณเลือกทุกเช้า</p>
+
+  <h2>ภาพรวม: บอทคือ "เบอร์โทร" ของ Hermes</h2>
+  <p>Telegram ให้เราสร้าง <strong>บอท</strong> ส่วนตัวได้ฟรี — บอทเป็นเหมือนเบอร์โทรที่ Hermes ใช้รับสาย ใครทักบอทนี้ ข้อความจะวิ่งไปหา Hermes บน VPS แล้วมันตอบกลับมา และเราจะล็อกไว้ว่า<strong>รับสายจากคุณคนเดียวเท่านั้น</strong></p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 640 165" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <defs><marker id="tg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#555"/></marker></defs>
+      <rect x="15" y="35" width="120" height="60" rx="10" fill="#ecfdf3" stroke="#15803d" stroke-width="2"/>
+      <text x="75" y="60" font-size="14" font-weight="bold" fill="#15803d" text-anchor="middle">📱 มือถือคุณ</text>
+      <text x="75" y="82" font-size="11" fill="#555" text-anchor="middle">แอป Telegram</text>
+      <rect x="185" y="35" width="120" height="60" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="245" y="60" font-size="14" font-weight="bold" fill="#1d4ed8" text-anchor="middle">☁️ บอท</text>
+      <text x="245" y="82" font-size="11" fill="#555" text-anchor="middle">เบอร์โทรของ Hermes</text>
+      <rect x="355" y="35" width="120" height="60" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="415" y="60" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">🤖 Gateway</text>
+      <text x="415" y="82" font-size="11" fill="#555" text-anchor="middle">Hermes บน VPS</text>
+      <rect x="525" y="35" width="100" height="60" rx="10" fill="#f4f1ea" stroke="#555" stroke-width="2"/>
+      <text x="575" y="60" font-size="14" font-weight="bold" fill="#1a1a1a" text-anchor="middle">🧠 LLM</text>
+      <text x="575" y="82" font-size="11" fill="#555" text-anchor="middle">สมองเช่า</text>
+      <line x1="135" y1="55" x2="185" y2="55" stroke="#555" stroke-width="2" marker-end="url(#tg)"/>
+      <line x1="305" y1="55" x2="355" y2="55" stroke="#555" stroke-width="2" marker-end="url(#tg)"/>
+      <line x1="475" y1="55" x2="525" y2="55" stroke="#555" stroke-width="2" marker-end="url(#tg)"/>
+      <path d="M 575 95 L 575 130 L 75 130 L 75 98" fill="none" stroke="#15803d" stroke-width="2" marker-end="url(#tg)"/>
+      <text x="320" y="123" font-size="12" fill="#15803d" text-anchor="middle">คำตอบวิ่งกลับมาหาคุณ</text>
+      <text x="245" y="25" font-size="11" fill="#b91c1c" text-anchor="middle">🔐 allowlist: รับเฉพาะ user ID ของคุณ</text>
+      <text x="320" y="155" font-size="11" fill="#555" text-anchor="middle">ทั้งวงจรใช้เวลาไม่กี่วินาที — สั่งงานได้จากทุกที่บนโลก</text>
+    </svg>
+    <figcaption>เส้นทางของหนึ่งข้อความ: มือถือ → บอท → VPS → สมอง → กลับมามือถือ</figcaption>
+  </figure>
+
+  <h2>ขั้นที่ 1 — สร้างบอทกับ @BotFather (ทำในแอป Telegram)</h2>
+  <ol class="steps">
+    <li>ค้นหา <a href="https://t.me/BotFather">@BotFather</a> (บอททางการของ Telegram มีติ๊กถูก) → กด Start</li>
+    <li>พิมพ์ <code>/newbot</code> → ตั้งชื่อที่แสดง (เช่น "ผู้ช่วยเพจคำคม") → ตั้ง username ที่ต้องลงท้ายด้วย <code>bot</code> (เช่น <code>quotepage_helper_bot</code>)</li>
+    <li>BotFather จะส่ง <strong>token</strong> มา หน้าตาแบบ <code>123456789:ABCdef...</code> — ก๊อปเก็บไว้ <strong>นี่คือความลับระดับเดียวกับ API key</strong> ใครได้ไปคุมบอทคุณได้ (ถ้าหลุด พิมพ์ <code>/revoke</code> ใน BotFather เพื่อออกใหม่)</li>
+  </ol>
+
+  <h2>ขั้นที่ 2 — หาเลขประจำตัว Telegram ของคุณ</h2>
+  <p>ทัก <a href="https://t.me/userinfobot">@userinfobot</a> แล้วมันจะตอบ <strong>เลข user ID</strong> ของคุณกลับมาทันที (เป็นตัวเลข ไม่ใช่ @username) — จดไว้ เลขนี้คือกุญแจที่บอกว่า "เจ้าของตัวจริงคือคนนี้"</p>
+
+  <h2>ขั้นที่ 3 — บอก Hermes (ทำใน CLI ของ Hermes บน VPS)</h2>
+  <p>เปิด Hermes CLI (ปุ่ม Open เหมือนบท 04) แล้วรันตัวตั้งค่า (<a href="https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/telegram.md">เอกสารทางการ</a>):</p>
+  <pre><code>hermes gateway setup</code></pre>
+  <ol class="steps">
+    <li>เลือก <strong>Telegram</strong></li>
+    <li>วาง <strong>bot token</strong> จากขั้นที่ 1</li>
+    <li>ใส่ <strong>user ID</strong> จากขั้นที่ 2 ในช่อง allowed users — นี่แหละตัวล็อก "รับสายจากคุณคนเดียว" คนอื่นทักบอทจะถูกปฏิเสธ</li>
+    <li>เสร็จแล้วให้ gateway ทำงาน (ถ้าไม่ได้รันอยู่แล้ว): <pre><code>hermes gateway</code></pre> บนเครื่อง Hostinger ตัว deployment มักรัน gateway ให้อยู่แล้ว — ถ้าใช่ ข้ามข้อนี้ได้</li>
+  </ol>
+
+  <h2>ขั้นที่ 4 — ทดสอบจากมือถือ 🎉</h2>
+  <ol class="steps">
+    <li>เปิดแชทบอทของคุณใน Telegram → พิมพ์ทัก เช่น "สวัสดี ทำอะไรได้บ้าง"</li>
+    <li>ได้คำตอบ = ครบวงจรแล้ว: มือถือคุณ → Telegram → VPS → LLM → กลับมามือถือ</li>
+    <li>ลองของจริงอีกอัน: <em>"หาคำคมสั้นๆ เกี่ยวกับความพยายามมา 3 อัน"</em> — แอบดูตัวอย่างงานที่มันจะทำให้เราทุกเช้าในอนาคต</li>
+  </ol>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 05 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">1. bot token ที่ BotFather ให้มา ควรทำยังไง?</div>
+      <button class="quiz-opt">โพสต์เก็บไว้บนเพจของเราให้หาง่าย</button>
+      <button class="quiz-opt">ตั้งเป็นชื่อบอทไปเลยจะได้ไม่หลงลืม</button>
+      <button class="quiz-opt">เก็บลับสุดๆ ถ้าหลุดต้อง revoke ทันที</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. อะไรกันไม่ให้คนแปลกหน้ามาสั่งงาน Hermes ผ่านบอทเรา?</div>
+      <button class="quiz-opt">allowlist ที่ระบุเลข user ID ของเรา</button>
+      <button class="quiz-opt">รหัสผ่านที่ต้องพิมพ์ก่อนแชททุกครั้ง</button>
+      <button class="quiz-opt">การซ่อนชื่อบอทไม่ให้ใครค้นหาเจอ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">3. เส้นทางของข้อความตอนคุณทักบอทคือ?</div>
+      <button class="quiz-opt">มือถือ → Facebook → VPS → กลับมามือถือ</button>
+      <button class="quiz-opt">มือถือ → Telegram → VPS → กลับมามือถือ</button>
+      <button class="quiz-opt">มือถือ → hPanel → Docker → กลับมามือถือ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <p>📖 แหล่งหลักของบทนี้: <a href="https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/messaging/telegram.md">Hermes Agent Docs: Telegram — NousResearch (GitHub)</a></p>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 05</span>
+    <p>บอกครูว่า <strong>"จบบท 5"</strong> + คำคม 3 อันที่ Hermes หามาให้ตอนทดสอบ (อยากเห็นฝีมือมัน 😄) — บทต่อไป: ติด "ป้ายชื่อ" ให้เครื่องด้วย domain ฟรีของคุณ</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 06 ─────────── -->
+<section class="lesson" id="lesson-06">
+  <p class="lesson-kicker">บทที่ 06 · Phase 2 — ติดตั้ง Hermes</p>
+  <div class="minimap" data-active="domain,vps" data-note="บทนี้: ติดป้ายชื่อ (โดเมนฟรี) ให้เครื่อง"></div>
+  <h1>Domain ฟรี + HTTPS — ให้เครื่องมีชื่อจำง่าย</h1>
+  <p class="lesson-lede">~25 นาที (+ รอ DNS กระจายตัว) — จบแล้ว VPS ของคุณจะมีชื่อเรียกสวยๆ แทนตัวเลข IP และคุณเข้าใจกลไก DNS ที่อยู่เบื้องหลังอินเทอร์เน็ตทั้งใบ</p>
+
+  <h2>DNS ใน 4 บรรทัด</h2>
+  <p>คอมพิวเตอร์รู้จักกันด้วยเลข IP (เช่น <code>145.79.12.88</code>) แต่คนจำชื่อเก่งกว่าจำเลข — <strong>DNS</strong> (Domain Name System) คือ "สมุดโทรศัพท์ของอินเทอร์เน็ต" ที่แปลงชื่อ → เลขให้อัตโนมัติ และ <strong>A record</strong> คือบรรทัดหนึ่งในสมุดนั้นที่บอกว่า "ชื่อนี้ = IP นี้"</p>
+  <p>สิ่งที่เราจะทำ: จดชื่อฟรีที่ Hostinger แถมมา แล้วเขียน A record ชี้มาที่ VPS ของเรา</p>
+
+  <h2>ขั้นที่ 1 — เคลมโดเมนฟรี (<a href="https://support.hostinger.com/en/articles/1583407-how-to-register-a-domain-for-free">คู่มือทางการ</a>)</h2>
+  <ol class="steps">
+    <li>hPanel → หน้า Home → ปุ่ม <strong>Claim Domain</strong> ใน to-do list (หรือ Domains → Domain Portfolio → <strong>Add new domain</strong> → Claim your free domain)</li>
+    <li>แผน VPS (KVM) แถมโดเมนสกุล <strong>.cloud</strong> หรือ <strong>.tech</strong> ฟรี 12 เดือน — เลือกชื่อที่สื่อถึงเพจ เช่น <code>mymindsetpage.cloud</code> (ตั้งใจหน่อย เปลี่ยนทีหลังไม่ได้)</li>
+    <li>ระบบอาจขอข้อมูลผู้จดทะเบียน (ชื่อ ที่อยู่) — เป็นข้อกำหนดมาตรฐานของการจดโดเมน กรอกตามจริง</li>
+  </ol>
+  <div class="callout">
+    <span class="label">หมายเหตุเรื่องปีหน้า</span>
+    <p>ฟรีเฉพาะปีแรก — ปีต่อไปมีค่าต่ออายุ (สกุล .cloud/.tech ราวๆ ไม่กี่ร้อยบาท/ปี เช็คราคาจริงตอนใกล้ครบ) ถ้าไม่ต่อ ชื่อหลุดแต่ระบบเรายังรันได้ปกติผ่าน IP</p>
+  </div>
+
+  <h2>ขั้นที่ 2 — ชี้ชื่อเข้าเครื่อง (A record)</h2>
+  <ol class="steps">
+    <li>hPanel → <strong>Domains → Domain Portfolio</strong> → กด Manage โดเมนของคุณ → เมนู <strong>DNS / Nameservers</strong> (<a href="https://www.hostinger.com/support/1583227-how-to-point-a-domain-to-your-vps-at-hostinger/">คู่มือทางการ</a>)</li>
+    <li>ในตาราง DNS records หา <strong>A record</strong> ของชื่อหลัก (Name เป็น <code>@</code>) → แก้ค่า (Points to) เป็น <strong>IP ของ VPS คุณ</strong></li>
+    <li>เห็น record ประเภท CNAME ของ <code>www</code> ชี้ไปที่อื่น ก็จัดการให้ชี้มาทางเดียวกัน (หรือลบ แล้วเพิ่ม A record ชื่อ <code>www</code> ชี้ IP เดียวกัน)</li>
+    <li>รอ DNS กระจายตัว (propagation) — ทางการบอกได้ถึง 24 ชม. แต่ส่วนใหญ่ไม่กี่นาทีถึงชั่วโมงเดียว</li>
+  </ol>
+  <p>ทดสอบจาก PowerShell บนคอมคุณ (ไม่ต้อง SSH):</p>
+  <pre><code>ping mymindsetpage.cloud</code></pre>
+  <p>ถ้าเห็นมันแปลงเป็น IP ของ VPS คุณ = สมุดโทรศัพท์อัปเดตแล้ว 🎉</p>
+
+  <h2>ขั้นที่ 3 — แล้ว HTTPS กับหน้าเว็บของ Hermes ล่ะ?</h2>
+  <p>ตอนติดตั้ง Hermes ในบท 04 Hostinger แถม <strong>Traefik</strong> มาด้วย — มันคือ "พนักงานต้อนรับ" ที่ยืนเฝ้าประตูเว็บของเครื่อง คอยพาผู้เข้าชมไปยัง container ที่ถูกต้อง และขอใบรับรอง HTTPS (กุญแจ 🔒) ให้อัตโนมัติ</p>
+  <div class="callout info">
+    <span class="label">จุดที่จะยืนยันกับเครื่องจริง</span>
+    <p>รายละเอียดการผูกโดเมนเข้ากับ Hermes WebUI ขึ้นกับเวอร์ชันของแอปใน catalog ณ วันติดตั้ง (Hostinger มีทั้งแอป <em>Hermes Agent</em> แบบ CLI และ <em>Hermes WebUI</em> ที่มีหน้าเว็บ+agent ในตัว) — พอคุณถึงบทนี้จริง ให้บอกครูว่าในหน้า Docker Manager ของคุณเห็นตัวเลือกอะไร แล้วเราจะเลือกทางที่สะอาดที่สุดด้วยกัน โดยหลักการที่เรียนในบทนี้ (A record → Traefik → container) ใช้ได้กับทุกทาง</p>
+  </div>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 06 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. A record ทำหน้าที่อะไร?</div>
+      <button class="quiz-opt">เข้ารหัสการเชื่อมต่อให้ปลอดภัยขึ้น</button>
+      <button class="quiz-opt">จับคู่ชื่อโดเมนเข้ากับเลข IP เครื่อง</button>
+      <button class="quiz-opt">สำรองข้อมูลโดเมนไว้กันการสูญหาย</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. แก้ DNS แล้วเว็บยังเข้าไม่ได้ทันที เพราะอะไร?</div>
+      <button class="quiz-opt">การกระจายตัวของ DNS ต้องใช้เวลา</button>
+      <button class="quiz-opt">ต้องรีสตาร์ท VPS หนึ่งรอบก่อนเสมอ</button>
+      <button class="quiz-opt">ต้องจ่ายค่าธรรมเนียมเปิดใช้ก่อน</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">3. Traefik ในเครื่องเราทำหน้าที่อะไร?</div>
+      <button class="quiz-opt">สำรองความจำของ Hermes ทุกคืน</button>
+      <button class="quiz-opt">เร่งความเร็วอินเทอร์เน็ตของเครื่อง</button>
+      <button class="quiz-opt">เฝ้าประตูเว็บ พาคนเข้า container + จัดการ HTTPS</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <p>📖 แหล่งหลักของบทนี้: <a href="https://www.hostinger.com/support/1583227-how-to-point-a-domain-to-your-vps-at-hostinger/">How to point a domain to your VPS — Hostinger Support</a></p>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 06 — และจบ Phase 2 ทั้งเฟส 🏆</span>
+    <p>บอกครูว่า <strong>"จบบท 6"</strong> + ชื่อโดเมนที่เคลมมา + ผล ping — ถึงตรงนี้โครงสร้างพื้นฐานครบหมดแล้ว: เครื่อง ✓ Docker ✓ Hermes ✓ Telegram ✓ โดเมน ✓ ต่อไปคือสอนมันทำงาน: <strong>Phase 3 — Cron และ Skills</strong></p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 07 ─────────── -->
+<section class="lesson" id="lesson-07">
+  <p class="lesson-kicker">บทที่ 07 · Phase 3 — ใช้ Hermes ให้เป็น</p>
+  <div class="minimap" data-active="cron" data-note="บทนี้: ติดนาฬิกาปลุกให้ระบบตื่นมาทำงานเอง"></div>
+  <h1>Cron — ตั้งงานอัตโนมัติด้วยภาษาธรรมชาติ</h1>
+  <p class="lesson-lede">~25 นาที — จบแล้ว Hermes จะ "ตื่นมาทำงานเอง" ตามเวลาโดยไม่ต้องมีใครสั่ง นี่คือกลไกที่จะโพสต์เพจให้คุณวันละ 2 ครั้ง</p>
+
+  <h2>วอร์มอัพ (นึกก่อนอ่าน)</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">ทวนความจำ</div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">ที่ที่ Hermes ส่งผลงาน cron ไปหาคุณ (ตั้งไว้ตอนบท 05) เรียกว่า?</div>
+      <button class="quiz-opt">จุดส่งที่เรียกว่า allowlist</button>
+      <button class="quiz-opt">จุดส่งที่เรียกว่า gateway</button>
+      <button class="quiz-opt">จุดส่งที่เรียกว่า home channel</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <h2>Cron ของ Hermes ทำงานยังไง (<a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/cron">เอกสารทางการ</a>)</h2>
+  <p>ตัว gateway (ที่รันอยู่ตลอดใต้ s6 อยู่แล้ว) มีนาฬิกาเช็คทุก 60 วินาทีว่า "มีงานถึงเวลาหรือยัง" — พองานถึงเวลา มันเปิด <strong>agent session สดใหม่</strong> ขึ้นมาทำงานนั้นแล้วส่งผลไปที่ home channel ของคุณ</p>
+  <div class="callout">
+    <span class="label">กฎเหล็กของ cron — สำคัญที่สุดในบทนี้</span>
+    <p>งาน cron แต่ละรอบเป็น session สด <strong>ไม่มีความจำจากแชทของเรา ไม่รู้ว่าเมื่อวานคุยอะไรกัน</strong> — ดังนั้น prompt ของงานต้อง "จบในตัวเอง" (self-contained): บอกให้ครบว่าทำอะไร รูปแบบผลลัพธ์เป็นยังไง ส่งไปไหน (ความรู้ถาวรจะฝากไว้ใน skill แล้วผูกกับงานแทน — บทหน้า)</p>
+  </div>
+
+  <h2>เรื่องเวลา — กับดักที่ต้องเช็คก่อนตั้งงานจริง</h2>
+  <p>เซิร์ฟเวอร์ส่วนใหญ่ตั้งนาฬิกาเป็น <strong>UTC</strong> (ช้ากว่าไทย 7 ชั่วโมง) ถ้าตั้งงาน "07:00" โดยไม่เช็ค อาจได้คำคมตอนบ่ายสอง! เช็คก่อนด้วยคำสั่งนี้ (ใน container):</p>
+  <pre><code>date</code></pre>
+  <p>ถ้าเห็น <code>UTC</code> และเวลาไม่ตรงกับนาฬิกาคุณ → เวลาไทย 07:00 = เวลา UTC 00:00 (ลบ 7 ชั่วโมง) หรือระบุในคำสั่งสร้างงานให้ชัดไปเลยว่า "เวลาประเทศไทย"</p>
+
+  <h2>ภารกิจที่ 1 — งานทดลอง 2 นาที</h2>
+  <p>วิธีที่เร็วสุดคือสั่งในแชท Telegram กับบอทเลย (ภาษาคนธรรมดา):</p>
+  <pre><code>ตั้งงานให้หน่อย: อีก 2 นาทีจากนี้ ส่งข้อความว่า "⏰ ระบบ cron ทำงานแล้ว!" มาที่แชทนี้</code></pre>
+  <p>แล้วรอดู — ถ้าข้อความเด้งมาตามเวลา แปลว่านาฬิกาปลุกของระบบเพจคุณใช้งานได้จริงแล้ว 🎉</p>
+
+  <h2>ภารกิจที่ 2 — งานประจำวันตัวแรก</h2>
+  <pre><code>ตั้งงานประจำ: ทุกวันเวลา 07:00 เวลาประเทศไทย หาคำคมสร้างกำลังใจภาษาไทย 1 อัน ส่งมาที่แชทนี้ พร้อมคำว่า "☀️ อรุณสวัสดิ์"</code></pre>
+  <p>จากนั้นตรวจรายการงานทั้งหมด (ใน CLI หรือพิมพ์ถามในแชทก็ได้):</p>
+  <pre><code>hermes cron list</code></pre>
+  <p>คำสั่งจัดการงานที่ควรรู้ (มีในตารางคำสั่งด้วย): <code>hermes cron run &lt;id&gt;</code> = สั่งรันเดี๋ยวนี้ไม่ต้องรอเวลา (ไว้ทดสอบ) · <code>pause / resume</code> = พัก/ปลุกงาน · <code>remove</code> = ลบทิ้ง</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 07 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. ทำไม prompt ของงาน cron ต้อง "จบในตัวเอง"?</div>
+      <button class="quiz-opt">เพราะระบบจำกัดความยาวของข้อความ</button>
+      <button class="quiz-opt">เพราะแต่ละรอบเป็น session สดไร้ความจำ</button>
+      <button class="quiz-opt">เพราะช่วยประหยัดค่าไฟของเซิร์ฟเวอร์</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. ก่อนตั้งงานตามเวลา ต้องเช็คอะไรของเครื่องก่อน?</div>
+      <button class="quiz-opt">timezone ของเครื่อง (มักเป็น UTC)</button>
+      <button class="quiz-opt">ความเร็วเน็ตของตัวเซิร์ฟเวอร์</button>
+      <button class="quiz-opt">จำนวนพื้นที่ดิสก์ที่ยังเหลืออยู่</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">3. อยากทดสอบงาน cron ทันทีโดยไม่รอเวลา ใช้คำสั่งไหน?</div>
+      <button class="quiz-opt">คำสั่ง hermes cron pause ตามด้วย id</button>
+      <button class="quiz-opt">คำสั่ง hermes cron list ตามด้วย id</button>
+      <button class="quiz-opt">คำสั่ง hermes cron run ตามด้วย id</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <p>📖 แหล่งหลักของบทนี้: <a href="https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron">Automate Anything with Cron — Hermes Docs</a></p>
+
+  <h2 style="border-top:3px double var(--line); padding-top:2rem;">บทเสริม 7.5 — โมเดลหลัก &amp; Fallback: ดูยังไง ตั้งยังไง</h2>
+  <p>ระบบเรามี "สมอง" ได้หลายตัวเรียงเป็นแถว: <strong>โมเดลหลัก</strong>ทำงานปกติ และ <strong>fallback chain</strong> คือแถวตัวสำรองที่รับไม้ต่ออัตโนมัติเมื่อตัวหน้าล้ม (error, rate limit 429, เครดิตหมด) — ลำดับการทำงาน: หลัก → สำรองตัวที่ 1 → ตัวที่ 2 → ... จนกว่าจะมีตัวที่ตอบได้</p>
+
+  <h3>การดู — ตอนนี้ใช้ตัวไหนอยู่?</h3>
+  <table>
+    <tr><th>อยากรู้อะไร</th><th>ทำยังไง</th></tr>
+    <tr><td>โมเดลหลักปัจจุบัน</td><td><code>hermes model</code> — หน้าเลือกโมเดลจะชี้ตัวที่ active อยู่ (กด ESC ออกได้ถ้าแค่มาดู)</td></tr>
+    <tr><td>แถว fallback ปัจจุบัน</td><td><code>hermes fallback</code> — แสดง chain ที่ตั้งไว้</td></tr>
+    <tr><td>ดูทั้งหมดจากไฟล์จริง</td><td><code>cat ~/.hermes/config.yaml</code> — หมวด <code>model:</code> คือความจริงสุดท้ายของระบบ (บนเครื่องเรา ไฟล์จริงคือ <code>/opt/data/config.yaml</code> — ยืนยันจาก ls แล้ว อยู่บ้านเดียวกับ .env)</td></tr>
+    <tr><td>ถามในแชทเฉยๆ</td><td>"ตอนนี้ใช้โมเดลหลักตัวไหน fallback คืออะไร" — Hermes ตอบได้ (มันอ่าน config ตัวเอง)</td></tr>
+  </table>
+
+  <h3>การตั้งค่า — สามระดับที่ต้องแยกให้ออก</h3>
+  <table>
+    <tr><th>ระดับ</th><th>วิธีตั้ง</th><th>มีผลกับใคร</th></tr>
+    <tr><td><strong>ครั้งเดียว</strong></td><td>flag ตอนเรียก: <code>hermes -m "stealth/ox-alpha" -c "..."</code></td><td>เฉพาะคำสั่งนั้นครั้งนั้น</td></tr>
+    <tr><td><strong>เฉพาะ session</strong></td><td>คำสั่งในแชท เช่น <code>/model</code>, <code>/reasoning max</code> — ขึ้นป้าย <em>"(session only)"</em></td><td>บทสนทนานั้น — ⚠️ <strong>แชท Telegram เป็น session เดียวยาวไม่มีวันจบ ค่านี้จึงติดถาวรโดยพฤตินัย</strong> (บทเรียนราคา $5 — ดูใน 🛠 playbook) และไม่ส่งผลถึงงาน cron ที่เป็น session สดเสมอ</td></tr>
+    <tr><td><strong>ถาวร (global)</strong></td><td><code>hermes model</code> เลือกแล้วกด Switch (เขียนลง config.yaml) · fallback: <code>hermes fallback add</code> หรือสั่งในแชทแบบที่คุณทำ</td><td>ทุก session รวมถึงงาน cron</td></tr>
+  </table>
+
+  <h3>กติกาที่ระบบบังคับ (คุณเจอมาแล้วกับตัว)</h3>
+  <ol class="steps">
+    <li><strong>fallback ห้ามซ้ำกับโมเดลหลัก</strong> — ตัวสำรองที่เหมือนตัวจริงไม่ใช่แผนสำรอง ระบบจะปฏิเสธเลย</li>
+    <li><strong>งาน cron เดินตาม global</strong> — และถ้าอยากให้ฝูงงาน cron ใช้โมเดลต่างจากแชท ตั้งแยกได้ที่ <code>cron.model</code> + <code>cron.model_provider</code> ใน config.yaml (ข้อความ error 429 ของคุณแนะนำทางนี้ไว้เอง)</li>
+    <li><strong>fallback ที่ดีควรข้ามค่าย/ข้ามโควตา</strong> — ของคุณตอนนี้: หลักเดินผ่าน Nous สำรองเดินผ่าน OpenRouter = ล่มไม่พร้อมกัน ยิ่งอนาคตเพิ่ม Google AI Studio เป็นชั้นสามยิ่งแน่น เพราะสามโควตาจากสามค่าย</li>
+  </ol>
+
+  <h3>จัดการ fallback chain ครบวงจร: ดู · เพิ่ม · ลบ · ล้าง</h3>
+  <table>
+    <tr><th>ต้องการ</th><th>คำสั่ง (<a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/fallback-providers">เอกสารทางการ</a>)</th></tr>
+    <tr><td>เปิดตัวจัดการแบบโต้ตอบ (ทำได้ทุกอย่างในที่เดียว)</td><td><code>hermes fallback</code></td></tr>
+    <tr><td>ดูแถวปัจจุบัน</td><td><code>hermes fallback list</code> (ย่อ: <code>ls</code>)</td></tr>
+    <tr><td>เพิ่มตัวสำรองต่อท้ายแถว</td><td><code>hermes fallback add</code> — เข้าหน้าเลือก provider+โมเดล (หน้าเดียวกับ hermes model)</td></tr>
+    <tr><td>ลบตัวใดตัวหนึ่งออก</td><td><code>hermes fallback remove</code> (ย่อ: <code>rm</code>)</td></tr>
+    <tr><td>ล้างทั้งแถว</td><td><code>hermes fallback clear</code></td></tr>
+    <tr><td>สลับลำดับ / แก้ละเอียด</td><td>แก้ตรงในไฟล์: หมวด <code>fallback_providers:</code> ใน config.yaml — แต่ละตัวมีคู่ <code>provider:</code> + <code>model:</code> เรียงบน→ล่างตามลำดับรับไม้ (สลับบรรทัด = สลับลำดับ) — หรือสั่งในแชทแบบที่เคยทำก็ได้</td></tr>
+  </table>
+  <pre><code># หน้าตาใน config.yaml
+fallback_providers:
+  - provider: openrouter
+    model: poolside/laguna-s-2.1:free    # ตัวรับไม้คนแรก
+  - provider: nous
+    model: upstage/solar-pro4:free       # ตัวรับไม้คนที่สอง</code></pre>
+  <p><strong>ตัวอย่างการลบ (ลำดับเต็ม — ดูก่อน ลบ ตรวจหลัง):</strong></p>
+  <pre><code>hermes fallback list      # ① ดูแถวก่อน: 1. poolside  2. solar-pro4
+hermes fallback remove    # ② เมนูโต้ตอบเด้งให้เลือกตัวที่จะลบ → เลือก → ยืนยัน
+hermes fallback list      # ③ ตรวจงาน: ต้องเหลือตามที่ตั้งใจ</code></pre>
+  <p>หรือทางแชทประโยคเดียว: <em>"ลบ upstage/solar-pro4:free ออกจาก fallback chain แล้วโชว์แถวที่เหลือยืนยัน"</em> — กติกาเดิมเสมอ: <strong>ดูก่อนลบ และตรวจหลังลบ</strong> (บางเวอร์ชันรับชื่อเป็น argument ได้เลย — เช็คด้วย <code>hermes fallback remove -h</code>)</p>
+  <div class="callout info">
+    <span class="label">พฤติกรรมที่ควรรู้ (จากเอกสาร + สนามจริง)</span>
+    <p>① fallback ทำงาน<strong>รายเทิร์น</strong>: ข้อความใหม่ทุกครั้งลองตัวหลักก่อนเสมอ ตัวหลักฟื้นเมื่อไหร่ระบบกลับไปใช้เอง ไม่ต้องสลับมือ ② ในหนึ่งเทิร์น fallback เด้งได้ครั้งเดียว ③ เงื่อนไขที่ trigger: 429 / 5xx (หลัง retry จนหมด), 401 / 403 / 404 (ทันที), คำตอบเสียรูปซ้ำๆ — และย้ำจากที่เราพิสูจน์เอง: <strong>timeout ไม่อยู่ในรายการ</strong> จึงต้องให้ cron ใช้โมเดลเสถียรตั้งแต่ต้น</p>
+  </div>
+
+  <h3>ลำดับการเลือกโมเดลของงาน cron (พิสูจน์แล้วในสนามจริง)</h3>
+  <pre><code>1. cron.model ใน config.yaml     ← เครื่องเราล็อกไว้: poolside/laguna-s-2.1:free
+2. ถ้าไม่ได้ตั้ง → ค่า global
+3. ล้มระหว่างทาง → ไล่ fallback chain (global)
+✗ ผ้าคลุมจากแชท (/model ใน Telegram) — cron ไม่เห็นและไม่ใช้เด็ดขาด</code></pre>
+  <p>เพราะงาน cron ทุกรอบคือ session เกิดใหม่สด (กฎเหล็กบท 07) มันจึงไม่รู้จักแชทของเรา ไม่เห็นประวัติ และไม่เห็น override ที่แชทตั้งไว้ — ผลคือ<strong>เกราะสองชั้น</strong>: ในแชทจะเผลอคลุมโมเดลอะไรไว้ก็ตาม งานโพสต์อัตโนมัติของเพจไม่สะเทือน · กลับกัน ถ้าจะแตะ <code>cron.model</code> หรือ fallback chain (สองจุดเดียวที่กระทบ cron ได้ — แก้ผ่าน CLI/config เท่านั้น) ให้คิดถึงงานอัตโนมัติเสมอ</p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <defs><marker id="ml" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#555"/></marker></defs>
+      <rect x="220" y="15" width="200" height="48" rx="10" fill="#f4f1ea" stroke="#1a1a1a" stroke-width="2"/>
+      <text x="320" y="35" font-size="14" font-weight="bold" fill="#1a1a1a" text-anchor="middle">⚙️ global (config.yaml)</text>
+      <text x="320" y="54" font-size="11" fill="#555" text-anchor="middle">ค่ากลางของทั้งระบบ</text>
+      <rect x="40" y="120" width="220" height="70" rx="10" fill="#ecfdf3" stroke="#15803d" stroke-width="2"/>
+      <text x="150" y="143" font-size="14" font-weight="bold" fill="#15803d" text-anchor="middle">💬 แชท Telegram</text>
+      <text x="150" y="163" font-size="11" fill="#555" text-anchor="middle">session เดียว ยาวไม่มีวันจบ</text>
+      <rect x="60" y="168" width="180" height="18" rx="9" fill="#fef2f2" stroke="#b91c1c"/>
+      <text x="150" y="181" font-size="10.5" fill="#b91c1c" text-anchor="middle">ผ้าคลุม /model — ติดค้างจนกว่าจะเปลี่ยน!</text>
+      <rect x="380" y="120" width="220" height="70" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="490" y="143" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">⏰ งาน cron</text>
+      <text x="490" y="163" font-size="11" fill="#555" text-anchor="middle">session เกิดใหม่สดทุกรอบ</text>
+      <rect x="400" y="168" width="180" height="18" rx="9" fill="#fff" stroke="#b45309"/>
+      <text x="490" y="181" font-size="10.5" fill="#b45309" text-anchor="middle">cron.model ล็อกไว้ = poolside:free</text>
+      <line x1="265" y1="63" x2="175" y2="118" stroke="#555" stroke-width="2" marker-end="url(#ml)"/>
+      <line x1="375" y1="63" x2="465" y2="118" stroke="#555" stroke-width="2" marker-end="url(#ml)"/>
+      <line x1="262" y1="150" x2="378" y2="150" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6,5"/>
+      <text x="320" y="142" font-size="16" font-weight="bold" fill="#b91c1c" text-anchor="middle">✗</text>
+      <text x="320" y="205" font-size="11" fill="#b91c1c" text-anchor="middle">ผ้าคลุมของแชทข้ามไปหา cron ไม่ได้เด็ดขาด — เกราะสองชั้น (พิสูจน์แล้วจากเคส $5)</text>
+    </svg>
+    <figcaption>สามชั้นการตั้งค่าโมเดล: global แจกให้ทุกคน · แชทคลุมทับของตัวเองได้ · cron มีล็อกของตัวเองและไม่ฟังแชท</figcaption>
+  </figure>
+  <div class="callout good">
+    <span class="label">หลักฐานจากเหตุการณ์จริง (2026-08-26)</span>
+    <p>ช่วงที่แชท Telegram ติดผ้าคลุมโมเดลเสียเงิน (GPT-5.6 Luna — เคส $5 ใน playbook) งาน cron ตอน 05:53 UTC ยังใช้ poolside:free ตามทางของมันเอง แถมตอนโดน HTTP 429 ก็<strong>เด้งไป fallback solar-pro4:free เองอัตโนมัติ</strong> — ทั้งการแยกชั้นและตาข่าย fallback ทำงานจริงโดยไม่มีใครสั่ง คำคมเช้าส่งตรงเวลาด้วยโมเดลฟรีตลอดเหตุการณ์</p>
+  </div>
+
+  <div class="callout">
+    <span class="label">ค่าปัจจุบันของเครื่องคุณ (2026-08-25)</span>
+    <p>หลัก: <code>stealth/ox-alpha</code> (ผ่าน Nous) → สำรอง: <code>poolside/laguna-s-2.1:free</code> (ผ่าน OpenRouter) มีผล global รวม cron — ตั้งจากเหตุการณ์จริงตอนเจอ HTTP 429 · จุดเตือน: ทั้งคู่เป็นโมเดลทดลอง/ฟรี ตัว stealth หายได้ทุกเมื่อตอนแล็บเปิดตัวจริง — ถ้าวันไหนบอทตอบแปลกหรือเงียบ ให้เปิด <code>hermes model</code> เช็คเป็นอย่างแรก</p>
+  </div>
+
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทเสริม 7.5 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. ตั้งค่าในแชทแล้วเห็น "(session only)" ถ้าอยากให้ถาวรต้องทำยังไง?</div>
+      <button class="quiz-opt">พิมพ์คำสั่งเดิมซ้ำสามครั้งติดกัน</button>
+      <button class="quiz-opt">เติม --global ต่อท้ายคำสั่งนั้น</button>
+      <button class="quiz-opt">รีสตาร์ทเครื่อง VPS หนึ่งรอบก่อน</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. "ความจริงสุดท้าย" ของการตั้งค่าโมเดลทั้งหมดอยู่ที่ไหน?</div>
+      <button class="quiz-opt">ในประวัติแชท Telegram ล่าสุด</button>
+      <button class="quiz-opt">ในหน้าเว็บของผู้ให้บริการโมเดล</button>
+      <button class="quiz-opt">ในไฟล์ ~/.hermes/config.yaml</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. ทำไม fallback ควรอยู่คนละค่าย/คนละโควตากับโมเดลหลัก?</div>
+      <button class="quiz-opt">จะได้ไม่ล่มพร้อมกันตอนค่ายใดค่ายหนึ่งมีปัญหา</button>
+      <button class="quiz-opt">เพราะระบบห้ามใช้ค่ายเดียวกันสองตัวเสมอ</button>
+      <button class="quiz-opt">เพราะโมเดลค่ายเดียวกันตอบเหมือนกันหมด</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 07</span>
+    <p>รายงาน: ข้อความงานทดลอง 2 นาทีเด้งเข้า Telegram หรือไม่ + ผล <code>hermes cron list</code> + <code>date</code> ของเครื่องเป็น timezone อะไร</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 08 ─────────── -->
+<section class="lesson" id="lesson-08">
+  <p class="lesson-kicker">บทที่ 08 · Phase 3 — ใช้ Hermes ให้เป็น</p>
+  <div class="minimap" data-active="skills" data-note="บทนี้: เขียนคู่มือให้พนักงานจำงานได้ถาวร"></div>
+  <h1>Skills &amp; Memory — สอนงานพนักงานให้จำได้ตลอดไป</h1>
+  <p class="lesson-lede">~25 นาที — จบแล้วคุณจะ "เขียนคู่มืองาน" ให้ Hermes ได้ ซึ่งเป็นวิธีแก้ข้อจำกัดของ cron ที่ไร้ความจำ และเป็นหัวใจของคุณภาพคำคมในเฟสถัดไป</p>
+
+  <h2>Skill คืออะไร (<a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/skills">เอกสารทางการ</a>)</h2>
+  <p><strong>Skill = คู่มืองานหนึ่งเรื่อง</strong> เขียนเป็นไฟล์ <code>SKILL.md</code> เก็บไว้ที่ <code>/opt/data/skills/</code> บนเครื่องเรา (ค่ามาตรฐานตามเอกสารคือ <code>~/.hermes/skills/</code> แต่ตัวติดตั้งของ Hostinger ย้ายมาที่ /opt/data) — Hermes จะหยิบอ่านเฉพาะตอนงานนั้นเกี่ยวข้อง (ไม่เปลืองสมอง) และที่สำคัญที่สุดสำหรับเรา: <strong>งาน cron ผูก skill ได้</strong> — session สดที่ไร้ความจำจะ "อ่านคู่มือ" ก่อนเริ่มงานทุกครั้ง นี่คือคำตอบของกฎเหล็กบทที่แล้ว</p>
+  <p>โครงของ SKILL.md เรียบง่ายมาก: หัวไฟล์บอกชื่อ+คำอธิบาย แล้วตามด้วยเนื้อหา: <em>ใช้เมื่อไหร่ / ขั้นตอน / ข้อควรระวัง / วิธีตรวจงาน</em></p>
+
+  <h2>สามวิธีได้ skill มา</h2>
+  <table>
+    <tr><th>วิธี</th><th>ใช้ตอนไหน</th></tr>
+    <tr><td><code>/learn ...</code> ในแชท</td><td>สอนจากประสบการณ์/ลิงก์ เช่น <code>/learn วิธีที่เราเพิ่งแก้ปัญหา gateway เมื่อกี้</code> — Hermes สรุปเป็น skill ให้เอง</td></tr>
+    <tr><td>สั่งให้มันเขียน</td><td>บอกความต้องการในแชท มันร่าง SKILL.md ให้ (เราจะใช้วิธีนี้เป็นหลัก)</td></tr>
+    <tr><td><code>hermes skills browse / install</code></td><td>หยิบ skill สำเร็จรูปจากคลังกลาง</td></tr>
+  </table>
+  <div class="callout info">
+    <span class="label">Hermes สอนตัวเองด้วย — แต่มีประตูอนุมัติ</span>
+    <p>เวลามันเจอวิธีทำงานใหม่ๆ มันจะเสนอสร้าง/แก้ skill เอง (นี่คือความหมายของ "self-improving agent") — การแก้ไขจะรอคุณอนุมัติ: <code>/skills pending</code> ดูรายการ · <code>/skills diff &lt;id&gt;</code> ดูว่าแก้อะไร · <code>/skills approve &lt;id&gt;</code> อนุมัติ — เหมือนหัวหน้าเซ็นรับรองคู่มือฉบับใหม่ก่อนใช้จริง</p>
+  </div>
+
+  <h2>ภารกิจ — สร้าง skill แรก: quote-style</h2>
+  <p>พิมพ์ในแชท Telegram (ปรับตามใจได้ นี่คือจุดเริ่มของสไตล์เพจคุณ):</p>
+  <pre><code>ช่วยสร้าง skill ชื่อ quote-style เนื้อหา: วิธีเขียนคำคมของเพจเรา
+- ภาษาไทยธรรมชาติ อ่านแล้วเหมือนคนไทยพูด ห้ามสำนวนแปลแข็งๆ
+- ยาว 1-2 ประโยค จบในตัว อ่านเข้าใจใน 3 วินาที
+- โทน: ให้กำลังใจแบบจริงใจ ไม่สั่งสอน ไม่ดราม่าเกิน
+- ตัวอย่างที่ดี: "ความสำเร็จไม่อยู่ที่จุดหยุด แต่อยู่ที่การเริ่มต้นใหม่ทุกวัน"
+- ห้าม: คำหยาบ การเมือง ศาสนา ยี่ห้อสินค้า</code></pre>
+  <p>สังเกตตัวอย่างที่ดีนั่น — คือคำคมที่<strong>คุณวงสีเหลืองเลือกเอง</strong>ตอนบท 05 นั่นแหละครับ 😉 เสร็จแล้วตรวจว่า skill เกิดจริง:</p>
+  <pre><code>hermes skills</code></pre>
+  <p>แล้ว<strong>ทดสอบพลังของมัน</strong>: สั่ง "หาคำคม 3 อันโดยใช้ skill quote-style" เทียบกับผลตอนบท 05 ที่ไม่มีคู่มือ — คุณควรเห็นความต่างชัดเจน</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 08 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">1. skill แก้ปัญหาอะไรของงาน cron?</div>
+      <button class="quiz-opt">ให้ session สดมีคู่มือความรู้ติดตัวไปด้วย</button>
+      <button class="quiz-opt">ทำให้งานรันเร็วขึ้นกว่าเดิมหลายเท่าตัว</button>
+      <button class="quiz-opt">ลดค่าใช้จ่าย token ลงจนเกือบเป็นศูนย์</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. ไฟล์หลักของทุก skill ชื่อว่าอะไร?</div>
+      <button class="quiz-opt">ไฟล์ที่ชื่อว่า config.yaml</button>
+      <button class="quiz-opt">ไฟล์ที่ชื่อว่า README.md</button>
+      <button class="quiz-opt">ไฟล์ที่ชื่อว่า SKILL.md</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">3. เวลา Hermes เสนอแก้ skill เอง เราควบคุมได้ด้วยอะไร?</div>
+      <button class="quiz-opt">มันแก้ไม่ได้เลยต้องเขียนเองเท่านั้น</button>
+      <button class="quiz-opt">ระบบอนุมัติ /skills pending และ approve</button>
+      <button class="quiz-opt">ต้องปิด gateway ก่อนทุกครั้งที่มันแก้</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <p>📖 แหล่งหลักของบทนี้: <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/skills">Skills — Hermes Agent Docs</a></p>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 08 — และจบ Phase 3 🏆</span>
+    <p>รายงาน: คำคม 3 อันแบบใช้ skill เทียบกับแบบไม่ใช้ ต่างกันยังไง — ต่อจากนี้คือของจริงทั้งหมด: <strong>Phase 4 ประกอบระบบเพจ</strong></p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 09 ─────────── -->
+<section class="lesson" id="lesson-09">
+  <p class="lesson-kicker">บทที่ 09 · Phase 4 — ★ ระบบเพจคำคม</p>
+  <div class="minimap" data-active="skills,queue" data-note="บทนี้: วางพิมพ์เขียวระบบ + สร้างคิวโพสต์"></div>
+  <h1>ออกแบบระบบ: ใครทำอะไร เก็บที่ไหน สไตล์แบบไหน</h1>
+  <p class="lesson-lede">~30 นาที — บทนี้ไม่ค่อยแตะ terminal แต่สำคัญที่สุดใน Phase 4: ตัดสินใจให้ครบก่อนสร้าง จะได้ไม่รื้อทีหลัง</p>
+
+  <h2>พิมพ์เขียวระบบ (ตัดสินใจแล้ว — อ่านให้เข้าใจว่าทำไม)</h2>
+  <table>
+    <tr><th>ชิ้น</th><th>ตัดสินใจ</th><th>เหตุผล</th></tr>
+    <tr><td>งานเช้า (cron 07:00 ไทย)</td><td>เสนอ 6 ข้อ: คำคมออริจินัล 3 + คำสอนคนดัง 3 (มีชื่อผู้กล่าว + ป้ายความมั่นใจแหล่งที่มา)</td><td>6 อันพอให้เลือกโดยไม่ล้า — คนดังต้อง Google เช็คก่อนเลือกเสมอ กัน AI กุคำพูด</td></tr>
+    <tr><td>การเลือก (คุณ)</td><td>ตอบแชทสั้นๆ เช่น "เลือก 2 กับ 5"</td><td>ใช้แชทปกติ ไม่ต้องสร้างระบบปุ่มให้ซับซ้อน</td></tr>
+    <tr><td>คิวโพสต์</td><td>ไฟล์ <code>~/.hermes/page/queue.jsonl</code> — บรรทัดละ 1 คำคม พร้อมสถานะ</td><td>บนเครื่องเรา ~ คือ <code>/opt/data/home</code> ซึ่งอยู่บน volume (พิสูจน์แล้วจากไฟล์จริง) — path นี้ต้องตรงกับที่เขียนใน skill page-queue เสมอ ห้ามมีสองคิว</td></tr>
+    <tr><td>งานโพสต์ (cron 08:00 / 19:00 ไทย)</td><td>หยิบคำคม ready ตัวแรก → ทำรูป → โพสต์เพจ → เปลี่ยนสถานะเป็น posted → รายงานเข้า Telegram</td><td>สองงานแยกกัน ใช้คู่มือเดียวกัน</td></tr>
+    <tr><td>ความรู้ทั้งหมด</td><td>เก็บเป็น skills: quote-style (มีแล้ว), page-queue, quote-image, post-facebook</td><td>cron แต่ละรอบไร้ความจำ — คู่มือคือความจำถาวรของระบบ</td></tr>
+  </table>
+
+  <p>รูปแบบคิว 1 บรรทัด (jsonl = JSON บรรทัดละก้อน):</p>
+  <pre><code>{"text": "ความสำเร็จไม่อยู่ที่จุดหยุด แต่อยู่ที่การเริ่มต้นใหม่ทุกวัน", "status": "ready", "added": "2026-08-25"}
+{"text": "อุปสรรคคือสิ่งที่คุณเห็น เมื่อละสายตาจากเป้าหมาย", "author": "เฮนรี ฟอร์ด", "status": "ready", "added": "2026-08-25"}</code></pre>
+  <p>บรรทัดที่มี <code>author</code> = คำสอนคนดัง (รูปจะวาด "— ชื่อผู้กล่าว" ให้) · ไม่มี = คำคมออริจินัลของเพจ</p>
+  <p>สถานะมีแค่ 2 ค่า: <code>ready</code> (รอโพสต์) → <code>posted</code> (โพสต์แล้ว + วันที่) — เรียบง่ายที่สุดที่ยังทำงานได้ครบ</p>
+
+  <h2>ภารกิจที่ 1 — นิยามสไตล์เพจให้จบ</h2>
+  <p>ตอบ 5 ข้อนี้ (ในใจหรือจดใส่กระดาษ) แล้วเอาคำตอบไป<strong>อัปเดต skill quote-style</strong> ผ่านแชทกับ Hermes:</p>
+  <ol class="steps">
+    <li><strong>ชื่อเพจ</strong> ที่จะใช้จริง (ต้องใช้ตอนสร้างเพจบท 12 ด้วย)</li>
+    <li><strong>คนอ่านคือใคร</strong> — วัยไหน กำลังเจออะไรในชีวิต (เช่น วัยทำงานที่เหนื่อยกับงาน)</li>
+    <li><strong>ธีมคำคม 3–4 ธีม</strong> ที่เพจจะวนเวียน (เช่น ความพยายาม / การเริ่มใหม่ / ใจเย็นกับตัวเอง)</li>
+    <li><strong>ตัวอย่างที่ใช่ 2–3 อัน</strong> (จากที่ Hermes เคยเสนอก็ได้) และ<strong>ตัวอย่างที่ไม่ใช่</strong> พร้อมเหตุผลสั้นๆ</li>
+    <li><strong>ลายเซ็นเพจ</strong> — อยากให้ทุกโพสต์ลงท้ายด้วยอะไรไหม (เช่น ชื่อเพจ, #แฮชแท็กประจำ) </li>
+  </ol>
+
+  <h2>ภารกิจที่ 2 — สร้าง skill จัดการคิว</h2>
+  <p>สั่งในแชท:</p>
+  <pre><code>สร้าง skill ชื่อ page-queue เนื้อหา: วิธีจัดการคิวโพสต์ของเพจ
+- คิวอยู่ที่ไฟล์ ~/.hermes/page/queue.jsonl (ถ้ายังไม่มีโฟลเดอร์/ไฟล์ ให้สร้าง)
+- 1 บรรทัด = 1 คำคม รูปแบบ: {"text": "...", "status": "ready", "added": "YYYY-MM-DD"}
+- เมื่อผู้ใช้พิมพ์ "เลือก" ตามด้วยหมายเลข: เอาคำคมหมายเลขนั้นจากชุดล่าสุดที่เสนอ เพิ่มเข้าคิวสถานะ ready แล้วตอบยืนยันจำนวนคิวคงเหลือ
+- เมื่อโพสต์แล้ว: แก้ status เป็น posted และเพิ่ม "posted": "YYYY-MM-DD HH:MM"
+- ห้ามลบบรรทัดออกจากไฟล์ ห้ามแก้ข้อความคำคมเอง</code></pre>
+  <p>ตรวจงาน: สั่ง "ทดสอบ: เพิ่มคำคม 'ทดสอบระบบคิว' เข้าคิว แล้วโชว์เนื้อไฟล์ queue.jsonl ทั้งหมด" — เห็นบรรทัด JSON โผล่มา = ผ่าน</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 09 — 2 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. ทำไมคิวโพสต์ต้องอยู่ใน ~/.hermes (= /opt/data/home/.hermes บนเครื่องเรา)?</div>
+      <button class="quiz-opt">เพราะอ่านเขียนได้เร็วกว่าที่อื่นในเครื่อง</button>
+      <button class="quiz-opt">เพราะเป็น volume — อัปเดต container แล้วไม่หาย</button>
+      <button class="quiz-opt">เพราะ Telegram มองเห็นเฉพาะโฟลเดอร์นี้</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. ความจำถาวรของระบบ (ที่งาน cron ทุกรอบพึ่งพา) เก็บอยู่ในรูปอะไร?</div>
+      <button class="quiz-opt">คู่มือ skills ที่ผูกเข้ากับแต่ละงาน</button>
+      <button class="quiz-opt">ประวัติแชทเก่าทั้งหมดใน Telegram</button>
+      <button class="quiz-opt">ตัวโมเดล LLM จำทุกอย่างไว้ให้เอง</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 09</span>
+    <p>รายงาน: ชื่อเพจ + ธีม 3-4 ธีมที่เลือก + ผลทดสอบไฟล์คิว (บรรทัด JSON ที่ได้) — สามคำตอบนี้คือฐานของทุกบทที่เหลือ</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 10 ─────────── -->
+<section class="lesson" id="lesson-10">
+  <p class="lesson-kicker">บทที่ 10 · Phase 4 — ★ ระบบเพจคำคม</p>
+  <div class="minimap" data-active="morning,you,queue" data-note="บทนี้: งานเช้าเสนอคำคม → คุณเลือก → เข้าคิว"></div>
+  <h1>งานเช้า: คำคมมาเสิร์ฟ — คุณเลือก — เข้าคิวเอง</h1>
+  <p class="lesson-lede">~30 นาที — จบแล้วครึ่งแรกของ pipeline จะหมุนเองทุกเช้า: ตื่นมาก็เจอคำคม 6 อันรอให้เลือกใน Telegram</p>
+
+  <h2>ประกอบร่าง: cron + skills สองตัวที่มีแล้ว</h2>
+  <p>สั่งในแชท Telegram (ประโยคเดียวยาวหน่อย — นี่คือ prompt แบบ self-contained ของจริง):</p>
+  <pre><code>ตั้งงานประจำชื่อ morning-quotes: ทุกวันเวลา 07:00 เวลาประเทศไทย
+ใช้ skill quote-style และ page-queue
+หาคำคมใหม่ 6 อันตามสไตล์เพจ (ห้ามซ้ำกับที่อยู่ใน queue.jsonl)
+ส่งมาที่แชทนี้เป็นรายการหมายเลข 1-6
+ปิดท้ายว่า: "ตอบ 'เลือก' ตามด้วยหมายเลขที่ต้องการได้เลยครับ"</code></pre>
+  <p>แล้ว<strong>อย่ารอถึงพรุ่งเช้า</strong> — ทดสอบทันที:</p>
+  <pre><code>hermes cron list        # หา id ของ morning-quotes
+hermes cron run &lt;id&gt;    # สั่งรันเดี๋ยวนี้</code></pre>
+
+  <h2>ครึ่งหลัง: การเลือกของคุณ</h2>
+  <p>พอคำคม 6 อันเด้งเข้า Telegram ให้ตอบตามธรรมชาติ:</p>
+  <pre><code>เลือก 2 กับ 5</code></pre>
+  <p>Hermes (ตัวแชทปกติ ที่มีความจำ) จะอ่าน skill page-queue แล้วบันทึกให้ ตรวจสอบด้วยตาจริงเสมอในช่วงแรก:</p>
+  <pre><code>cat ~/.hermes/page/queue.jsonl</code></pre>
+
+  <div class="callout info">
+    <span class="label">บทเรียนจากสนามจริง: cron ต้องใช้ path เต็มเสมอ</span>
+    <p>ตอนซ้อมรอบแรก session ของ cron หา queue.jsonl ไม่เจอ ทั้งที่ session แชทเขียนไฟล์ได้ปกติ — เพราะสองสภาพแวดล้อมตีความ <code>~</code> ต่างกันได้ กฎถาวร: <strong>ทุก path ใน skill ที่งาน cron ใช้ ต้องเป็น path เต็ม</strong> เช่น <code>/opt/data/home/.hermes/page/queue.jsonl</code> ไม่ใช่ <code>~/.hermes/page/queue.jsonl</code> (กฎนี้ใช้กับ skill quote-image และ post-facebook ในบทถัดๆ ไปด้วย)</p>
+  </div>
+
+  <div class="callout">
+    <span class="label">จุดทดสอบจริง — ปรับจนนิ่ง</span>
+    <p>ช่วงสัปดาห์แรกพฤติกรรมอาจยังไม่เป๊ะ 100%: บางทีมันลืมกันคำคมซ้ำ บางทีตอบเยิ่นเย้อ — <strong>นี่ปกติ</strong> วิธีแก้คือแก้ที่คู่มือ ไม่ใช่บ่นในแชท: สั่ง "อัปเดต skill page-queue เพิ่มกติกาว่า..." ทุกครั้งที่เจอพฤติกรรมไม่พอใจ คู่มือจะคมขึ้นเรื่อยๆ จนระบบนิ่ง (แล้วเอาปัญหาที่เจอมาเล่าให้ครูฟังด้วย — ช่วยกันแก้ได้)</p>
+  </div>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 10 — 2 ข้อ</div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">1. ตอนคุณตอบ "เลือก 2 กับ 5" ใครเป็นคนบันทึกเข้าคิว?</div>
+      <button class="quiz-opt">งาน cron ที่ชื่อ morning-quotes ทำให้</button>
+      <button class="quiz-opt">ระบบ Telegram บันทึกให้โดยอัตโนมัติ</button>
+      <button class="quiz-opt">Hermes ตัวแชทปกติ ตาม skill page-queue</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. เจอพฤติกรรมไม่ตรงใจ (เช่น เสนอคำคมซ้ำ) วิธีแก้ที่ถูกคือ?</div>
+      <button class="quiz-opt">อัปเดตกติกาใน skill ให้ชัดขึ้น</button>
+      <button class="quiz-opt">ลบงาน cron ทิ้งแล้วสร้างใหม่ทุกวัน</button>
+      <button class="quiz-opt">เปลี่ยนโมเดล LLM ใหม่ไปเรื่อยๆ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 10</span>
+    <p>รายงาน: screenshot คำคม 6 อันใน Telegram + คุณเลือกอะไร + เนื้อไฟล์คิวหลังเลือก — <strong>ครึ่งแรกของ pipeline เสร็จแล้ว!</strong></p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 11 ─────────── -->
+<section class="lesson" id="lesson-11">
+  <p class="lesson-kicker">บทที่ 11 · Phase 4 — ★ ระบบเพจคำคม</p>
+  <div class="minimap" data-active="postjob" data-note="บทนี้: โรงงานรูป — คำคมกลายเป็นภาพ"></div>
+  <h1>โรงงานรูปคำคม — ข้อความกลายเป็นภาพพร้อมโพสต์</h1>
+  <p class="lesson-lede">~40 นาที — จบแล้วคำคมทุกอันจะกลายเป็นรูปสวยขนาดโพสต์ Facebook โดยอัตโนมัติ ไม่ต้องเปิดโปรแกรมแต่งรูปอีกเลย</p>
+
+  <h2>แนวทางที่เลือก: Python + Pillow (ฟรี ออฟไลน์ เสถียร)</h2>
+  <p>เราจะให้ Hermes <strong>เขียนสคริปต์วาดรูปให้เราเอง</strong> — สคริปต์รับข้อความคำคม แล้ววาดลงพื้นหลัง ออกมาเป็นไฟล์ PNG ขนาด 1080×1350 (สัดส่วน 4:5 ที่ Facebook ชอบ) ข้อดีของทางนี้: ไม่พึ่งบริการภายนอก ไม่มีค่าใช้จ่ายต่อรูป และผลลัพธ์เหมือนเดิมทุกครั้ง</p>
+
+  <h2>ภารกิจที่ 1 — เตรียมวัตถุดิบ (ทำครั้งเดียว)</h2>
+  <ol class="steps">
+    <li>สั่งในแชท: <pre><code>สร้างโฟลเดอร์ ~/.hermes/page/assets แล้วดาวน์โหลดฟอนต์ไทย Sarabun
+(ตัว Regular กับ Bold) จาก Google Fonts มาเก็บไว้ที่นั่น</code></pre></li>
+    <li>พื้นหลัง: เริ่มจากง่ายสุด — สั่งให้มันสร้างพื้นสีพื้น/ไล่เฉดด้วยโค้ดไปก่อน (สวยพอใช้ได้จริง) ภายหลังอยากอัปเกรด ค่อยทำภาพพื้นหลังเองจาก Canva แล้วอัปโหลดมาแทน</li>
+  </ol>
+
+  <h2>ภารกิจที่ 2 — ให้ Hermes สร้างโรงงาน</h2>
+  <pre><code>เขียนสคริปต์ Python ชื่อ ~/.hermes/page/make_image.py ใช้ Pillow
+- รับข้อความคำคมเป็น argument
+- สร้างภาพ 1080x1350 พื้นหลังไล่เฉดสีน้ำเงินเข้ม-ม่วง
+- วางคำคมกึ่งกลางภาพ ฟอนต์ Sarabun Bold ขนาดใหญ่อ่านง่าย ตัดบรรทัดอัตโนมัติ
+- ใส่ชื่อเพจ "(ชื่อเพจของคุณ)" ตัวเล็กมุมล่าง
+- บันทึกเป็น ~/.hermes/page/out/quote_วันที่เวลา.png
+ติดตั้ง Pillow ให้ด้วยถ้ายังไม่มี แล้วทดสอบกับคำคมแรกในคิว
+เสร็จแล้วส่งรูปมาให้ดูในแชทนี้</code></pre>
+  <p>รูปเด้งเข้า Telegram → ดูด้วยตา: ตัวหนังสือตกขอบไหม สระวรรณยุกต์ไทยเพี้ยนไหม ขนาดอ่านง่ายไหม — <strong>สั่งแก้เป็นรอบๆ เหมือนคุยกับกราฟิกดีไซเนอร์</strong> ("ขยับข้อความขึ้นหน่อย", "สีอ่อนไป") จนพอใจ</p>
+
+  <h2>ภารกิจที่ 3 — เก็บเป็นคู่มือถาวร</h2>
+  <pre><code>สร้าง skill ชื่อ quote-image เนื้อหา: วิธีทำรูปคำคมของเพจ
+- รันสคริปต์ ~/.hermes/page/make_image.py โดยส่งข้อความคำคมเข้าไป
+- ผลลัพธ์อยู่ที่ ~/.hermes/page/out/
+- ถ้าสคริปต์ error ให้รายงาน ห้ามแก้สคริปต์เองโดยไม่ได้รับอนุญาต</code></pre>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 11 — 2 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. ทำไมเลือกทำรูปด้วยสคริปต์ในเครื่อง แทนบริการ AI สร้างภาพ?</div>
+      <button class="quiz-opt">เพราะสวยกว่าทุกบริการที่มีในตลาด</button>
+      <button class="quiz-opt">ฟรี เสถียร และได้ผลเหมือนเดิมทุกครั้ง</button>
+      <button class="quiz-opt">เพราะ Facebook ห้ามโพสต์รูปจาก AI</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. ถ้าอยากเปลี่ยนดีไซน์รูปในอนาคต แก้ที่ไหน?</div>
+      <button class="quiz-opt">สคริปต์ make_image.py ตัวเดียวจบ</button>
+      <button class="quiz-opt">ต้องรื้อ skill ทุกตัวในระบบใหม่</button>
+      <button class="quiz-opt">ต้องติดตั้ง Hermes ใหม่ทั้งหมดเลย</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 11</span>
+    <p>รายงาน: รูปคำคมที่พอใจแล้ว 1 รูป (แคปมาอวดหน่อยครับ 😄) — เหลือด่านสุดท้าย: Facebook</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 12 ─────────── -->
+<section class="lesson" id="lesson-12">
+  <p class="lesson-kicker">บทที่ 12 · Phase 4 — ★ ระบบเพจคำคม</p>
+  <div class="minimap" data-active="fb" data-note="บทนี้: เชื่อมท่อสุดท้ายสู่เพจ Facebook"></div>
+  <h1>สร้างเพจ + กุญแจ Facebook API + โพสต์แรกผ่านโค้ด</h1>
+  <p class="lesson-lede">~45 นาที — บทที่ขั้นตอนเยอะที่สุดในคอร์ส ค่อยๆ ทำทีละขั้น จบแล้วระบบจะมีสิทธิ์โพสต์ลงเพจของคุณได้เอง</p>
+
+  <div class="callout info">
+    <span class="label">ทำบทนี้แบบจับมือกับครู</span>
+    <p>หน้าจอฝั่ง Meta เปลี่ยนบ่อยที่สุดในบรรดาทุกเครื่องมือที่เราใช้ — ทำไปคุยไป เจอหน้าจอไม่ตรงกับที่เขียน แคปมาถามได้ทันที อย่าเดา</p>
+  </div>
+
+  <h2>ขั้นที่ 1 — สร้างเพจ (5 นาที)</h2>
+  <ol class="steps">
+    <li>เข้า <a href="https://www.facebook.com/pages/create">facebook.com/pages/create</a> ด้วยบัญชีส่วนตัวของคุณ</li>
+    <li>ตั้งชื่อเพจ (ตามที่ตอบไว้บท 09) เลือกหมวดหมู่ (เช่น "ชุมชน" หรือ "เว็บไซต์ข่าวสารและสื่อ")</li>
+    <li>ใส่รูปโปรไฟล์/หน้าปกให้เรียบร้อยพอประมาณ — เพจที่ดูมีตัวตนสำคัญตอน Meta ตรวจแอป</li>
+  </ol>
+
+  <h2>ขั้นที่ 2 — สร้าง Meta App (ประตูสู่ API)</h2>
+  <ol class="steps">
+    <li>เข้า <a href="https://developers.facebook.com">developers.facebook.com</a> → ยอมรับเงื่อนไขนักพัฒนา (ใช้บัญชี Facebook เดิม)</li>
+    <li><strong>My Apps → Create App</strong> → ตั้งชื่อแอป (เช่น "QuotePage Poster") → ขั้น <strong>"กรณีการใช้งาน"</strong>: รายการแนะนำจะไม่มีของเรา — คลิก filter <strong>"การจัดการเนื้อหา"</strong> ทางซ้าย แล้วเลือก <strong>"จัดการทุกอย่างบนเพจของคุณ"</strong> (Manage everything on your Page) → ขั้น "ธุรกิจ" ข้ามได้ → ยอมรับข้อกำหนด → สร้างแอป (ยืนยันกับหน้าจอจริง 2026-08-25)</li>
+    <li>ใน Dashboard: use case จะมี permissions พื้นฐานติดมา (business_management, pages_show_list, public_profile) — กด <strong>Customize/ปรับแต่ง</strong> แล้ว<strong>เพิ่ม</strong> <code>pages_manage_posts</code> + <code>pages_read_engagement</code></li>
+    <li>แอปเริ่มใน <strong>Development mode</strong> — โหมดนี้ใช้<em>ทดสอบ</em>โพสต์ลงเพจตัวเองได้ แต่มีกับดักใหญ่: <strong>โพสต์ที่สร้างตอน dev mode จะถูกซ่อนจากคนทั่วไป</strong> (เห็นเฉพาะคนที่มีบทบาทในแอป — เจอจากเพจจริง: โพสต์ขึ้นแต่คนอื่นมองไม่เห็น) → พอทดสอบผ่านแล้วต้องทำขั้น "เผยแพร่แอปเป็น Live" ท้ายบทนี้</li>
+  </ol>
+
+  <h2>ขั้นที่ 3 — ขอกุญแจ (Page Access Token)</h2>
+  <p>ใช้เครื่องมือทางการชื่อ <strong>Graph API Explorer</strong> (เมนู Tools ของ developers.facebook.com) · ต้องมี: แอปพร้อม App ID และ App Secret (ดูได้ใน App settings → Basic)</p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 640 165" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <defs><marker id="tk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#555"/></marker></defs>
+      <rect x="15" y="40" width="135" height="62" rx="10" fill="#fef2f2" stroke="#b91c1c" stroke-width="2"/>
+      <text x="82" y="63" font-size="13" font-weight="bold" fill="#b91c1c" text-anchor="middle">User token สั้น</text>
+      <text x="82" y="84" font-size="11" fill="#555" text-anchor="middle">อายุ ~1–2 ชม.</text>
+      <rect x="180" y="40" width="135" height="62" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="247" y="63" font-size="13" font-weight="bold" fill="#b45309" text-anchor="middle">Extend ใน Debugger</text>
+      <text x="247" y="84" font-size="11" fill="#555" text-anchor="middle">→ อายุ ~60 วัน</text>
+      <rect x="345" y="40" width="135" height="62" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="412" y="63" font-size="13" font-weight="bold" fill="#1d4ed8" text-anchor="middle">GET me/accounts</text>
+      <text x="412" y="84" font-size="11" fill="#555" text-anchor="middle">ด้วย token 60 วัน!</text>
+      <rect x="510" y="40" width="118" height="62" rx="10" fill="#ecfdf3" stroke="#15803d" stroke-width="2"/>
+      <text x="569" y="63" font-size="13" font-weight="bold" fill="#15803d" text-anchor="middle">Page token</text>
+      <text x="569" y="84" font-size="11" fill="#15803d" text-anchor="middle">Expires: Never ✓</text>
+      <line x1="150" y1="71" x2="180" y2="71" stroke="#555" stroke-width="2" marker-end="url(#tk)"/>
+      <line x1="315" y1="71" x2="345" y2="71" stroke="#555" stroke-width="2" marker-end="url(#tk)"/>
+      <line x1="480" y1="71" x2="510" y2="71" stroke="#555" stroke-width="2" marker-end="url(#tk)"/>
+      <text x="412" y="125" font-size="11" fill="#b91c1c" text-anchor="middle">⚠️ จุดพลาดอันดับ 1: ลืมวางตัว 60 วันทับ</text>
+      <text x="412" y="141" font-size="11" fill="#b91c1c" text-anchor="middle">แล้วเรียกด้วยตัวสั้น → ได้ token มีวันหมดอายุ</text>
+      <text x="150" y="130" font-size="11" fill="#555" text-anchor="middle">ตรวจปลายทางเสมอ:</text>
+      <text x="150" y="146" font-size="11" fill="#15803d" text-anchor="middle">Debugger ต้องขึ้น Never เท่านั้น</text>
+    </svg>
+    <figcaption>บันไดโทเค็น 4 ขั้น — เดินให้ครบ ห้ามข้าม แล้วตรวจว่า Never จริงก่อนใช้</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><strong>ตั้งค่าฝั่งขวาก่อน</strong> — ช่อง <strong>"แอพ Meta"</strong> เลือกแอปของเรา (Quote Hermes) → ช่อง <strong>"ผู้ใช้หรือเพจ"</strong> เลือก <strong>"รับโทเค็นของผู้ใช้" (User Token)</strong> ⚠️ ใน dropdown นี้จะมีชื่อเพจให้เลือกด้วย — <strong>ห้ามเลือกเพจตรงนั้น</strong> (จะได้ Page token อายุสั้น ทางลัดที่พาลงเหว) → แท็บ Permissions ช่อง "เพิ่มสิทธิ์การอนุญาต" ใส่ให้ครบ <strong>3 ตัว</strong>: <code>pages_show_list</code>, <code>pages_manage_posts</code>, <code>pages_read_engagement</code> (ตัว <code>pages_show_list</code> ขาดแล้ว me/accounts จะตอบว่างเปล่า)</li>
+    <li><strong>สร้าง User token ระยะสั้น</strong> — กด <strong>Generate Access Token</strong> → หน้าต่างล็อกอิน/อนุญาตเด้ง → ตอนถามว่าให้สิทธิ์เพจไหน เลือกเฉพาะ "บทเรียนชีวิต" → อนุญาตจนจบ token จะโผล่ในช่อง "โทเค็นการเข้าถึง"</li>
+    <li><strong>ต่ออายุเป็น 60 วัน</strong> — กดไอคอน <strong>ⓘ</strong> ตรงหัวช่อง token → <strong>Open in Access Token Tool</strong> (เด้งไปหน้า Access Token Debugger) → กดปุ่ม <strong>Extend Access Token</strong> ด้านล่าง (ถ้าขอ App Secret: ก๊อปจาก App settings → Basic ของแอป) → ได้ token ใหม่อายุ ~60 วัน — คัดลอกเก็บไว้</li>
+    <li><strong>เรียก me/accounts</strong> — กลับมาที่ Explorer <strong>ลบ token เดิมในช่องออกให้หมด แล้ววาง token 60 วันแทน</strong> (จุดที่คนพลาดบ่อยสุด) → ช่อง endpoint กลางบน: ลบของเดิม (เช่น <code>me?fields=id,name</code>) พิมพ์ <code>me/accounts</code> → เมธอด <strong>GET</strong> → เวอร์ชันตามที่ระบบตั้ง (เช่น <strong>v26.0</strong> — จดเลขนี้ไว้ใช้ระบุใน skill ตอนบท 13) → กดปุ่ม <strong>ส่ง</strong> → ผล JSON: หา block ที่ <code>"name": "บทเรียนชีวิต"</code> → ก๊อป <code>access_token</code> (ยาวมาก เอาให้ครบ) และ <code>id</code> (= Page ID) — นี่คือ <strong>Page token ที่ไม่มีวันหมดอายุ</strong></li>
+    <li><strong>ตรวจว่าไม่มีวันหมดอายุจริง</strong> — ก๊อป Page token ไปวางใน Access Token Debugger อีกครั้ง → บรรทัด <strong>Expires ต้องขึ้นว่า Never</strong> — ถ้าขึ้นเป็นวันที่ แปลว่าเผลอใช้ token สั้นตอนเรียก me/accounts ให้ย้อนทำข้อ 2–3 ใหม่</li>
+    <li><strong>เก็บให้ปลอดภัย</strong> — Page token + Page ID ลงไฟล์ <code>/opt/data/.env</code> ตามกล่องถัดไป — ห้ามลงโค้ดที่ push ขึ้น git ห้ามวางในแชท ใครได้ token นี้ไปโพสต์ในนามเพจคุณได้ทันที</li>
+  </ol>
+  <div class="callout info">
+    <span class="label">สองจุดที่คนติดบ่อยในขั้นนี้</span>
+    <p>① ขาด <code>pages_show_list</code> → me/accounts ตอบว่างเปล่า (ไม่ error ด้วย งงกันมานักต่อนัก) ② ลืมวาง token 60 วันทับตัวเก่าก่อนเรียก me/accounts → ได้ Page token แบบมีวันหมดอายุโดยไม่รู้ตัว — ขั้นตรวจ Expires: Never ในข้อ 4 คือตาข่ายกันพลาดของทั้งสองจุดนี้</p>
+  </div>
+  <div class="callout">
+    <span class="label">เก็บกุญแจให้ถูกที่</span>
+    <p>token นี้โพสต์ลงเพจคุณได้ = ความลับระดับเดียวกับ API key — เก็บในไฟล์ความลับของ Hermes: <code>/opt/data/.env</code> (ที่เดียวกับ Telegram token) โดยเพิ่มใน terminal <strong>ไม่ผ่านแชท</strong>: <code>echo 'FB_PAGE_TOKEN=ค่าจริง' &gt;&gt; /opt/data/.env</code> และ <code>FB_PAGE_ID</code> อีกบรรทัด — ระวัง: ใช้ <code>&gt;&gt;</code> (ต่อท้าย) ห้ามใช้ <code>&gt;</code> ตัวเดียว (เขียนทับทั้งไฟล์!) · ส่วนคำสั่ง <code>hermes secrets</code> เป็นตัวเชื่อม Bitwarden/1Password — เราไม่ได้ใช้</p>
+  </div>
+
+  <h2>ขั้นที่ 4 — โพสต์แรกผ่าน API 🎉</h2>
+  <p>สั่ง Hermes ในแชท:</p>
+  <pre><code>ทดสอบโพสต์ Facebook: อ่านค่า FB_PAGE_TOKEN และ FB_PAGE_ID
+จากไฟล์ /opt/data/.env (ห้ามโชว์ค่า token ในข้อความตอบ)
+เรียก Graph API เวอร์ชันล่าสุด endpoint /{PAGE_ID}/photos
+อัปโหลดรูปล่าสุดจาก ~/.hermes/page/out/ พร้อม caption "ทดสอบระบบ 🤖"
+แล้วรายงานผลพร้อมลิงก์โพสต์</code></pre>
+  <p>เปิดเพจดู — ถ้าเห็นโพสต์รูปคำคมโผล่ขึ้นมา นั่นคือ<strong>โพสต์แรกที่ระบบของคุณทำเอง</strong> (ลบทิ้งทีหลังได้ ไม่เป็นไร มันคือโพสต์ประวัติศาสตร์ 😄)</p>
+
+  <h2>ขั้นที่ 5 — เผยแพร่แอปเป็น Live (ไม่งั้นโลกไม่เห็นโพสต์!)</h2>
+  <p>โพสต์ทดสอบผ่านแล้ว แต่ตราบใดที่แอปยังเป็น Development mode คนทั่วไปจะ<strong>มองไม่เห็น</strong>โพสต์ที่แอปสร้าง (อาการ: โพสต์ขึ้นปกติ แต่คนอื่นเปิดเพจแล้วว่างเปล่า) — ต้องสลับเป็น Live ซึ่ง<strong>ไม่ใช่การส่งแอปตรวจ (App Review)</strong> · เส้นทางจริงที่ผ่านการพิสูจน์ (2026-08-26):</p>
+  <ol class="steps">
+    <li><strong>หา Privacy Policy URL</strong> — Meta ขอลิงก์หน้านโยบายความเป็นส่วนตัวที่เข้าถึงได้จริง ทางเร็ว: ตัวสร้างฟรี เช่น <a href="https://www.freeprivacypolicy.com">freeprivacypolicy.com</a> (กรอกชื่อแอป ได้ลิงก์โฮสต์ฟรี ใช้ยื่น Meta ได้จริง) — อนาคตย้ายไปโฮสต์บนโดเมนตัวเอง (บท 06) ให้ดูโปรขึ้นได้</li>
+    <li><strong>App settings → Basic</strong>: วาง Privacy Policy URL + เลือก Category → เลื่อนลงล่างสุดกด <strong>Save changes</strong> (จุดที่คนวางลิงก์แล้วลืมกด Save บ่อยมาก)</li>
+    <li><strong>ด่านทดสอบกรณีการใช้งาน</strong> — แดชบอร์ดแอปมีเช็คลิสต์ 3 ข้อ (ปรับแต่ง use case / ทดสอบ / เผยแพร่) ข้อ "ทดสอบ" ต้องการให้ permission หลักถูกเรียกใช้จริงอย่างน้อย 1 ครั้ง — <strong>การใช้งานจริงของเรานับอยู่แล้ว</strong> (โพสต์รูป = pages_manage_posts, เรียก me/accounts = pages_show_list) ไม่ต้องยิงเพิ่มเอง <em>แต่ตัวนับหน่วงได้ถึง 24 ชั่วโมง</em> — โพสต์ทดสอบวันนี้ พรุ่งนี้เช็คลิสต์ถึงเขียว อย่าตกใจถ้ายังเป็น 0 ทั้งที่โพสต์ไปแล้ว</li>
+    <li><strong>กดเผยแพร่</strong> — เมนู "เผยแพร่" → เมื่อเงื่อนไขครบ ปุ่มน้ำเงิน <strong>"เผยแพร่"</strong> จะโผล่มุมขวาล่างของหน้า (ก่อนหน้านั้นไม่มีปุ่มเลย ไม่ใช่ปุ่มเทา) → กด → ขึ้นกล่อง "เผยแพร่แอพของคุณสำเร็จ 🎁" → สถานะข้างเมนูเปลี่ยนเป็น <strong>"เผยแพร่แล้ว"</strong></li>
+    <li><strong>ทดสอบแบบคนนอก</strong>: เปิดเพจใน incognito (ไม่ล็อกอิน) — เห็นโพสต์ = ผ่านจริง · ผลจริงจากเพจเรา: หลัง Live แล้ว<strong>โพสต์เก่าที่สร้างช่วง dev mode กลับมามองเห็นได้ด้วย</strong> ไม่ต้องลบทำใหม่ (ดีกว่าที่กังวลไว้)</li>
+  </ol>
+  <div class="callout">
+    <span class="label">แยกให้ออก: Live ≠ App Review</span>
+    <p><strong>Live</strong> = เปิดสวิตช์ให้เนื้อหาที่แอปสร้างมองเห็นได้สาธารณะ (ทำเองได้ทันที แค่มี privacy policy) · <strong>App Review</strong> = ส่ง Meta ตรวจเพื่อให้<em>คนอื่น</em>มาใช้แอปเราได้ (Advanced Access) — ระบบเราแอดมินใช้เอง Standard Access พอ ไม่ต้องส่งตรวจ</p>
+  </div>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 12 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">1. ทำไม Development mode ก็พอสำหรับระบบเรา?</div>
+      <button class="quiz-opt">เพราะโพสต์เพจที่เราเป็นแอดมินได้เลย</button>
+      <button class="quiz-opt">เพราะโหมดนี้โพสต์ได้ไม่จำกัดจำนวน</button>
+      <button class="quiz-opt">เพราะ Meta ยกเลิกโหมดอื่นไปหมดแล้ว</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. token ที่ระบบใช้โพสต์ระยะยาว คือตัวไหน?</div>
+      <button class="quiz-opt">User token อายุสั้นจากปุ่ม Generate</button>
+      <button class="quiz-opt">รหัสผ่าน Facebook ของเราโดยตรง</button>
+      <button class="quiz-opt">Page token ที่ได้จาก user token อายุยาว</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">3. โพสต์รูปลงเพจ ใช้ endpoint ไหน?</div>
+      <button class="quiz-opt">endpoint ที่ชื่อ /{PAGE_ID}/albums</button>
+      <button class="quiz-opt">endpoint ที่ชื่อ /{PAGE_ID}/photos</button>
+      <button class="quiz-opt">endpoint ที่ชื่อ /{PAGE_ID}/stories</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <p>📖 แหล่งหลักของบทนี้: <a href="https://developers.facebook.com/docs/pages-api/getting-started/">Pages API: Get Started — Meta for Developers</a></p>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 12</span>
+    <p>รายงาน: ลิงก์/แคปโพสต์ทดสอบบนเพจ — เหลือบทเดียว: ต่อทุกอย่างเป็นวงจรเดียว</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 13 ─────────── -->
+<section class="lesson" id="lesson-13">
+  <p class="lesson-kicker">บทที่ 13 · Phase 4 — ★ ระบบเพจคำคม</p>
+  <div class="minimap" data-active="all" data-note="บทนี้: ต่อครบทุกชิ้น — ระบบหมุนเองทั้งวงจร"></div>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 700 800" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <defs>
+        <marker id="wf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#555"/></marker>
+        <marker id="wfd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#b45309"/></marker>
+      </defs>
+
+      <!-- ① -->
+      <rect x="130" y="18" width="400" height="54" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="330" y="41" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">① ⏰ 07:00 — นาฬิกาเช้าดัง</text>
+      <text x="330" y="61" font-size="11.5" fill="#555" text-anchor="middle">cron: morning-quotes (session สดใหม่)</text>
+      <line x1="330" y1="72" x2="330" y2="104" stroke="#555" stroke-width="2.4" marker-end="url(#wf)"/>
+
+      <!-- ② -->
+      <rect x="130" y="104" width="400" height="54" rx="10" fill="#fff" stroke="#b45309" stroke-width="2"/>
+      <text x="330" y="127" font-size="14" font-weight="bold" fill="#1a1a1a" text-anchor="middle">② 🤖 Hermes หาคำคม 6 ข้อ</text>
+      <text x="330" y="147" font-size="11.5" fill="#555" text-anchor="middle">ออริจินัล 3 + คนดัง 3 (ตรวจแหล่งที่มาจริง)</text>
+      <rect x="558" y="120" width="130" height="22" rx="11" fill="#fef3e2" stroke="#b45309" stroke-dasharray="4,3"/>
+      <text x="623" y="135" font-size="11" fill="#b45309" text-anchor="middle">📚 quote-style</text>
+      <line x1="530" y1="131" x2="556" y2="131" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <line x1="330" y1="158" x2="330" y2="190" stroke="#555" stroke-width="2.4" marker-end="url(#wf)"/>
+      <text x="345" y="179" font-size="11.5" fill="#555">ส่งรายการหมายเลข 1–6 เข้า Telegram</text>
+
+      <!-- ③ -->
+      <rect x="130" y="190" width="400" height="54" rx="10" fill="#ecfdf3" stroke="#15803d" stroke-width="2.5"/>
+      <text x="330" y="213" font-size="14" font-weight="bold" fill="#15803d" text-anchor="middle">③ 📱 คุณกดเลือก — ตอบ "เลือก 2, 5"</text>
+      <text x="330" y="233" font-size="11.5" fill="#555" text-anchor="middle">มนุษย์จุดเดียวของทั้งระบบ (~30 วินาที · Google เช็คคนดังก่อน)</text>
+      <rect x="558" y="206" width="130" height="22" rx="11" fill="#fef3e2" stroke="#b45309" stroke-dasharray="4,3"/>
+      <text x="623" y="221" font-size="11" fill="#b45309" text-anchor="middle">📚 page-queue</text>
+      <line x1="530" y1="217" x2="556" y2="217" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <line x1="330" y1="244" x2="330" y2="276" stroke="#555" stroke-width="2.4" marker-end="url(#wf)"/>
+      <text x="345" y="265" font-size="11.5" fill="#555">บันทึกตัวที่เลือก (ก๊อปคำต่อคำ)</text>
+
+      <!-- ④ -->
+      <rect x="130" y="276" width="400" height="54" rx="10" fill="#fff" stroke="#b45309" stroke-width="2" stroke-dasharray="7,5"/>
+      <text x="330" y="299" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">④ 🗂 คิวโพสต์ — queue.jsonl</text>
+      <text x="330" y="319" font-size="11.5" fill="#555" text-anchor="middle">คำคมนอนรอเป็นบรรทัด status: ready</text>
+      <line x1="330" y1="330" x2="330" y2="362" stroke="#555" stroke-width="2.4" marker-end="url(#wf)"/>
+      <text x="345" y="351" font-size="11.5" fill="#555">⏳ รอจนถึงเวลาโพสต์…</text>
+
+      <!-- ⑤ -->
+      <rect x="130" y="362" width="400" height="54" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="330" y="385" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">⑤ ⏰ 08:00 / 19:00 — นาฬิกาโพสต์ดัง</text>
+      <text x="330" y="405" font-size="11.5" fill="#555" text-anchor="middle">cron: post-morning / post-evening</text>
+      <rect x="558" y="378" width="130" height="22" rx="11" fill="#fef3e2" stroke="#b45309" stroke-dasharray="4,3"/>
+      <text x="623" y="393" font-size="11" fill="#b45309" text-anchor="middle">📚 post-facebook</text>
+      <line x1="530" y1="389" x2="556" y2="389" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <line x1="330" y1="416" x2="330" y2="448" stroke="#555" stroke-width="2.4" marker-end="url(#wf)"/>
+      <text x="345" y="437" font-size="11.5" fill="#555">หยิบคำคม ready ตัวแรกจากคิว ④</text>
+
+      <!-- ⑥ -->
+      <rect x="130" y="448" width="400" height="54" rx="10" fill="#fff" stroke="#b45309" stroke-width="2"/>
+      <text x="330" y="471" font-size="14" font-weight="bold" fill="#1a1a1a" text-anchor="middle">⑥ 🖼 ทำรูปคำคม</text>
+      <text x="330" y="491" font-size="11.5" fill="#555" text-anchor="middle">make_image.py — ตัดบรรทัดไทยสวย + "— ชื่อผู้กล่าว" ถ้ามี</text>
+      <rect x="558" y="464" width="130" height="22" rx="11" fill="#fef3e2" stroke="#b45309" stroke-dasharray="4,3"/>
+      <text x="623" y="479" font-size="11" fill="#b45309" text-anchor="middle">📚 quote-image</text>
+      <line x1="530" y1="475" x2="556" y2="475" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <line x1="330" y1="502" x2="330" y2="534" stroke="#555" stroke-width="2.4" marker-end="url(#wf)"/>
+
+      <!-- ⑦ -->
+      <rect x="130" y="534" width="400" height="54" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="330" y="557" font-size="14" font-weight="bold" fill="#1d4ed8" text-anchor="middle">⑦ 📘 โพสต์ขึ้นเพจ "บทเรียนชีวิต"</text>
+      <text x="330" y="577" font-size="11.5" fill="#555" text-anchor="middle">Graph API /photos + caption · 🔐 token จาก /opt/data/.env</text>
+      <line x1="330" y1="588" x2="330" y2="620" stroke="#555" stroke-width="2.4" marker-end="url(#wf)"/>
+
+      <!-- ⑧ -->
+      <rect x="130" y="620" width="400" height="54" rx="10" fill="#ecfdf3" stroke="#15803d" stroke-width="2"/>
+      <text x="330" y="643" font-size="14" font-weight="bold" fill="#15803d" text-anchor="middle">⑧ ✅ รายงานลิงก์เข้า Telegram</text>
+      <text x="330" y="663" font-size="11.5" fill="#555" text-anchor="middle">คิวพลิกเป็น posted — จบรอบ ไม่มีมนุษย์ตั้งแต่ขั้น ④</text>
+
+      <!-- วนลูป -->
+      <path d="M 130 647 L 88 647 L 88 45 L 126 45" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="7,5" marker-end="url(#wf)"/>
+      <text x="76" y="360" font-size="12" fill="#15803d" text-anchor="middle" transform="rotate(-90 76 360)">🔁 พรุ่งเช้า 07:00 วนใหม่อัตโนมัติ ไม่รู้จบ</text>
+
+      <!-- legend -->
+      <line x1="130" y1="710" x2="170" y2="710" stroke="#555" stroke-width="2.4" marker-end="url(#wf)"/>
+      <text x="180" y="714" font-size="12" fill="#1a1a1a">ลำดับงานจริง (อัตโนมัติทั้งหมด)</text>
+      <line x1="400" y1="710" x2="440" y2="710" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <text x="450" y="714" font-size="12" fill="#b45309">📚 คู่มือ (skill) ที่ขั้นนั้นเปิดอ่าน</text>
+      <text x="130" y="742" font-size="11.5" fill="#555">สี: 🟩 เขียว = มีมนุษย์ · 🟧 ส้ม = อัตโนมัติ · 🟦 น้ำเงิน = โลกภายนอก · กรอบเส้นประ = ไฟล์ข้อมูล</text>
+      <text x="130" y="764" font-size="11.5" fill="#555">อ่านจากบนลงล่างตามเวลาจริงของหนึ่งวัน — งานมนุษย์มีแค่กล่องเขียวขั้น ③ กล่องเดียว</text>
+    </svg>
+    <figcaption>Workflow หนึ่งวันของระบบ อ่านบน→ล่างตามเวลา ①–⑧ — ป้ายส้มขวามือคือคู่มือที่แต่ละขั้นใช้</figcaption>
+  </figure>
+  <h1>ต่อครบวงจร — เพจที่รันตัวเอง</h1>
+  <p class="lesson-lede">~30 นาที — บทสุดท้ายของการสร้าง: งานโพสต์ 08:00/19:00 หยิบจากคิว ทำรูป โพสต์ รายงาน แล้วระบบก็หมุนเองตั้งแต่วันนี้</p>
+
+  <h2>ภารกิจที่ 1 — คู่มือโพสต์ (skill สุดท้าย)</h2>
+  <pre><code>สร้าง skill ชื่อ post-facebook เนื้อหา: วิธีโพสต์คำคมลงเพจ
+1. อ่าน ~/.hermes/page/queue.jsonl หาบรรทัดแรกที่ status เป็น ready
+2. ถ้าไม่มีเลย: ส่งข้อความเตือนไปที่ home channel ว่า "คิวว่าง! เลือกคำคมเพิ่มด้วยครับ" แล้วจบงาน
+3. ทำรูปตาม skill quote-image
+4. โพสต์ตาม endpoint /{PAGE_ID}/photos โดยอ่าน FB_PAGE_TOKEN และ FB_PAGE_ID
+   จากไฟล์ /opt/data/.env (ห้ามพิมพ์ค่า token ออกมาในรายงาน)
+   caption = ข้อความคำคม + ลายเซ็นเพจ
+5. สำเร็จ: แก้ status เป็น posted พร้อมเวลา แล้วรายงานลิงก์โพสต์ไป home channel
+6. ล้มเหลว: ห้ามลองซ้ำเกิน 2 ครั้ง — รายงาน error ไป home channel</code></pre>
+
+  <h2>ภารกิจที่ 2 — งานโพสต์ 2 เวลา</h2>
+  <pre><code>ตั้งงานประจำชื่อ post-morning: ทุกวันเวลา 08:00 เวลาประเทศไทย
+ใช้ skill post-facebook และ page-queue และ quote-image — ทำตามคู่มือ post-facebook
+
+ตั้งงานประจำชื่อ post-evening: ทุกวันเวลา 19:00 เวลาประเทศไทย
+ใช้ skill post-facebook และ page-queue และ quote-image — ทำตามคู่มือ post-facebook</code></pre>
+
+  <h2>ภารกิจที่ 3 — ซ้อมใหญ่ทั้งเส้น (อย่ารอพรุ่งนี้)</h2>
+  <ol class="steps">
+    <li>เช็คคิวมีของ: <code>cat ~/.hermes/page/queue.jsonl</code> (ต้องมี ready อย่างน้อย 1)</li>
+    <li>ยิงงานโพสต์ทันที: <code>hermes cron run &lt;id ของ post-morning&gt;</code></li>
+    <li>นับผล 4 อย่าง: ① โพสต์ขึ้นเพจจริง ② caption ถูก ③ คิวเปลี่ยนเป็น posted ④ รายงานเด้งเข้า Telegram</li>
+    <li>ครบ 4/4 → รันซ้ำอีกรอบเพื่อทดสอบว่า<strong>มันไม่หยิบคำคมเดิมซ้ำ</strong> (ต้องหยิบ ready ตัวถัดไป หรือเตือนคิวว่างถ้าหมด)</li>
+  </ol>
+
+  <h2>🏁 วันแรกของเพจอัตโนมัติ</h2>
+  <p>คืนนี้ก่อนนอน เช็คว่าคิวมีคำคม ready ≥ 2 — พรุ่งนี้:</p>
+  <table>
+    <tr><th>เวลา</th><th>เกิดอะไร</th><th>คุณทำอะไร</th></tr>
+    <tr><td>07:00</td><td>คำคม 6 อันเด้งเข้า Telegram</td><td>ตอบ "เลือก ..." (30 วินาที)</td></tr>
+    <tr><td>08:00</td><td>โพสต์เช้าขึ้นเพจ + รายงานเข้าแชท</td><td>ดูเฉยๆ 😎</td></tr>
+    <tr><td>19:00</td><td>โพสต์เย็นขึ้นเพจ + รายงานเข้าแชท</td><td>ดูเฉยๆ 😎</td></tr>
+  </table>
+  <p>เทียบกับแผนผังในบทที่ 01 — <strong>คุณสร้างมันครบทุกชิ้นแล้ว</strong></p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <defs><marker id="lp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#555"/></marker></defs>
+      <rect x="15" y="45" width="112" height="66" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="71" y="68" font-size="13" font-weight="bold" fill="#b45309" text-anchor="middle">⏰ 07:00</text>
+      <text x="71" y="87" font-size="11" fill="#555" text-anchor="middle">เสนอคำคม 6 ข้อ</text>
+      <text x="71" y="103" font-size="11" fill="#555" text-anchor="middle">เข้า Telegram</text>
+      <rect x="147" y="45" width="112" height="66" rx="10" fill="#ecfdf3" stroke="#15803d" stroke-width="2"/>
+      <text x="203" y="68" font-size="13" font-weight="bold" fill="#15803d" text-anchor="middle">📱 คุณเลือก</text>
+      <text x="203" y="87" font-size="11" fill="#555" text-anchor="middle">"เลือก 2, 5"</text>
+      <text x="203" y="103" font-size="11" fill="#555" text-anchor="middle">~30 วินาที</text>
+      <rect x="279" y="45" width="112" height="66" rx="10" fill="#fff" stroke="#b45309" stroke-width="2" stroke-dasharray="6,4"/>
+      <text x="335" y="68" font-size="13" font-weight="bold" fill="#b45309" text-anchor="middle">🗂 คิว</text>
+      <text x="335" y="87" font-size="11" fill="#555" text-anchor="middle">queue.jsonl</text>
+      <text x="335" y="103" font-size="11" fill="#555" text-anchor="middle">ready รอโพสต์</text>
+      <rect x="411" y="45" width="102" height="66" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="462" y="68" font-size="13" font-weight="bold" fill="#b45309" text-anchor="middle">⏰ 08:00</text>
+      <text x="462" y="87" font-size="11" fill="#555" text-anchor="middle">ทำรูป + โพสต์</text>
+      <text x="462" y="103" font-size="11" fill="#555" text-anchor="middle">→ 📘 เพจ</text>
+      <rect x="533" y="45" width="95" height="66" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="580" y="68" font-size="13" font-weight="bold" fill="#b45309" text-anchor="middle">⏰ 19:00</text>
+      <text x="580" y="87" font-size="11" fill="#555" text-anchor="middle">ทำรูป + โพสต์</text>
+      <text x="580" y="103" font-size="11" fill="#555" text-anchor="middle">→ 📘 เพจ</text>
+      <line x1="127" y1="78" x2="147" y2="78" stroke="#555" stroke-width="2" marker-end="url(#lp)"/>
+      <line x1="259" y1="78" x2="279" y2="78" stroke="#555" stroke-width="2" marker-end="url(#lp)"/>
+      <line x1="391" y1="78" x2="411" y2="78" stroke="#555" stroke-width="2" marker-end="url(#lp)"/>
+      <line x1="513" y1="78" x2="533" y2="78" stroke="#555" stroke-width="2" marker-end="url(#lp)"/>
+      <path d="M 580 111 L 580 150 L 71 150 L 71 114" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="7,5" marker-end="url(#lp)"/>
+      <text x="320" y="143" font-size="12" fill="#15803d" text-anchor="middle">🔁 วนใหม่พรุ่งเช้า — ทุกวัน ไม่มีวันหยุด ไม่ต้องมีใครสั่ง</text>
+      <text x="320" y="178" font-size="11" fill="#555" text-anchor="middle">งานของมนุษย์ทั้งวัน: กล่องสีเขียวกล่องเดียว (~30 วินาที)</text>
+    </svg>
+    <figcaption>วงจรหนึ่งวันของเพจ "บทเรียนชีวิต" — สายพานหมุนเองครบรอบแล้ววนใหม่ไม่รู้จบ</figcaption>
+  </figure>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 13 — 2 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. ถ้าถึงเวลาโพสต์แต่คิวว่าง ระบบควรทำอะไร?</div>
+      <button class="quiz-opt">แต่งคำคมขึ้นมาเองแล้วโพสต์ไปเลย</button>
+      <button class="quiz-opt">เตือนเข้า Telegram แล้วจบงานเฉยๆ</button>
+      <button class="quiz-opt">โพสต์รูปเก่าซ้ำไปก่อนกันเพจเงียบ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. ทำไมกำหนดให้ "ล้มเหลวห้ามลองซ้ำเกิน 2 ครั้ง"?</div>
+      <button class="quiz-opt">กัน loop เผาเงิน token และสแปมเพจ</button>
+      <button class="quiz-opt">Facebook บังคับกฎนี้กับทุกแอปใหม่</button>
+      <button class="quiz-opt">เพราะ cron รันได้สูงสุดสองครั้งต่อวัน</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <span class="label">จบบทที่ 13 — จบ Phase 4 — MISSION COMPLETE 🏆🎉</span>
+    <p>รายงาน: ผลซ้อมใหญ่ 4 ข้อ + screenshot โพสต์จริงบนเพจ — เหลือบทเดียวในคอร์ส: ทำให้มันอยู่ยาวและไม่เผาเงิน (และอย่าลืมกลับไปเก็บบท 06 domain ที่ข้ามไว้ด้วยนะ)</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 14 ─────────── -->
+<section class="lesson" id="lesson-14">
+  <p class="lesson-kicker">บทที่ 14 · Phase 5 — ดูแลระยะยาว</p>
+  <div class="minimap" data-active="vps,docker,llm" data-note="บทนี้: ดูแลทั้งระบบให้อยู่ยาว (backup · update · คุมเงิน)"></div>
+  <h1>ให้ระบบอยู่ยาว: Backup, Update, และไม่เผาเงิน</h1>
+  <p class="lesson-lede">~30 นาที — บทสุดท้าย: ระบบที่ดีไม่ใช่แค่ทำงานได้วันนี้ แต่ต้องกู้คืนได้ตอนพัง และไม่สร้างบิลช็อกตอนสิ้นเดือน</p>
+
+  <h2>1. คุมเงิน — ทำก่อนอย่างอื่น 💸</h2>
+  <p>สองข้อแรกคุณสอบผ่านภาคปฏิบัติไปแล้วกลางสนามจริง (แพงหน่อย — ค่าเทอม $5 😅) เหลือเก็บให้ครบ:</p>
+  <ol class="steps">
+    <li><strong>เพดานฝั่ง provider</strong> (สำคัญสุด — ประกันชั้นสุดท้ายของทุกความผิดพลาด): openrouter.ai → <strong>API Keys → key ที่ Hermes ใช้ → ตั้ง Credit limit</strong> — ต่อให้เผลอคลุมโมเดลแพงไว้ที่ไหนอีก เงินก็ไหลเกินเพดานนี้ไม่ได้ (ทำกับทุก provider ที่ผูกบัตร/เติมเงินไว้)</li>
+    <li><strong>fallback เป็นโมเดลฟรี</strong> — ✅ มีแล้วและพิสูจน์แล้วในสนาม: poolside:free โดน 429 → เด้งไป solar-pro4:free เองอัตโนมัติ (ดูภาพ "สามชั้นโมเดล" ในบทเสริม 7.5) — เช็คสุขภาพ chain ได้ด้วย <code>hermes fallback</code></li>
+    <li><strong>ระวังผ้าคลุม session</strong> — เคส $5 ของเพจนี้: <code>/model</code> ในแชทติดค้างถาวรโดยพฤตินัย → กฎ: เล่นโมเดลในแชทเสร็จสลับกลับเสมอ + เช็คโมเดลใช้จริงจาก <strong>log ฝั่ง provider</strong> เป็นระยะ (รายละเอียดเต็มใน 🛠 playbook)</li>
+    <li><strong>ผู้ช่วยรายงานตัวเอง (ยามประจำสัปดาห์)</strong> — ให้ระบบเฝ้าระบบ ครอบคลุมทั้ง 3 ท่าล้มเหลว รวมท่า "ค้าง" ที่ตรวจยากสุด: <pre><code>ตั้งงานประจำชื่อ weekly-guard: ทุกวันจันทร์ 09:00 เวลาไทย สรุปมาที่แชทนี้:
+1. งาน cron แต่ละตัวในสัปดาห์ที่ผ่านมา: สำเร็จ/ล้มเหลวกี่ครั้ง (ดูจาก cron list + log)
+2. มีการรันที่สถานะ running หรือ unknown ค้างนานผิดปกติไหม (งานค้าง)
+3. จำนวนคำคม ready คงเหลือในคิว — ต่ำกว่า 4 ให้เตือนดังๆ
+4. พื้นที่ดิสก์ (df -h) และขนาดโฟลเดอร์รูป out/
+5. โมเดลที่ session ต่างๆ ใช้อยู่ตอนนี้ — ถ้าเจอโมเดลเสียเงินให้เตือนทันที
+เป็นข้อความผลลัพธ์โดยตรง ห้ามสร้างหรือเรียกใช้สคริปต์ใดๆ</code></pre></li>
+  </ol>
+
+  <h2>2. Backup — ของสำคัญอยู่ที่เดียว: /opt/data</h2>
+  <p>ทุกอย่างที่สร้างมาทั้งคอร์ส (skills, คิว, สคริปต์รูป, secrets, ความจำ) อยู่ใน <code>/opt/data</code> ซึ่งเป็น volume — แผน backup 2 ชั้น:</p>
+  <ol class="steps">
+    <li><strong>ชั้นในเครื่อง</strong> — อัดไฟล์เก็บเป็นระยะ (SSH เข้าตัวเครื่อง VPS ไม่ใช่ใน container): <pre><code>docker exec hermes-agent-xxxx-hermes-agent-1 tar czf - /opt/data > hermes-backup-$(date +%Y%m%d).tar.gz</code></pre> แล้วสั่ง Hermes ตั้ง cron ทำเองทุกสัปดาห์ก็ได้ (มันรันคำสั่งนี้เป็น)</li>
+    <li><strong>ชั้น Hostinger</strong> — hPanel มีระบบ Snapshot/Backup ของทั้ง VPS: เข้าไปดูที่เมนู Backups ของเครื่อง สร้าง snapshot หลังระบบนิ่งแล้วหนึ่งอัน = จุดกู้คืนทั้งเครื่อง</li>
+  </ol>
+
+  <h2>3. Update — วงจรที่ปลอดภัย</h2>
+  <p>Hermes ออกเวอร์ชันใหม่เรื่อยๆ — ลำดับที่ถูกคือ <strong>backup ก่อน อัปเดตทีหลัง</strong>: ทำ backup ชั้นในเครื่อง → เข้า hPanel → Docker Manager → อัปเดต image ของ Hermes project → container ถูกสร้างใหม่จาก image ใหม่ แต่ <code>/opt/data</code> อยู่ครบเพราะเป็น volume (บทที่ 03 สัญญาไว้ — ตรงนี้แหละที่มันจ่ายคืน) → ทดสอบทักบอท 1 ครั้ง + <code>hermes doctor</code></p>
+
+  <h2>4. เมื่อมีอะไรพัง — ลำดับการไล่ (จำจากประสบการณ์จริงของคุณ)</h2>
+  <table>
+    <tr><th>อาการ</th><th>เช็คตามลำดับ</th></tr>
+    <tr><td>บอทเงียบ</td><td>① เครดิต provider (คุณเจอมาแล้ว!) ② <code>hermes doctor</code> ③ <code>hermes logs</code> ขณะทักบอท</td></tr>
+    <tr><td>cron ไม่รัน</td><td>① <code>hermes cron list</code> งานยัง active ไหม ② timezone (<code>date</code>) ③ <a href="https://hermes-agent.nousresearch.com/docs/guides/cron-troubleshooting">คู่มือ cron troubleshooting</a></td></tr>
+    <tr><td>โพสต์ไม่ขึ้นเพจ</td><td>① token หมดอายุ/ถูกเพิกถอน (ทำใหม่ตามบท 12 ขั้น 3) ② ดู error ใน log ③ ลองโพสต์มือผ่านแชทเพื่อแยกว่าพังที่ cron หรือที่ API</td></tr>
+    <tr><td>เครื่องเต็ม/อืด</td><td>① <code>df -h</code> + <code>free -h</code> ② ลบรูปเก่าใน out/ ③ <code>docker ps</code> ดูอะไรรันเกินจำเป็น</td></tr>
+  </table>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 14 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">1. ด่านกันเงินไหลที่สำคัญที่สุดตั้งอยู่ที่ไหน?</div>
+      <button class="quiz-opt">ในไฟล์ skill ทุกตัวที่เราเขียนไว้</button>
+      <button class="quiz-opt">ในตัว cron ที่จำกัดรอบการรันงาน</button>
+      <button class="quiz-opt">spending limit ที่ฝั่งเว็บ provider</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. ก่อนอัปเดต Hermes เวอร์ชันใหม่ ต้องทำอะไรก่อนเสมอ?</div>
+      <button class="quiz-opt">backup โฟลเดอร์ /opt/data ไว้ก่อน</button>
+      <button class="quiz-opt">ลบ container เก่าทิ้งให้หมดก่อน</button>
+      <button class="quiz-opt">ปิดเพจ Facebook ชั่วคราวไว้ก่อน</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">3. ข้อมูลรอดตอนอัปเดต container เพราะกลไกอะไร?</div>
+      <button class="quiz-opt">Hermes อัปโหลดขึ้น cloud ให้ทุกคืน</button>
+      <button class="quiz-opt">/opt/data อยู่ใน volume นอก container</button>
+      <button class="quiz-opt">Docker เก็บสำเนา image เก่าไว้เสมอ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <span class="label">🎓 จบคอร์ส!</span>
+    <p>จากคนที่ "ไม่มีความรู้เกี่ยวกับ VPS และ Hermes เลย" → เจ้าของระบบ AI agent ที่รันเพจให้ตัวเองทุกวัน ภารกิจปิดคอร์ส: ① ตั้ง spending limit ② สร้าง backup แรก ③ เก็บบท 06 (domain) ที่ข้ามไว้ · เพจรันจริงแล้วมีคำถาม/อยากต่อยอด (หลายเพจ? วิดีโอ? ตอบคอมเมนต์อัตโนมัติ?) — ครูยังอยู่ตรงนี้ตลอดครับ และลอง <a href="https://discord.gg/nousresearch">Discord ของ Nous Research</a> กับ <a href="https://reddit.com/r/selfhosted">r/selfhosted</a> — ชุมชนคนเลี้ยง agent เหมือนคุณ</p>
+  </div>
+</section>
+
+<!-- ─────────── บทแถม 15 ─────────── -->
+<section class="lesson" id="lesson-15">
+  <p class="lesson-kicker">บทแถม 15 · 🎁 หลังจบคอร์ส</p>
+  <div class="minimap" data-active="cron,queue,you,skills" data-note="บทนี้: อัปเกรดคิวให้มีตารางเวลา — เห็นทั้งสัปดาห์ล่วงหน้า"></div>
+  <h1>วางแผนล่วงหน้าทั้งสัปดาห์ — ปฏิทินคอนเทนต์อัตโนมัติ</h1>
+  <p class="lesson-lede">~40 นาที — จากเดิม "เลือกเช้าต่อเช้า" เป็น "ทุกวันเสาร์เห็นแผนทั้ง 14 โพสต์ของสัปดาห์หน้าในตารางเดียว ปรับ อนุมัติ แล้วนอนรอ" — งานมนุษย์เหลือสัปดาห์ละ ~5 นาที</p>
+
+  <h2>แนวคิด: คิวเดิม + มิติเวลา = ปฏิทิน</h2>
+  <p>ระบบเดิมโพสต์แบบ "หยิบ ready ตัวแรก" — เราเพิ่ม field <code>slot</code> (วัน+เวลานัดโพสต์) เข้าไปในแต่ละบรรทัดของคิว งานโพสต์เปลี่ยนจากหยิบตัวแรก เป็น<strong>หยิบตัวที่นัดไว้กับช่วงเวลานี้</strong>:</p>
+  <pre><code>{"text": "...", "slot": "2026-09-01 08:00", "status": "ready", "added": "..."}</code></pre>
+  <p>แล้วเพิ่มงานใหม่หนึ่งตัว: <strong>weekly-plan ทุกวันเสาร์ 10:00</strong> — ร่างแผน 14 ช่อง (จันทร์–อาทิตย์ × เช้า/เย็น) ส่งเป็นตารางให้คุณตรวจ</p>
+
+  <h2>ศิลปะการวางธีมลงตาราง (หัวใจของแผนที่ดี)</h2>
+  <p>คำคมที่ดีถูกเวลา ดีกว่าคำคมที่ดีเฉยๆ — จับคู่ธีมทั้ง 4 ของเพจกับ "อารมณ์ของวันและเวลา":</p>
+  <table>
+    <tr><th>ช่วง</th><th>คนอ่านกำลังรู้สึก</th><th>ธีมที่เข้าจังหวะ</th></tr>
+    <tr><td>จันทร์–อังคาร เช้า</td><td>ฝืนตื่นมาเริ่มสัปดาห์</td><td>การเริ่มใหม่ / ความพยายาม</td></tr>
+    <tr><td>กลางสัปดาห์ เย็น</td><td>ล้าสะสม เริ่มสงสัยตัวเอง</td><td>ใจเย็นกับตัวเอง</td></tr>
+    <tr><td>ศุกร์ เย็น – เสาร์</td><td>อยากวางทุกอย่างลง</td><td>การปล่อยวาง</td></tr>
+    <tr><td>อาทิตย์ เย็น</td><td>ใจหน่วงก่อนวันจันทร์</td><td>การเริ่มใหม่ (ปลุกใจเบาๆ)</td></tr>
+  </table>
+
+  <h2>ตัวอย่างแผนหนึ่งสัปดาห์ (หน้าตาที่จะได้ใน Telegram ทุกวันเสาร์)</h2>
+  <table>
+    <tr><th>วัน</th><th>08:00 เช้า</th><th>19:00 เย็น</th></tr>
+    <tr><td><b>จันทร์</b></td><td>[เริ่มใหม่] "วันจันทร์ไม่ใช่ศัตรู แค่หน้ากระดาษใหม่ที่ยังว่าง"</td><td>[พยายาม] "วันนี้ทำได้แค่ไหน ก็นับว่าได้ทำแล้ว"</td></tr>
+    <tr><td><b>อังคาร</b></td><td>[พยายาม — คนดัง] "จินตนาการสำคัญกว่าความรู้" — ไอน์สไตน์</td><td>[ใจเย็นกับตัวเอง] "เหนื่อยก็พักก่อน ไม่มีใครให้คะแนนความเร็วของชีวิตคุณ"</td></tr>
+    <tr><td><b>พุธ</b></td><td>[เริ่มใหม่] "ครึ่งสัปดาห์แรกเป็นยังไง ไม่สำคัญเท่าครึ่งที่เหลือ"</td><td>[ปล่อยวาง — คนดัง] คำสอนพระพุทธเจ้า (ธรรมบท — ยืนยันแหล่งที่มา)</td></tr>
+    <tr><td><b>พฤหัส</b></td><td>[พยายาม] ...</td><td>[ใจเย็นกับตัวเอง] ...</td></tr>
+    <tr><td><b>ศุกร์</b></td><td>[พยายาม] "อีกวันเดียว สู้แบบไม่ต้องสวยก็ได้"</td><td>[ปล่อยวาง] "สัปดาห์นี้จบแล้ว อนุญาตให้ตัวเองวางมันลงตรงนี้"</td></tr>
+    <tr><td><b>เสาร์</b></td><td>[ปล่อยวาง] ...</td><td>[ใจเย็นกับตัวเอง — คนดัง] ...</td></tr>
+    <tr><td><b>อาทิตย์</b></td><td>[ใจเย็นกับตัวเอง] ...</td><td>[เริ่มใหม่] "พรุ่งนี้ไม่ได้มาทวงหนี้ มันมาให้โอกาส"</td></tr>
+  </table>
+  <p>คุณตอบกลับแบบธรรมชาติ: <em>"สลับพุธเย็นกับศุกร์เย็น"</em>, <em>"เปลี่ยนเสาร์เช้าเป็นธีมพยายาม"</em>, <em>"ข้ออังคารเช้าขอตัวใหม่"</em> — พอใจแล้วพิมพ์ <strong>"อนุมัติแผน"</strong> → ทั้ง 14 ข้อเข้าคิวพร้อม slot ครบ</p>
+
+  <h2>ภารกิจที่ 1 — อัปเกรดคิวให้รู้จักเวลานัด</h2>
+  <pre><code>อัปเดต skill page-queue เพิ่มกติกา:
+- แต่ละบรรทัดมี field "slot" ได้ (รูปแบบ "YYYY-MM-DD HH:MM") = วันเวลานัดโพสต์
+- บรรทัดที่ไม่มี slot = โพสต์ได้ทุกเมื่อ (แบบเดิม)
+- เมื่อบันทึกแผนสัปดาห์ที่อนุมัติแล้ว: เขียนทุกข้อเป็น ready พร้อม slot ของมัน</code></pre>
+
+  <h2>ภารกิจที่ 2 — สอนงานโพสต์ให้ดูนาฬิกานัด</h2>
+  <pre><code>อัปเดต skill post-facebook ข้อ 1 (การเลือกคำคม):
+- หยิบบรรทัด ready ที่ slot ตรงกับวันนี้และช่วงเวลานี้ก่อน (เช้า=08:00, เย็น=19:00)
+- ถ้าไม่มีตัวที่นัดไว้: หยิบ ready ที่ไม่มี slot ตัวแรกแทน (เข้ากันได้กับระบบเดิม)
+- ห้ามหยิบตัวที่ slot เป็นวันอื่น</code></pre>
+
+  <h2>ภารกิจที่ 3 — งานร่างแผนประจำอาทิตย์</h2>
+  <pre><code>ตั้งงานประจำชื่อ weekly-plan: ทุกวันเสาร์เวลา 10:00 เวลาประเทศไทย
+ใช้ skill quote-style และ page-queue
+ร่างแผนโพสต์สัปดาห์หน้า (จันทร์ถึงอาทิตย์ x เช้า 08:00 / เย็น 19:00 = 14 ช่อง)
+- วางธีมตามอารมณ์ของวัน: ต้นสัปดาห์=เริ่มใหม่/พยายาม, กลางสัปดาห์เย็น=ใจเย็นกับตัวเอง,
+  ศุกร์เย็นถึงเสาร์=ปล่อยวาง, อาทิตย์เย็น=เริ่มใหม่
+- คนดังไม่เกิน 4 ข้อต่อสัปดาห์ กระจายวัน ห้ามติดกัน และต้องผ่านกติกาตรวจแหล่งที่มา
+- ห้ามซ้ำกับทุกบรรทัดใน queue.jsonl
+ส่งเป็นตารางให้ผมตรวจ ปิดท้ายว่า: "ปรับแก้ได้เลย หรือพิมพ์ 'อนุมัติแผน' เพื่อลงคิวทั้งหมด"
+ยังไม่ต้องเขียนอะไรลงคิวจนกว่าผมจะอนุมัติ
+เป็นข้อความผลลัพธ์โดยตรง ห้ามสร้างหรือเรียกใช้สคริปต์ใดๆ</code></pre>
+
+  <h2>ภารกิจที่ 4 — จัดระเบียบงานเช้าตัวเดิม</h2>
+  <p>เมื่อแผนสัปดาห์ทำงาน งาน morning-quotes รายวันจะซ้ำซ้อน — เปลี่ยนบทบาทมันเป็น "ผู้ประกาศข่าวเช้า":</p>
+  <pre><code>อัปเดตงาน morning-quotes: เปลี่ยนหน้าที่เป็น
+รายงานสั้นๆ ทุกเช้า 07:00 ว่าวันนี้มีนัดโพสต์อะไรบ้าง (เช้า/เย็น ธีมอะไร ข้อความว่าอะไร)
+พร้อมบอกว่า "อยากสลับหรือเปลี่ยนตัวไหน บอกได้ก่อน 08:00"
+ถ้าวันนี้ไม่มีตัวที่นัดไว้ในคิวเลย ให้เสนอคำคม 6 ข้อแบบเดิมมาให้เลือกแทน</code></pre>
+  <p>ผลลัพธ์: ทุกเช้าคุณยังได้ยินเสียงระบบ แต่แทนที่จะต้องตัดสินใจ กลายเป็นแค่<strong>รับทราบ + มีสิทธิ์วีโต้</strong> — และถ้าสัปดาห์ไหนลืมอนุมัติแผน ระบบถอยกลับไปโหมดเดิมเองอัตโนมัติ ไม่มีวันเพจเงียบ</p>
+
+  <h2>ซ้อมใหญ่</h2>
+  <ol class="steps">
+    <li><code>hermes cron run &lt;id ของ weekly-plan&gt;</code> → ได้ตารางแผนใน Telegram</li>
+    <li>ลองสั่งแก้ 1 อย่าง (เช่น "สลับจันทร์เย็นกับพุธเย็น") → ดูตารางฉบับแก้</li>
+    <li>พิมพ์ "อนุมัติแผน" → <code>cat</code> คิวดูว่าทุกบรรทัดมี slot ถูกต้อง</li>
+    <li>ซ้อมโพสต์: <code>hermes cron run &lt;id post-morning&gt;</code> → ต้องหยิบตัวที่นัดวันนี้เช้า ไม่ใช่ตัวแรกในไฟล์</li>
+  </ol>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทแถม 15 — 2 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. งานโพสต์รู้ได้ยังไงว่าช่วงนี้ต้องโพสต์คำคมตัวไหน?</div>
+      <button class="quiz-opt">หยิบบรรทัดแรกสุดของไฟล์เสมอเหมือนเดิม</button>
+      <button class="quiz-opt">หาบรรทัด ready ที่ slot ตรงวันเวลานี้ก่อน</button>
+      <button class="quiz-opt">ให้โมเดลสุ่มเลือกตามอารมณ์ของมันเอง</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. ถ้าสัปดาห์ไหนลืมอนุมัติแผน จะเกิดอะไรขึ้น?</div>
+      <button class="quiz-opt">ระบบถอยกลับโหมดเสนอรายวันเองอัตโนมัติ</button>
+      <button class="quiz-opt">เพจจะเงียบไปทั้งสัปดาห์จนกว่าจะอนุมัติ</button>
+      <button class="quiz-opt">ระบบจะอนุมัติแผนแทนเราเองทันทีเลย</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <span class="label">จบบทแถม 15 🎁</span>
+    <p>รายงาน: ตารางแผนสัปดาห์แรกที่อนุมัติแล้ว + ผลซ้อมข้อ 4 — จากนี้จังหวะชีวิตของคุณกับเพจคือ เสาร์ 10:00 ตรวจแผน 5 นาที + เช้าละ 10 วินาทีอ่านข่าวเช้า แค่นั้นจริงๆ</p>
+  </div>
+</section>
+
+<!-- ─────────── บทแถม 16 ─────────── -->
+<section class="lesson" id="lesson-16">
+  <p class="lesson-kicker">บทแถม 16 · 🎁 หลังจบคอร์ส</p>
+  <div class="minimap" data-active="skills,hermes" data-note="บทนี้: เพิ่มทักษะสำเร็จรูปจากคลังกลาง — อย่างมีเกณฑ์และปลอดภัย"></div>
+  <h1>ช้อปปิ้งทักษะจาก Skills Hub — อย่างมีเกณฑ์และปลอดภัย</h1>
+  <p class="lesson-lede">~30 นาที — คลังกลางมี skill เกือบแสนตัว บทนี้สอนสองอย่างที่สำคัญกว่าการติดตั้ง: <strong>วิธีคัด</strong> และ <strong>พิธีตรวจก่อนรับเข้าบ้าน</strong> — เพราะ skill คือ "คำสั่งที่คนอื่นเขียนให้พนักงานเราทำตาม"</p>
+
+  <h2>เกณฑ์คัด 4 ข้อ (ใช้กับทุก skill ตลอดไป)</h2>
+  <ol class="steps">
+    <li><strong>ไม่ต้องเสียเงินเพิ่ม</strong> — ตัดทิ้งทันทีถ้าต้องสมัครบริการภายนอก/มี subscription (เช่น ตัวจัดการโซเชียล 28 ช่องทั้งหลาย)</li>
+    <li><strong>เพิ่มความสามารถ</strong> — ทำสิ่งที่ระบบเรายังทำไม่ได้ (ไม่ใช่ของซ้ำ)</li>
+    <li><strong>เพิ่มประสิทธิภาพ</strong> — ทำของเดิมให้ดีขึ้น/เร็วขึ้น/คุณภาพสูงขึ้น</li>
+    <li><strong>ปลอดภัย</strong> — ✓ Built-in (ทีม Nous ดูแล) > ✦ registry มีชื่อ (ต้องอ่านก่อน) > ไม่ทราบที่มา (ไม่เอา)</li>
+  </ol>
+
+  <h2>ผลการคัดจากคลัง (สำหรับเพจบทเรียนชีวิต)</h2>
+  <table>
+    <tr><th>Skill</th><th>ที่มา</th><th>ผ่านเกณฑ์</th><th>ได้อะไร</th></tr>
+    <tr><td><strong>humanizer</strong></td><td>✓ Built-in</td><td>ฟรี ✓ ประสิทธิภาพ ✓ ปลอดภัย ✓</td><td>ขัดภาษาให้หมดกลิ่น AI — ตรงปัญหาคำคมแปลแข็งที่เราสู้มาตลอด</td></tr>
+    <tr><td><strong>weekly-review-planning</strong></td><td>✓ Built-in</td><td>ฟรี ✓ ประสิทธิภาพ ✓ ปลอดภัย ✓</td><td>โครง weekly reset — เสริมจังหวะเสาร์ 10:00 ของเรา</td></tr>
+    <tr><td><strong>Meta Business Suite</strong></td><td>✦ ClawHub</td><td>ฟรี ✓ ความสามารถ ✓ ปลอดภัย = <em>ต้องตรวจเอง</em></td><td>ตั้งเวลาโพสต์แบบ native + ประตูสู่ Instagram</td></tr>
+    <tr><td>Postnify / JubJub ฯลฯ</td><td>✦ ClawHub</td><td>❌ ตกข้อ 1 (บริการเสียเงิน)</td><td>—</td></tr>
+    <tr><td>comfyui</td><td>✓ Built-in</td><td>❌ ตกความจริง: VPS ไม่มี GPU</td><td>—</td></tr>
+  </table>
+
+  <h2>พิธีตรวจก่อนรับเข้าบ้าน (สำคัญที่สุดของบทนี้)</h2>
+  <div class="callout">
+    <span class="label">ทำไมต้องตรวจ — ภัยเงียบของยุค agent</span>
+    <p>SKILL.md คือ prompt ที่ agent จะ<em>เชื่อและทำตาม</em> — skill ร้ายสามารถสั่งพนักงานเราแอบส่ง token ออกนอกเครื่อง อ่าน .env หรือรันคำสั่งอันตรายได้ กฎเดียวกับบท 02 เป๊ะ: <strong>อย่ารันสิ่งที่ก๊อปมาโดยไม่เข้าใจ</strong> — คราวนี้แค่เปลี่ยนจาก "คำสั่ง shell" เป็น "คู่มือของ agent"</p>
+  </div>
+  <ol class="steps">
+    <li><strong>เปิดอ่าน SKILL.md ทั้งไฟล์ก่อนติดตั้ง</strong> (คลิกการ์ดในเว็บ hub ดูเนื้อในได้) — มองหาธงแดง: สั่ง curl/ส่งข้อมูลไป URL แปลกๆ · สั่งอ่านไฟล์ .env หรือ secrets · สั่งติดตั้งโปรแกรมเพิ่ม · ข้อความชี้นำให้ agent ทำเกินหน้าที่ของ skill</li>
+    <li>ดู <code>requires_toolsets</code> ในหัวไฟล์ — skill ขัดภาษาไม่ควรขอสิทธิ์ terminal</li>
+    <li>ติดตั้งแล้ว<strong>ซ้อมในแชทก่อนเสมอ</strong> — ห้ามผูกเข้า cron จนกว่าจะเห็นพฤติกรรมจริงว่านิ่ง</li>
+    <li>ติดครั้งละ 1–2 ตัวพอ — ลงพร้อมกันเยอะๆ พังแล้วหาตัวการไม่เจอ</li>
+  </ol>
+
+  <h2>ภารกิจที่ 1 — สำรวจของที่มีอยู่แล้ว</h2>
+  <pre><code>hermes skills list</code></pre>
+  <p>ตัวป้าย "✓ Built-in" ในเว็บ hub จำนวนมาก<strong>ติดมากับเครื่องอยู่แล้ว</strong> — เช็คก่อนว่า humanizer / weekly-review-planning อยู่ในรายการไหม ถ้ายังไม่มี ดูคลังในเครื่อง:</p>
+  <pre><code>hermes skills browse</code></pre>
+  <p>(ถ้าต้องติดตั้งจากเว็บ: คลิกการ์ดใน <a href="https://hermes-agent.nousresearch.com/docs/skills">Skills Hub</a> → ก๊อปคำสั่ง <code>hermes skills install ...</code> ของการ์ดนั้นมารัน)</p>
+
+  <h2>ภารกิจที่ 2 — ทดสอบ humanizer กับงานจริง (ก่อนผูกเข้าระบบ)</h2>
+  <p>ซ้อมในแชทด้วยของจริงที่เรามี — คำคมยุคก่อนมีคู่มือ:</p>
+  <pre><code>ใช้ skill humanizer ขัดประโยคนี้ให้เป็นภาษาไทยธรรมชาติ:
+"ความสูงไม่ใช่ของเธอ แต่คือจำนวนครั้งที่เธอลุกขึ้นหลังพักผ่อน"
+แล้วเทียบให้ดูก่อน-หลัง</code></pre>
+  <p><strong>จุดตัดสิน:</strong> humanizer ถูกฝึกกับภาษาอังกฤษเป็นหลัก — ถ้าผลภาษาไทยดี ค่อยผูกเข้าระบบ: <em>"อัปเดต skill quote-style เพิ่มขั้นสุดท้าย: ก่อนส่งคำคมทุกครั้ง ขัดด้วยแนวทาง humanizer"</em> · ถ้าผลเฉยๆ ก็ไม่ผูก — การตัดสินใจ "ไม่ใช้" หลังทดสอบ คือผลลัพธ์ที่ถูกต้องเท่ากับ "ใช้" (เราเสีย 5 นาที ไม่ใช่เสียระบบ)</p>
+
+  <h2>ภารกิจที่ 3 — ฝึกพิธีตรวจกับของชุมชน (ไม่บังคับติดตั้ง)</h2>
+  <p>ใช้ <strong>Meta Business Suite</strong> เป็นแบบฝึก — ขั้นตอนคลิกต่อคลิก (เดินจริงมาแล้ว 2026-08-27):</p>
+  <ol class="steps">
+    <li><strong>หาการ์ดใน Hub</strong> — เปิด <a href="https://hermes-agent.nousresearch.com/docs/skills">hermes-agent.nousresearch.com/docs/skills</a> → พิมพ์ในช่องค้นหา: <code>Meta Business Suite</code> → <strong>คลิกที่ตัวการ์ด</strong> (การ์ดจะกางออก) — ได้สองอย่าง: แถบ tags (facebook, graph-api, instagram, scheduling...) และ<strong>กล่องคำสั่งติดตั้งพร้อมปุ่ม Copy</strong>: <code>hermes skills install clawhub/meta-business-suite</code> — แต่การ์ด<em>ไม่โชว์เนื้อใน</em> ห้ามติดตั้งจากตรงนี้ทันที</li>
+    <li><strong>ไปอ่านเนื้อจริงที่ต้นทาง</strong> — skill นี้บ้านอยู่ ClawHub: เปิด <a href="https://clawhub.ai/nachx639/meta-business-suite">clawhub.ai/nachx639/meta-business-suite</a> (หรือค้นชื่อใน clawhub.ai) — หน้านี้มีแท็บ <strong>SKILL.md</strong> (เนื้อเต็ม), <strong>Files</strong> (ไฟล์แนบทั้งหมด), <strong>Versions</strong> (ประวัติแก้), <strong>Requirements</strong> — อ่าน SKILL.md ให้จบ</li>
+    <li><strong>ไล่เช็คลิสต์ธงแดง</strong> — เฉลยจากการตรวจจริงของครู (ให้เทียบกับที่คุณเห็น):
+      <br>✅ ทุกคำสั่ง curl ยิงไป <code>graph.facebook.com</code> ที่เดียว — ไม่มี URL แปลกปลอม
+      <br>✅ ประกาศเองว่า "CRITICAL: Never hardcode tokens" — ใช้ตัวแปร env (<code>META_PAGE_ACCESS_TOKEN</code>)
+      <br>✅ ไม่สั่งติดตั้งโปรแกรมเพิ่ม (ใช้ curl + python3 ที่มีอยู่แล้ว)
+      <br>⚠️ ข้อสังเกต: มันมีท่า <em>ลบโพสต์</em> ด้วย (พลังที่ต้องระวัง), ใช้ API v25.0 (ของเรา v26.0 — แจ้ง agent ให้ใช้เวอร์ชันเราได้), และชื่อตัวแปร token ไม่ตรงกับของเรา (<code>FB_PAGE_TOKEN</code>) — ถ้าติดตั้งต้องบอกให้ map ชื่อ</li>
+    <li><strong>ตอบสามคำถามตัดสิน</strong>: ขอสิทธิ์อะไร (แค่ Graph API ด้วย token ที่เรามีอยู่แล้ว) / ส่งข้อมูลไปไหน (graph.facebook.com เท่านั้น) / ทำอะไรที่เราทำไม่ได้ (ตั้งเวลาโพสต์ native ล่วงหน้าได้ถึง 75 วัน!, ดู insights, จัดการคอมเมนต์, โพสต์ Instagram รูป/Reels/carousel) — <strong>ผลตรวจ: ผ่าน</strong> ติดได้เมื่อถึงวันอยากใช้ของพวกนี้ ตอนนี้ระบบเรายังไม่มีโจทย์ → จดไว้ก่อน</li>
+  </ol>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทแถม 16 — 2 ข้อ</div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">1. ก่อนติดตั้ง skill จากชุมชน สิ่งแรกที่ต้องทำคือ?</div>
+      <button class="quiz-opt">ติดตั้งเลยแล้วค่อยลองใช้ดูว่าเวิร์คไหม</button>
+      <button class="quiz-opt">ดูจำนวนดาวหรือยอดดาวน์โหลดให้เยอะๆ</button>
+      <button class="quiz-opt">เปิดอ่าน SKILL.md ทั้งไฟล์หาธงแดงก่อน</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">2. skill ใหม่ที่เพิ่งติดตั้ง ควรใช้ที่ไหนก่อน?</div>
+      <button class="quiz-opt">ผูกเข้างาน cron ทันทีให้ทำงานอัตโนมัติ</button>
+      <button class="quiz-opt">ซ้อมในแชทจนเห็นว่าพฤติกรรมนิ่งก่อน</button>
+      <button class="quiz-opt">ใส่ในทุก skill เดิมให้ทำงานร่วมกันเลย</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <span class="label">จบบทแถม 16 🎁</span>
+    <p>รายงาน: ผล <code>hermes skills list</code> + ผลเทียบก่อน-หลังของ humanizer (และคำตัดสินของคุณ: ผูก/ไม่ผูก) — เกณฑ์ 4 ข้อกับพิธีตรวจในบทนี้คือเครื่องมือถาวร ใช้ได้กับ skill เกือบแสนตัวที่เหลือในคลังตลอดไป</p>
+  </div>
+</section>
+
+<!-- ─────────── บทแถม 17 ─────────── -->
+<section class="lesson" id="lesson-17">
+  <p class="lesson-kicker">บทแถม 17 · 🎁 หลังจบคอร์ส</p>
+  <div class="minimap" data-active="llm,cron" data-note="บทนี้: เลือก 'สมอง' ให้ถูกงาน — ฟรีให้เป็น จ่ายให้คุ้ม"></div>
+  <h1>ตลาดสมอง — คัดโมเดลฟรีให้เหมาะงาน และศาสตร์การตัดสินใจจ่าย</h1>
+  <p class="lesson-lede">~40 นาที — <a href="https://openrouter.ai/models">openrouter.ai/models</a> มีโมเดลหลายร้อยตัว บทนี้สอนวิธีคัดแบบมีหลักการ: อ่านตลาดเป็น → จัดประกวดด้วยงานจริง → และรู้ว่า "เมื่อไหร่ควรจ่าย" ด้วยตัวเลข ไม่ใช่ความรู้สึก</p>
+
+  <h2>ก่อนเลือกสมอง — รู้ก่อนว่างานเราต้องการสมองแบบไหน</h2>
+  <table>
+    <tr><th>งานในระบบเรา</th><th>ต้องการจริงๆ</th><th>ไม่ต้องการ</th></tr>
+    <tr><td>cron เขียนคำคม (07:00)</td><td><strong>ภาษาไทยเนียน</strong> + ทำตามคู่มือเป๊ะ + เสถียร</td><td>reasoning ลึก, ความรู้มหาศาล</td></tr>
+    <tr><td>cron ทำรูป/โพสต์ (08:00, 19:00)</td><td>ทำตามขั้นตอนแม่นๆ ไม่ timeout</td><td>ความคิดสร้างสรรค์ (ยิ่งน้อยยิ่งดี!)</td></tr>
+    <tr><td>แชทผู้ช่วย (แก้ระบบ, สร้าง skill)</td><td>ฉลาด ใช้เครื่องมือเก่ง อ่านโค้ดได้</td><td>— (งานนี้เอาแรงสุดที่หาได้)</td></tr>
+  </table>
+  <p>ข้อคิดหลัก: <strong>"โมเดลที่ดีที่สุด" ไม่มีจริง — มีแต่ "เหมาะกับงานนี้ที่สุด"</strong> งานเขียนคำคมกับงานกดโพสต์ต้องการสมองคนละแบบ (นี่คือเหตุผลที่เราแยก cron.model ออกจากแชทตั้งแต่แรก)</p>
+
+  <h2>อ่านตลาด openrouter.ai/models ให้เป็น</h2>
+  <ol class="steps">
+    <li>เปิด <a href="https://openrouter.ai/models">openrouter.ai/models</a> → filter ซ้ายมือ: <strong>Prompt pricing = FREE</strong> (หรือสังเกตชื่อลงท้าย <code>:free</code>) → sort ด้วย <strong>Top Weekly</strong></li>
+    <li>อ่านคอลัมน์สำคัญ: <strong>Weekly Tokens</strong> (ความนิยม = ตัวแทนความน่าเชื่อถือ — คนทั้งโลกช่วยทดสอบให้), <strong>Context</strong> (ยาวพอสำหรับ skill ของเรา — 32k ขึ้นไปเหลือเฟือ), <strong>Latency/Throughput</strong> (งาน cron ชอบตัวตอบไว)</li>
+    <li>รู้จักสองสายพันธุ์ฟรี: <strong>:free ปกติ</strong> (โมเดลจริงเวอร์ชันฟรี มีตัวตนถาวร) กับ <strong>stealth</strong> (แล็บลับเปิดทดสอบ — เก่งฟรีแต่<em>หายได้ทุกเมื่อ</em> เช่น ox-alpha ของเรา) — cron ควรพึ่งสายพันธุ์แรก</li>
+    <li>ข้อจำกัดที่ต้องจำ (จ่ายด้วยแผลจริงมาแล้วทั้งหมด): โควตารวมบัญชี (20 req/นาที + 50 หรือ 1,000 req/วัน) · ภาษาอื่นปนได้ (เคสอักษรจีน/เกาหลี) · กุข้อมูลเก่ง (เคสคำคมปลอม) · timeout ได้และไม่ trigger fallback · ข้อมูลอาจถูกใช้เทรน</li>
+  </ol>
+
+  <h2>วิธีคัดที่ถูกต้อง: จัดประกวดด้วยงานจริง 🏆</h2>
+  <p>อย่าเลือกจากรีวิวหรือ benchmark — งานเราคือคำคมไทย ให้คำคมไทยเป็นกรรมการ:</p>
+  <ol class="steps">
+    <li>เลือกผู้ท้าชิง 2–3 ตัวจากหน้า models (ฟรี + Weekly Tokens สูง + ไม่ใช่ stealth)</li>
+    <li>ให้แต่ละตัวทำ<strong>งานจริงชิ้นเดียวกัน</strong> ด้วย flag ครั้งเดียว (ไม่แตะ config): <pre><code>hermes -m "ชื่อโมเดล:free" -c "ใช้ skill quote-style เขียนคำคม 3 ข้อ ธีมความพยายาม"</code></pre></li>
+    <li><strong>ตัดสินแบบไม่ดูชื่อ</strong> — รวมผลทุกตัวปนกัน เลือกข้อที่ดีสุดก่อน แล้วค่อยเปิดเฉลยว่าใครเขียน (กันใจเอนเอียงเข้าข้างชื่อดัง)</li>
+    <li>ผู้ชนะ → ทดสอบความทน: รันงานจริง <code>hermes cron run</code> สัก 2–3 รอบดูว่าเสถียรไหม → ค่อยตั้งเป็น <code>cron.model</code> ตัวใหม่ · ตัวรอง → เข้า fallback chain</li>
+  </ol>
+
+  <h2>💰 ศาสตร์การตัดสินใจจ่าย — 4 คำถามก่อนควักเงิน</h2>
+  <ol class="steps">
+    <li><strong>"ฟรีแพ้ตรงไหน วัดได้ไหม?"</strong> — จ่ายเมื่อมีหลักฐาน ไม่ใช่เมื่ออยากได้ของแรง และเรามีมิเตอร์วัดอยู่แล้วโดยไม่รู้ตัว: <strong>อัตราการกดเลือกของคุณตอนเช้า</strong> — ถ้าจาก 6 ข้อคุณเลือกได้แค่ 1 หรือปัดตกบ่อยเพราะภาษาแข็ง/ผิดกติกา = ฟรีกำลังแพ้ · ถ้าเลือกได้ 2–3 ทุกเช้าสบายๆ = ฟรีชนะอยู่ ไม่ต้องจ่าย</li>
+    <li><strong>"ต้นทุนจริงเดือนละเท่าไหร่?"</strong> — คำนวณก่อนเสมอ (เลขจริงของระบบเรา): งานคำคมเช้าใช้ ~3–5k tokens/รอบ × 30 วัน ≈ 150k tokens/เดือน → โมเดลจ่ายเงินราคา ~$0.2/1M input + $0.8/1M output ≈ <strong>ไม่ถึง $0.15/เดือน = ห้าบาท</strong> — ราคาต่อ token แทบไม่ใช่ประเด็น! ตัวที่ฆ่ากระเป๋าจริงคือ 3 อย่างจากเคส $5: <em>context บวม × งานวนลูป × ผ้าคลุมค้างผิดที่</em></li>
+    <li><strong>"จ่ายเฉพาะจุดได้ไหม?"</strong> — ได้และควร: อัปเกรดเฉพาะงานที่คุณภาพคือหัวใจ (cron.model ของงานเขียนคำคม) ส่วนงาน mechanical (ทำรูป/โพสต์) ฟรีดีอยู่แล้ว — สถาปัตยกรรมเราแยกให้ตั้งแต่บทเสริม 7.5</li>
+    <li><strong>"ตาข่ายกางครบหรือยัง?"</strong> — ก่อนเปิดใช้ตัวจ่ายเงิน: เพดาน key ($1 ของเราตั้งแล้ว ✓) + fallback เป็นตัวฟรี ✓ + weekly-guard จับโมเดลแพงแปลกปลอม ✓ — ครบแล้วทดลองได้อย่างปลอดภัย: เปิด 1 สัปดาห์ วัดอัตราการกดเลือกเทียบก่อน-หลัง แล้วตัดสินด้วยตัวเลข</li>
+  </ol>
+  <div class="callout">
+    <span class="label">สูตรจำง่าย</span>
+    <p><strong>ฟรีก่อนเสมอ → วัดด้วยงานจริง → จ่ายเฉพาะจุดที่แพ้ → มีเพดานกับตาข่ายเสมอ → วัดซ้ำหลังจ่าย</strong> — ถ้าจ่ายแล้ววัดไม่ได้ว่าดีขึ้น ให้ถอยกลับฟรี เงินเดือนละห้าบาทก็ไม่ควรจ่ายให้สิ่งที่พิสูจน์ไม่ได้</p>
+  </div>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทแถม 17 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. วิธีคัดโมเดลสำหรับงานเขียนคำคมที่ถูกต้องคือ?</div>
+      <button class="quiz-opt">เลือกตัวที่คะแนน benchmark สูงที่สุด</button>
+      <button class="quiz-opt">ประกวดด้วยงานจริงแล้วตัดสินไม่ดูชื่อ</button>
+      <button class="quiz-opt">เลือกตัวที่ชื่อคุ้นหูและคนพูดถึงเยอะ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. มิเตอร์วัดว่า "โมเดลฟรีกำลังแพ้" ของระบบเราคือ?</div>
+      <button class="quiz-opt">จำนวนไลก์ที่เพจได้รับในแต่ละวัน</button>
+      <button class="quiz-opt">ความเร็วในการตอบของตัวโมเดลเอง</button>
+      <button class="quiz-opt">อัตราที่คุณกดเลือกคำคมได้ตอนเช้า</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. ตัวการที่ทำให้เสียเงินจริงในทางปฏิบัติ (จากเคส $5) คือ?</div>
+      <button class="quiz-opt">context บวม งานวนลูป และผ้าคลุมค้างผิดที่</button>
+      <button class="quiz-opt">ราคาต่อ token ของโมเดลที่ตั้งไว้แพงไป</button>
+      <button class="quiz-opt">การตั้ง fallback chain ยาวเกินความจำเป็น</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout good">
+    <span class="label">จบบทแถม 17 🎁</span>
+    <p>ภารกิจ: เปิด openrouter.ai/models คัดผู้ท้าชิงฟรี 2–3 ตัว → จัดประกวดคำคม → รายงานผล: ใครชนะ และคุณตัดสินใจเปลี่ยน cron.model ไหม — และจดอัตราการกดเลือกของตัวเองไว้สักสัปดาห์ นั่นคือมิเตอร์ที่จะบอกเองว่าวันไหนถึงเวลาคุยเรื่องจ่ายเงิน</p>
+  </div>
+</section>
+
+<!-- ─────────── Reference: Glossary ─────────── -->
+<section class="lesson" id="glossary">
+  <p class="lesson-kicker">Reference</p>
+  <h1>📚 Glossary — ศัพท์ประจำคอร์ส</h1>
+  <p class="lesson-lede">ทุกบทเรียนใช้ศัพท์ตามนี้ เจอคำไหนไม่คุ้นให้กลับมาที่นี่ (เพิ่มคำใหม่ทุกครั้งที่บทเรียนแนะนำศัพท์ใหม่ · ล่าสุด: บทที่ 06)</p>
+
+  <dl>
+    <dt>VPS</dt>
+    <dd><em>Virtual Private Server</em> — "คอมพิวเตอร์เช่า" ใน data center เปิดตลอด 24 ชม. เราได้สิทธิ์ควบคุมเต็ม จ่ายรายเดือน ระบบเพจคำคมทั้งหมดอาศัยอยู่บนเครื่องนี้</dd>
+    <dt>Server (เซิร์ฟเวอร์)</dt>
+    <dd>คอมพิวเตอร์ที่เปิดทิ้งไว้เพื่อ "ให้บริการ" เครื่องอื่น — ไม่มีจอไม่มีเมาส์ สั่งงานผ่านอินเทอร์เน็ต</dd>
+    <dt>Ubuntu</dt>
+    <dd>ระบบปฏิบัติการตระกูล Linux ที่นิยมสุดสำหรับเซิร์ฟเวอร์ (คอมบ้านใช้ Windows, เซิร์ฟเวอร์เราใช้ Ubuntu) — ฟรี เครื่องมือแทบทุกตัวรองรับเป็นอันดับแรก</dd>
+    <dt>SSH</dt>
+    <dd><em>Secure Shell</em> — วิธีรีโมตเข้าไปสั่งงาน VPS จากคอมเราแบบเข้ารหัส สิ่งที่เห็นคือหน้าจอดำไว้พิมพ์คำสั่ง (ใช้จริงในบทที่ 02)</dd>
+    <dt>Terminal / Shell</dt>
+    <dd>หน้าจอข้อความล้วนไว้พิมพ์คำสั่งให้เครื่องทำงาน (บน Windows คือ PowerShell, บน VPS คือ shell ของ Ubuntu) — ไม่มีเมาส์ แต่ทำได้ทุกอย่าง</dd>
+    <dt>root</dt>
+    <dd>ผู้ใช้สิทธิ์สูงสุดของเครื่อง Linux — ทำได้ทุกอย่างรวมถึงลบทั้งระบบ ใช้ด้วยความระมัดระวัง Hostinger ให้เรา login เป็น root ตั้งแต่แรก</dd>
+    <dt>Prompt</dt>
+    <dd>บรรทัดล่างสุดของ terminal ที่รอเราพิมพ์ เช่น <code>root@srv123:~#</code> — อ่านว่า "user root อยู่บนเครื่อง srv123 ที่โฟลเดอร์ ~ (บ้าน)"</dd>
+    <dt>Docker</dt>
+    <dd>เครื่องมือที่ห่อโปรแกรมพร้อมทุกอย่างที่มันต้องใช้ไว้ใน "กล่อง" เรียกว่า container — ติดตั้งง่าย ลบง่าย ไม่ทำเครื่องรก Hermes รันอยู่ใน container</dd>
+    <dt>Container</dt>
+    <dd>กล่องที่ Docker สร้างมารันโปรแกรมหนึ่งตัวแยกส่วนจากระบบหลัก — พังก็ลบสร้างใหม่ได้โดยไม่กระทบเครื่อง</dd>
+    <dt>Image</dt>
+    <dd>แม่แบบสำเร็จรูปของโปรแกรมที่ใช้สร้าง container — image เดียวสร้างได้หลาย container (อุปมา: สูตรอาหาร → จานอาหาร)</dd>
+    <dt>Volume</dt>
+    <dd>ลิ้นชักเก็บข้อมูลถาวรนอก container — ลบ/อัปเดต container แล้วข้อมูลใน volume ไม่หาย ความจำของ Hermes อยู่ที่นี่</dd>
+    <dt>Docker Hub</dt>
+    <dd>คลังกลางบนอินเทอร์เน็ตที่รวม image ให้ดาวน์โหลด — <code>docker run</code> จะไปหยิบ image จากที่นี่ถ้าในเครื่องไม่มี</dd>
+    <dt>Docker Manager</dt>
+    <dd>หน้าเว็บใน hPanel ของ Hostinger ไว้จัดการ Docker ด้วยการกดปุ่ม — มี Catalog แอปสำเร็จรูปรวมถึง Hermes Agent</dd>
+    <dt>Hermes Agent</dt>
+    <dd>AI agent ของ Nous Research ที่รันบนเครื่องเราเอง — คุยผ่าน Telegram ได้ ตั้งงานอัตโนมัติ (cron) ได้ สอนทักษะใหม่ (skill) ได้ และจำสิ่งที่เรียนรู้ นี่คือ "พนักงาน" ของเพจเรา</dd>
+    <dt>AI Agent</dt>
+    <dd>โปรแกรม AI ที่ไม่ได้แค่ตอบคำถาม แต่<em>ลงมือทำงาน</em>ได้เอง — เรียกใช้เครื่องมือ ตัดสินใจ ทำงานหลายขั้นต่อเนื่องจนจบ</dd>
+    <dt>LLM</dt>
+    <dd><em>Large Language Model</em> — "สมอง" ที่ agent ใช้คิด เช่นโมเดลตระกูล Claude, GPT, Hermes ต้องต่อ API key ของผู้ให้บริการโมเดล (มีค่าใช้จ่ายตามการใช้งาน)</dd>
+    <dt>Cron</dt>
+    <dd>ระบบตั้งเวลางานอัตโนมัติ — "ทุกวัน 07:00 ทำสิ่งนี้" Hermes มี cron ในตัว เป็นหัวใจของการโพสต์วันละ 2 ครั้ง</dd>
+    <dt>Domain (โดเมน)</dt>
+    <dd>ชื่อจำง่ายที่ชี้ไปยังเครื่องเรา เช่น <code>mypage.com</code> แทนเลข IP — Hostinger แถมฟรี 12 เดือน</dd>
+    <dt>IP Address</dt>
+    <dd>เลขประจำเครื่องบนอินเทอร์เน็ต เช่น <code>145.79.12.88</code> — ใช้ตอน SSH เข้าเครื่อง</dd>
+    <dt>HTTPS</dt>
+    <dd>การเข้าเว็บแบบเข้ารหัส (รูปกุญแจ 🔒 หน้า URL) — จำเป็นเมื่อเปิดหน้าเว็บ Hermes ให้เข้าจากอินเทอร์เน็ต</dd>
+    <dt>API</dt>
+    <dd><em>Application Programming Interface</em> — "ประตูหลังบ้าน" ให้โปรแกรมคุยกับบริการต่างๆ โดยไม่ต้องเปิดหน้าเว็บ เช่น Hermes โพสต์ลงเพจผ่าน Facebook Pages API</dd>
+    <dt>Pipeline</dt>
+    <dd>สายพานงานหลายขั้นต่อกัน — ของเราคือ หาคำคม → เลือก → เข้าคิว → ทำรูป → โพสต์</dd>
+    <dt>Human-in-the-loop</dt>
+    <dd>จุดที่ระบบอัตโนมัติหยุดรอ "คน" ตัดสินใจก่อนไปต่อ — ของเราคือขั้นที่คุณกดเลือกคำคมใน Telegram</dd>
+    <dt>API key</dt>
+    <dd>รหัสลับไว้ใช้บริการผ่าน API — เหมือนบัตรเครดิตย่อมๆ ใครได้ไปก็เผาเงินเราได้ ห้ามแชร์ และตั้งเพดานใช้จ่ายเสมอ</dd>
+    <dt>Bot (Telegram) / BotFather</dt>
+    <dd>บอทคือบัญชี Telegram สำหรับโปรแกรม — "เบอร์โทร" ที่ Hermes ใช้รับข้อความ สร้างผ่าน @BotFather (บอททางการของ Telegram) ซึ่งออก token ให้</dd>
+    <dt>Gateway (Hermes)</dt>
+    <dd>ตัวกลางของ Hermes ที่ต่อกับช่องทางสื่อสาร (Telegram ฯลฯ) และคอยปลุก cron — ต้องรันค้างไว้ตลอด ระบบถึงตอบแชทและทำงานตามเวลาได้</dd>
+    <dt>Traefik</dt>
+    <dd>"พนักงานต้อนรับ" หน้าประตูเว็บของเครื่อง — รับผู้เข้าชม พาไปยัง container ที่ถูกต้อง และขอใบรับรอง HTTPS ให้อัตโนมัติ (Hostinger ติดมาให้ตอน deploy Hermes)</dd>
+    <dt>DNS</dt>
+    <dd><em>Domain Name System</em> — สมุดโทรศัพท์ของอินเทอร์เน็ต แปลงชื่อโดเมน → เลข IP</dd>
+    <dt>A record</dt>
+    <dd>บรรทัดหนึ่งในสมุด DNS ที่ประกาศว่า "ชื่อนี้ = IP นี้" — เราใช้มันชี้โดเมนฟรีเข้า VPS</dd>
+    <dt>Propagation</dt>
+    <dd>ช่วงเวลาที่การแก้ DNS ค่อยๆ กระจายไปทั่วโลก — ทางการบอกได้ถึง 24 ชม. ส่วนใหญ่เร็วกว่านั้นมาก</dd>
+    <dt>Skill (Hermes)</dt>
+    <dd>คู่มืองานหนึ่งเรื่องในไฟล์ SKILL.md เก็บที่ <code>/opt/data/skills/</code> (เครื่องเรา — ค่ามาตรฐานเอกสารคือ ~/.hermes/skills/) — ความจำถาวรของระบบ ผูกกับงาน cron ได้ สร้างผ่านแชท, <code>/learn</code>, หรือ <code>hermes skills install</code></dd>
+    <dt>Self-contained prompt</dt>
+    <dd>คำสั่งที่จบในตัวเอง ไม่พึ่งความจำจากแชทเก่า — จำเป็นสำหรับงาน cron เพราะทุกรอบเป็น session สด</dd>
+    <dt>UTC / Timezone</dt>
+    <dd>เซิร์ฟเวอร์มักตั้งนาฬิกาเป็น UTC ซึ่งช้ากว่าไทย 7 ชั่วโมง — เช็คด้วย <code>date</code> ก่อนตั้งงานตามเวลาเสมอ</dd>
+    <dt>Queue (คิวโพสต์)</dt>
+    <dd>ไฟล์ <code>~/.hermes/page/queue.jsonl</code> — คำคมที่คุณเลือกแล้วรอโพสต์ บรรทัดละอัน สถานะ ready → posted</dd>
+    <dt>Graph API</dt>
+    <dd>API หลักของ Meta — ระบบเราใช้ endpoint <code>/{PAGE_ID}/photos</code> โพสต์รูปลงเพจ (ระบุเวอร์ชัน API เสมอ)</dd>
+    <dt>Page Access Token</dt>
+    <dd>กุญแจสิทธิ์โพสต์ลงเพจ ได้จาก user token อายุยาวผ่าน <code>me/accounts</code> — ตัวจากอายุยาวจะไม่หมดอายุ เก็บใน <code>hermes secrets</code></dd>
+    <dt>Development mode (Meta App)</dt>
+    <dd>โหมดเริ่มต้นของแอป Meta — โพสต์ลงเพจที่เราเป็นแอดมินได้เลยโดยไม่ต้องส่งแอปตรวจ พอสำหรับระบบส่วนตัวแบบเรา</dd>
+    <dt>Fallback chain</dt>
+    <dd>แถวโมเดลสำรองที่รับไม้ต่ออัตโนมัติเมื่อโมเดลหลักล้ม (429/เครดิตหมด/error) — ตั้งด้วย <code>hermes fallback</code>, ห้ามซ้ำกับตัวหลัก, ควรอยู่คนละค่าย/โควตา</dd>
+    <dt>ไฟล์ .env (Hermes)</dt>
+    <dd>ที่เก็บความลับจริงของ Hermes: <code>/opt/data/.env</code> — token/key ทุกตัวอยู่ที่นี่ (Telegram, Facebook) เพิ่มด้วย <code>echo '...' &gt;&gt;</code> ใน terminal ไม่ผ่านแชท · ส่วนคำสั่ง <code>hermes secrets</code> คือตัวเชื่อมตู้เซฟภายนอก (Bitwarden/1Password) ซึ่งคอร์สนี้ไม่ใช้</dd>
+  </dl>
+</section>
+
+<!-- ─────────── Reference: คำสั่ง Linux ─────────── -->
+<section class="lesson" id="commands">
+  <p class="lesson-kicker">Reference</p>
+  <h1>⌨️ คำสั่ง Linux ประจำคอร์ส</h1>
+  <p class="lesson-lede">คำสั่งทั้งหมดที่คอร์สนี้ใช้จริง — พิมพ์ใน terminal แล้วกด Enter ทุกครั้ง (ล่าสุด: บทที่ 03)</p>
+
+  <h2>ดูว่าเราเป็นใคร อยู่ที่ไหน</h2>
+  <table>
+    <tr><th>คำสั่ง</th><th>ทำอะไร</th><th>จำง่ายๆ</th></tr>
+    <tr><td><code>whoami</code></td><td>บอกว่า login เป็น user ไหน (เครื่องเรา = <code>root</code>)</td><td>who am I?</td></tr>
+    <tr><td><code>pwd</code></td><td>บอกว่าอยู่โฟลเดอร์ไหน</td><td>print working directory</td></tr>
+    <tr><td><code>ls</code></td><td>ดูรายชื่อไฟล์ตรงนี้ (<code>ls -la</code> = ละเอียด+ไฟล์ซ่อน)</td><td>list</td></tr>
+    <tr><td><code>cd ชื่อโฟลเดอร์</code></td><td>ย้ายเข้าโฟลเดอร์ (<code>cd ..</code> = ถอยออก, <code>cd</code> = กลับบ้าน)</td><td>change directory</td></tr>
+    <tr><td><code>cat ชื่อไฟล์</code></td><td>แสดงเนื้อไฟล์ทั้งไฟล์</td><td>—</td></tr>
+  </table>
+
+  <h2>ดูสุขภาพเครื่อง</h2>
+  <table>
+    <tr><th>คำสั่ง</th><th>ทำอะไร</th><th>จำง่ายๆ</th></tr>
+    <tr><td><code>df -h</code></td><td>เหลือดิสก์เท่าไหร่ (ดูบรรทัด <code>/</code>)</td><td>disk free</td></tr>
+    <tr><td><code>free -h</code></td><td>เหลือ RAM เท่าไหร่</td><td>—</td></tr>
+    <tr><td><code>uptime</code></td><td>เครื่องเปิดมานานแค่ไหน + load</td><td>—</td></tr>
+    <tr><td><code>top</code></td><td>ดูโปรแกรมที่รันแบบสด — <strong>กด q ออก</strong></td><td>—</td></tr>
+  </table>
+
+  <h2>สร้าง/จัดการไฟล์</h2>
+  <table>
+    <tr><th>คำสั่ง</th><th>ทำอะไร</th><th>จำง่ายๆ</th></tr>
+    <tr><td><code>mkdir ชื่อ</code></td><td>สร้างโฟลเดอร์ใหม่</td><td>make directory</td></tr>
+    <tr><td><code>cp ต้นทาง ปลายทาง</code></td><td>คัดลอกไฟล์</td><td>copy</td></tr>
+    <tr><td><code>mv ต้นทาง ปลายทาง</code></td><td>ย้าย/เปลี่ยนชื่อ</td><td>move</td></tr>
+    <tr><td><code>rm ชื่อไฟล์</code></td><td>ลบไฟล์ — <strong>ไม่มีถังขยะ หายถาวร</strong> ⚠️</td><td>remove</td></tr>
+  </table>
+
+  <h2>Docker (บทที่ 03+)</h2>
+  <table>
+    <tr><th>คำสั่ง</th><th>ทำอะไร</th></tr>
+    <tr><td><code>docker --version</code></td><td>เช็คว่าเครื่องมี Docker ไหม + เวอร์ชันอะไร</td></tr>
+    <tr><td><code>docker ps</code></td><td>ดู container ที่<strong>กำลังรัน</strong>อยู่ตอนนี้</td></tr>
+    <tr><td><code>docker ps -a</code></td><td>ดู container ทั้งหมด รวมที่ดับไปแล้ว (Exited)</td></tr>
+    <tr><td><code>docker images</code></td><td>ดู image (แม่แบบ) ที่ดาวน์โหลดไว้ในเครื่อง</td></tr>
+    <tr><td><code>docker run hello-world</code></td><td>รัน container ทดสอบ — โหลด image จาก Docker Hub ถ้ายังไม่มี</td></tr>
+    <tr><td><code>docker exec -it ชื่อcontainer bash</code></td><td>"มุดเข้าไปข้างใน" container ที่รันอยู่ (ใช้เข้า Hermes จาก SSH: <code>docker exec -it hermes-agent-xxxx-hermes-agent-1 bash</code>) — exit เพื่อออกกลับมาตัวเครื่อง</td></tr>
+    <tr><td><code>ssh-keygen -R IP</code></td><td>ลบ "ลายนิ้วมือ" เครื่องเก่าออกจากคอมเรา (ใช้หลังเปลี่ยน OS ของ VPS — รันบนเครื่องเรา ไม่ใช่บน VPS)</td></tr>
+  </table>
+
+  <h2>Hermes CLI (บท 07+) — รันใน container</h2>
+  <table>
+    <tr><th>คำสั่ง</th><th>ทำอะไร</th></tr>
+    <tr><td><code>hermes cron list</code></td><td>ดูงานตั้งเวลาทั้งหมด + id</td></tr>
+    <tr><td><code>hermes cron run &lt;id&gt;</code></td><td>สั่งรันงานทันที (ไว้ทดสอบ ไม่ต้องรอเวลา)</td></tr>
+    <tr><td><code>hermes cron pause/resume/remove &lt;id&gt;</code></td><td>พัก / ปลุก / ลบงาน</td></tr>
+    <tr><td><code>hermes skills list</code></td><td>ดู skill ทั้งหมดที่ติดตั้ง (ต้องมีคำสั่งย่อย — พิมพ์เฉยๆ จะโชว์แค่ usage)</td></tr>
+    <tr><td><code>/skills pending · diff · approve</code></td><td>(ในแชท) ตรวจ+อนุมัติ skill ที่ Hermes เสนอแก้เอง</td></tr>
+    <tr><td><code>/learn ...</code></td><td>(ในแชท) สอนจากประสบการณ์/ลิงก์ ให้กลายเป็น skill</td></tr>
+    <tr><td><code>echo 'KEY=ค่า' &gt;&gt; /opt/data/.env</code></td><td>เพิ่มความลับ (token/key) — ใช้ &gt;&gt; เสมอ ห้าม &gt; ตัวเดียว (ทับทั้งไฟล์!)</td></tr>
+    <tr><td><code>hermes model</code></td><td>ดู+เลือกโมเดลหลัก (ดูเฉยๆ กด ESC ออก)</td></tr>
+    <tr><td><code>hermes fallback</code> · <code>list</code> · <code>add</code> · <code>remove</code> · <code>clear</code></td><td>จัดการแถวโมเดลสำรอง: ดู/เพิ่ม/ลบ/ล้าง — สลับลำดับ = สลับบรรทัดใน <code>fallback_providers:</code> ของ config.yaml</td></tr>
+    <tr><td><code>cat ~/.hermes/config.yaml</code></td><td>ดูการตั้งค่าจริงทั้งหมด (โมเดล, fallback, cron.model)</td></tr>
+    <tr><td><code>hermes doctor</code></td><td>ตรวจสุขภาพระบบทั้งหมด — จุดเริ่มเวลามีอะไรพัง</td></tr>
+    <tr><td><code>hermes logs</code></td><td>ดูบันทึกการทำงาน — หลักฐานจริงของทุกปัญหา</td></tr>
+    <tr><td><code>hermes gateway</code> / <code>hermes gateway setup</code></td><td>รัน / ตั้งค่าตัวเชื่อม Telegram และ cron</td></tr>
+    <tr><td><code>date</code></td><td>เช็คเวลา+timezone ของเครื่อง (มักเป็น UTC = ไทย -7 ชม.)</td></tr>
+  </table>
+
+  <h2>อื่นๆ ที่ใช้ทุกวัน</h2>
+  <table>
+    <tr><th>คำสั่ง</th><th>ทำอะไร</th><th>จำง่ายๆ</th></tr>
+    <tr><td><code>clear</code></td><td>ล้างจอให้สะอาด</td><td>—</td></tr>
+    <tr><td><code>exit</code></td><td>ออกจาก VPS กลับเครื่องเรา</td><td>—</td></tr>
+    <tr><td><code>ssh root@IP</code></td><td>เข้า VPS จาก PowerShell (พิมพ์บนเครื่องเรา)</td><td>secure shell</td></tr>
+  </table>
+
+  <div class="callout">
+    <span class="label">เทคนิคพิมพ์เร็ว</span>
+    <p>กด <strong>Tab</strong> = เดาชื่อไฟล์ให้อัตโนมัติ · กด <strong>ลูกศรขึ้น ↑</strong> = เรียกคำสั่งเก่ามารันซ้ำ/แก้ · สองปุ่มนี้มือโปรใช้ตลอดเวลา</p>
+  </div>
+
+  <div class="callout info">
+    <span class="label">ติดตรงไหน ถามครูได้ตลอด</span>
+    <p>ผม (Claude) เป็นครูประจำคอร์ส — สงสัยคำสั่งไหน เจอ error อะไร ก๊อปมาถามในแชทได้ทันที ไม่มีคำถามไหนพื้นฐานเกินไป</p>
+  </div>
+</section>
+
+<!-- ─────────── Reference: เทคนิค & Workflow ─────────── -->
+<section class="lesson" id="playbook">
+  <p class="lesson-kicker">Reference</p>
+  <h1>🛠 เทคนิค &amp; Workflow ประจำระบบ</h1>
+  <p class="lesson-lede">คู่มือภาคสนาม — ทุกข้อในหน้านี้มาจากเหตุการณ์จริงที่เราเจอและแก้ด้วยกันในคอร์ส ไม่ใช่ทฤษฎี (อัปเดตเรื่อยๆ เมื่อเจอบทเรียนใหม่)</p>
+
+  <h2>1. ศิลปะการสั่งงาน agent</h2>
+  <table>
+    <tr><th>เทคนิค</th><th>ตัวอย่าง / เหตุผล</th></tr>
+    <tr><td><strong>บอกทั้ง "ทำอะไร" และ "ห้ามทำอะไร"</strong></td><td>"...เป็นข้อความผลลัพธ์โดยตรง <em>ห้ามสร้างหรือเรียกใช้สคริปต์ใดๆ</em>" — เกิดจากเคสงาน cron แรกที่ agent สร้างสคริปต์เกินจำเป็นจน path พัง</td></tr>
+    <tr><td><strong>ให้ทางออกปลอดภัยเสมอ</strong></td><td>"ถ้าหาของจริงไม่ครบ 3 ข้อ ให้ลดจำนวนแล้วเติมออริจินัลแทน" — ถ้าไม่ให้ทางลง agent จะ "ขยัน" กุข้อมูลมาให้ครบ</td></tr>
+    <tr><td><strong>แก้พฤติกรรม = แก้ที่ skill ไม่ใช่บ่นในแชท</strong></td><td>เจอคำคมภาษาจีนปน → "อัปเดต skill quote-style เพิ่มข้อห้าม..." — คู่มือคมขึ้นถาวร บ่นในแชทหายไปกับ session</td></tr>
+    <tr><td><strong>ให้ agent ซ่อมงานตัวเอง</strong></td><td>สูตร: แปะ error จริง + บอกเป้าหมาย + สั่ง "แก้เสร็จรันทดสอบให้ดู" — เคส script path พัง มันลบงานเสีย สร้างใหม่ ทดสอบ ยืนยัน ครบใน 1 คำสั่ง</td></tr>
+    <tr><td><strong>วนงานภาพเหมือนคุยกับกราฟิก</strong></td><td>"ขยับข้อความขึ้น" / "ห้ามหักกลางคำ ตัดได้เฉพาะช่องว่าง" — สั่งแก้เป็นรอบๆ จากสิ่งที่เห็น ไม่ต้องพยายามสั่งครบในรอบเดียว</td></tr>
+    <tr><td><strong>path เต็มเสมอใน skill</strong></td><td><code>/opt/data/home/.hermes/page/...</code> ไม่ใช่ <code>~/.hermes/...</code> — shell กับ agent session ตีความ ~ คนละที่ (พิสูจน์แล้วบนเครื่องนี้)</td></tr>
+    <tr><td><strong>ตรึงคำสั่งที่พิสูจน์แล้วลงใน skill</strong></td><td>ขั้นตอนสำคัญ (เช่น curl ยิง API) ต้องเขียนคำสั่งเป๊ะๆ ในคู่มือ ไม่ปล่อยให้ cron "ประกอบใหม่เอง" ทุกรอบ — เคสจริง: โพสต์จากแชทสำเร็จ แต่ cron ประกอบ request เองแล้วโดน 403 พร้อมเดาคำอธิบายผิดๆ (publish_actions) มาเล่า</td></tr>
+  </table>
+
+  <h2>2. Workflow ไล่ปัญหา — ระบบล้มได้ 3 ท่า</h2>
+  <table>
+    <tr><th>ท่า</th><th>อาการ</th><th>ไล่ตามลำดับ</th></tr>
+    <tr><td>💥 <strong>พังทันที</strong></td><td>มี error โชว์</td><td>อ่าน error ให้จบก่อน (มักบอกทางแก้ในตัว เช่น "add one with hermes fallback add") → แปะให้ agent ซ่อม</td></tr>
+    <tr><td>🔇 <strong>เงียบ</strong></td><td>ไม่ตอบ ไม่มี error</td><td>① เครดิต/โควตา provider (เคสจริง: บอทเงียบเพราะเครดิตหมด) ② <code>hermes doctor</code> ③ <code>hermes logs</code> แล้วทำซ้ำดู log ขยับไหม</td></tr>
+    <tr><td>⏳ <strong>ค้าง</strong></td><td>สถานะ running นานผิดปกติ ไม่มี output</td><td>① <code>/stop</code> ในแชท ② <code>hermes cron list</code> ดู Execution (unknown = ตายแล้วเหลือแค่ป้าย) ③ รันใหม่ ถ้าค้างซ้ำ = โมเดลมีปัญหา → สลับตัว</td></tr>
+  </table>
+  <div class="callout">
+    <span class="label">กฎทอง</span>
+    <p>วินิจฉัยจาก<strong>หลักฐาน</strong> ไม่ใช่ความรู้สึก: <code>cat</code> ไฟล์จริง, <code>hermes cron list</code> ดู Last run จริง, log จริง — แล้วค่อยสรุป (Hermes เองก็ทำแบบนี้: มันเปิดอ่านซอร์สโค้ดตัวเองก่อนตอบเรื่อง fallback)</p>
+  </div>
+
+  <h2>3. สูตรสำเร็จ (Recipes) — ชุดคำสั่งที่ใช้ประจำ</h2>
+
+  <h3>เข้าเครื่องจาก PowerShell</h3>
+  <pre><code>ssh root@IP-ของคุณ
+docker exec -it hermes-agent-xxxx-hermes-agent-1 bash
+# ทำงาน... เสร็จแล้ว: exit (ออกจากกล่อง) → exit (กลับ PowerShell)</code></pre>
+
+  <h3>ซ้อมงาน cron (ใช้ทุกครั้งที่แก้อะไร)</h3>
+  <pre><code>hermes cron list        # ดู id + Last run + error ล่าสุด
+hermes cron run &lt;id&gt;    # ยิงทันทีไม่รอเวลา
+# ดูผลใน Telegram → ตรวจไฟล์ที่เกี่ยวข้องด้วย cat</code></pre>
+
+  <h3>เช็คสุขภาพระบบ (เช้าละครั้งช่วงแรก)</h3>
+  <pre><code>hermes cron list        # งานรันสำเร็จไหมเมื่อเช้า
+cat /opt/data/home/.hermes/page/queue.jsonl   # คิวเหลือกี่ ready
+df -h                   # ดิสก์ (รูปสะสมเรื่อยๆ)</code></pre>
+
+  <h3>ดูรูป / เอาไฟล์ออกจากเครื่อง</h3>
+  <pre><code># ง่ายสุด — สั่งในแชท: "ส่งรูปทั้งหมดในโฟลเดอร์ out มาที่แชทนี้"
+# แล้วเซฟจาก Telegram ลงคอมได้เลย
+
+# ทางเทคนิค (จาก shell ตัวเครื่อง VPS):
+docker cp hermes-agent-xxxx-hermes-agent-1:/opt/data/home/.hermes/page/out /root/quote-images
+# แล้วจาก PowerShell บนคอม:
+scp -r root@IP:/root/quote-images "$env:USERPROFILE\Downloads\"</code></pre>
+
+  <h2>4. หลักการเลือกโมเดล</h2>
+  <ol class="steps">
+    <li><strong>งานแชทใช้โมเดลฉลาดสุด งานอัตโนมัติใช้โมเดลเสถียรสุด</strong> — cron 07:00 ไม่มีใครนั่งกดรันซ้ำ ความนิ่งชนะความหรู (ตั้งแยกด้วย <code>cron.model</code> ใน config.yaml)</li>
+    <li><strong>fallback ต้องข้ามค่าย/ข้ามโควตา</strong> — สำรองค่ายเดียวกันกันได้แค่ "โมเดลแน่น" กัน "เพดานบัญชี" ไม่ได้</li>
+    <li><strong>รู้จุดบอดของโมเดลฟรี</strong>: ภาษาอื่นปนได้ (จีน/เกาหลี/อังกฤษ), กุคำคม+กุคนได้, timeout ได้ — และ timeout <em>ไม่</em> trigger fallback (ข้อจำกัดจริงของ Hermes ที่เราค้นพบเอง)</li>
+    <li><strong>⚠️ กับดัก "session only" ในแชทถาวร (บทเรียนราคา $5)</strong>: การสลับโมเดลด้วย <code>/model</code> ใน Telegram ขึ้นป้าย "session only" ฟังดูชั่วคราว — แต่แชท Telegram คือ session เดียวยาวไม่มีวันจบ = <strong>ถาวรโดยพฤตินัย</strong> เคยเผลอเลือกโมเดลเสียเงิน (GPT-5.6 Luna) ไว้ ทุกงานที่สั่งผ่านแชทหลายวันจ่ายเงินหมดโดย <code>hermes model</code> ฝั่ง CLI ยังโชว์ค่า global ที่ไม่ถูกใช้ — กฎ: (1) เช็คโมเดลใช้จริงจาก <strong>log ฝั่ง provider</strong> เป็นระยะ อย่าเชื่อ config (2) ตั้ง <strong>Credit limit บน API key</strong> ที่เว็บ provider เสมอ (3) session แชทบวม (90k token/ครั้ง) ให้เริ่มบทสนทนาใหม่ — ความจำถาวรอยู่ใน skills ไม่หาย</li>
+  </ol>
+
+  <h2>5. กฎความปลอดภัย &amp; คุณภาพ</h2>
+  <ol class="steps">
+    <li><strong>ความลับทุกชนิด</strong> (API key, bot token, FB token) → เก็บในไฟล์ <code>/opt/data/.env</code> โดยพิมพ์เพิ่มใน terminal เท่านั้น — ห้ามแปะในแชท (จะวิ่งผ่าน LLM) ห้ามฝังในไฟล์ skill · เพิ่มด้วย <code>&gt;&gt;</code> เสมอ ห้าม <code>&gt;</code> ตัวเดียว</li>
+    <li><strong>คำคมคนดัง</strong>: Google ก่อนเลือกเสมอ · ชื่อที่ไม่รู้จัก = ปัดตกทันที · ป้าย [ยืนยันแล้ว] ของ AI เชื่อไม่ได้ (เคสจริง: คำคมคานธีที่โลกแชร์แต่ไม่มีต้นทาง ก็ถูกแปะป้ายยืนยัน)</li>
+    <li><strong>ก่อนของใหม่เข้าระบบ ซ้อมด้วย <code>cron run</code> เสมอ</strong> — ทุกบั๊กที่เจอในคอร์สนี้ถูกจับตอนซ้อม ไม่ใช่ตอนจริง</li>
+    <li><strong>กับดักคนมาจาก Windows</strong>: <code>cd /</code> ไม่ใช่ <code>cd \</code> (backslash = รอพิมพ์ต่อ กด Ctrl+C ออก) · <code>cd</code> เฉยๆ = กลับบ้าน</li>
+  </ol>
+</section>
+
+</div>
+</main>
+</div>
+
+<script src="assets/quiz.js"></script>
+<script src="assets/progress.js"></script>
+<script src="assets/minimap.js"></script>
+<script src="assets/search.js"></script>
+</body>
+</html>
