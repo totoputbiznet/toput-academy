@@ -468,6 +468,237 @@ curl -X POST "https://graph.facebook.com/v26.0/ALBUM_ID/photos" \
   </div>
 </section>
 
+<!-- ─────────── บทที่ 06 ─────────── -->
+<section class="lesson" id="lesson-06">
+  <p class="lesson-kicker">บทที่ 06 · Phase 3 — ★ ไลน์ผลิตวิดีโอ</p>
+  <div class="minimap" data-active="vidline" data-note="บทนี้: ติดอาวุธ ffmpeg ให้ช่างวิดีโอ + คลิปแรกใน 1 คำสั่ง"></div>
+  <h1>ffmpeg 101 — เครื่องจักรวิดีโอบน VPS ของคุณ</h1>
+  <p class="lesson-lede">~25 นาที ลงมือกับเครื่องจริง — จบแล้ว VPS ของคุณจะตัดวิดีโอเป็น และคุณจะได้คลิปแรกจากภาพคำคมที่มีอยู่แล้ว ด้วยคำสั่งเดียว</p>
+
+  <h2>ffmpeg คืออะไร ใน 3 บรรทัด</h2>
+  <p><strong>ffmpeg</strong> คือโปรแกรมฟรี (โอเพนซอร์ส) ที่เป็น "มีดสวิสของงานวิดีโอ" — แปลงไฟล์ ตัดต่อ ใส่เสียง ซูม ย่อขยาย ทำได้หมดผ่านบรรทัดคำสั่ง ไม่ต้องมีจอ ไม่ต้องมีเมาส์ เบื้องหลังแอปตัดต่อดังๆ จำนวนมากก็คือ ffmpeg ห่อหน้ากากสวยๆ ไว้เท่านั้น</p>
+  <p>มันจึงเกิดมาเพื่องานเรา: <strong>ตัดวิดีโอบนเซิร์ฟเวอร์ที่ไม่มีหน้าจอ สั่งด้วยสคริปต์ ทำซ้ำได้ไม่จำกัด</strong></p>
+
+  <h2>ติดตั้งในกล่อง Hermes — ทีละก้าว</h2>
+  <p>👣 <strong>ก้าว 1</strong> — SSH เข้า VPS แล้วเข้าไปในกล่อง:</p>
+  <pre><code>docker exec -it hermes-agent-xxxx-hermes-agent-1 bash</code></pre>
+  <p>👣 <strong>ก้าว 2</strong> — ติดตั้ง (ประมาณ 1-2 นาที):</p>
+  <pre><code>apt-get update && apt-get install -y ffmpeg</code></pre>
+  <p>👣 <strong>ก้าว 3</strong> — พิสูจน์ว่ามาแล้วจริง:</p>
+  <pre><code>ffmpeg -version</code></pre>
+  <p>เห็นบรรทัด <code>ffmpeg version 5.x</code> (หรือ 6.x) = พร้อมใช้</p>
+
+  <div class="callout warn">
+    <span class="label">⚠️ ข้อควรรู้สำคัญ: ของที่ลงในกล่อง หายได้ถ้ากล่องถูกสร้างใหม่</span>
+    <p>การติดตั้งแบบนี้อยู่ "ในกล่อง Docker" — ถ้าวันหนึ่งกล่องถูกสร้างใหม่ (อัปเดต Hermes เวอร์ชันใหม่, rebuild) ffmpeg จะหายไปด้วย แต่<strong>ข้อมูลใน /opt/data ไม่หาย</strong> (มันคือโฟลเดอร์ฝากนอกกล่อง — บทเรียน Docker จากคอร์ส 1) วิธีรับมือแบบบ้านๆ ที่เวิร์ก: จดไว้ใน NOTES ว่า "ถ้าคลิปพังหลังอัปเดต Hermes → ลงซ้ำ 1 คำสั่ง: <code>apt-get update && apt-get install -y ffmpeg</code>" และในบท 10 เราจะให้บอทรายงานสุขภาพเช็กข้อนี้ให้อัตโนมัติทุกวัน</p>
+  </div>
+
+  <h2>คลิปแรกของคุณ — จากภาพที่มีอยู่แล้ว</h2>
+  <p>ยังอยู่ในกล่องต่อเลย ดูก่อนว่ามีภาพอะไรให้เล่น:</p>
+  <pre><code>ls -t /opt/data/home/.hermes/page/out/ | head -5</code></pre>
+  <p>หยิบชื่อไฟล์ .png ล่าสุดมาใส่ในคำสั่งนี้ (แก้ชื่อไฟล์ 2 จุด):</p>
+  <pre><code>ffmpeg -y -loop 1 -i /opt/data/home/.hermes/page/out/ชื่อภาพ.png -t 8 \
+  -c:v libx264 -pix_fmt yuv420p -r 25 \
+  /opt/data/home/.hermes/page/out/first-clip.mp4</code></pre>
+  <p>แปลคำสั่งทีละท่อน (อ่านให้เข้าใจ อย่าท่อง):</p>
+  <table>
+    <tr><th>ท่อน</th><th>แปลว่า</th></tr>
+    <tr><td><code>-loop 1 -i ภาพ.png</code></td><td>เอาภาพนิ่งใบนี้มาฉายวนเป็นวิดีโอ</td></tr>
+    <tr><td><code>-t 8</code></td><td>ยาว 8 วินาที (เวลากำลังดีสำหรับอ่านคำคม 1 ข้อ)</td></tr>
+    <tr><td><code>-c:v libx264</code></td><td>บีบอัดแบบ H.264 — มาตรฐานที่ Facebook รับแน่นอน</td></tr>
+    <tr><td><code>-pix_fmt yuv420p</code></td><td>รูปแบบสีที่เข้ากันได้ทุกเครื่อง (ลืมใส่ = บางมือถือเปิดไม่ได้)</td></tr>
+    <tr><td><code>-r 25</code></td><td>25 เฟรม/วินาที — พอเหลือเฟือสำหรับภาพนิ่ง</td></tr>
+  </table>
+  <p>เช็กผลงาน: <code>ffprobe -hide_banner /opt/data/home/.hermes/page/out/first-clip.mp4</code> — ดูบรรทัด Duration ต้องได้ ~8 วินาที</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 06 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">1. ทำไม ffmpeg เหมาะกับงานบน VPS เป็นพิเศษ?</div>
+      <button class="quiz-opt">เพราะมีหน้าจอสวยใช้ง่าย</button>
+      <button class="quiz-opt">เพราะฟรีเท่านั้น ตัวอื่นเสียเงินหมด</button>
+      <button class="quiz-opt">เพราะสั่งงานด้วยบรรทัดคำสั่ง/สคริปต์ได้ ไม่ต้องมีจอ ทำซ้ำได้ไม่จำกัด</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">2. ถ้ากล่อง Hermes ถูกสร้างใหม่ อะไรหาย-อะไรอยู่?</div>
+      <button class="quiz-opt">หายหมดทุกอย่างรวมถึงคิวและภาพ</button>
+      <button class="quiz-opt">ffmpeg ที่ลงไว้หาย แต่ข้อมูลใน /opt/data อยู่ครบ</button>
+      <button class="quiz-opt">ไม่มีอะไรหายเลย Docker เก็บให้หมด</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. <code>-pix_fmt yuv420p</code> ใส่ไว้ทำไม?</div>
+      <button class="quiz-opt">ให้วิดีโอเปิดได้บนทุกเครื่องทุกแอป</button>
+      <button class="quiz-opt">ให้ไฟล์เล็กลงครึ่งหนึ่ง</button>
+      <button class="quiz-opt">ให้สีสดขึ้น</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 06</span>
+    <p>(1) ติดตั้ง ffmpeg ตาม 3 ก้าว (2) ทำ first-clip.mp4 จากภาพจริงของเพจ (3) กลับมาที่แชท Telegram แล้วสั่ง: <code>ส่งไฟล์ /opt/data/home/.hermes/page/out/first-clip.mp4 มาให้ผมดูหน่อย</code> (4) เปิดดูคลิปในมือถือ — ถ้าเล่นได้ 8 วินาที ภารกิจสำเร็จ ส่งผลมาให้ครูดู</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 07 ─────────── -->
+<section class="lesson" id="lesson-07">
+  <p class="lesson-kicker">บทที่ 07 · Phase 3 — ★ ไลน์ผลิตวิดีโอ</p>
+  <div class="minimap" data-active="vidline,queue,you" data-note="บทนี้: สูตรคลิปคำคมเต็มยศ + สคริปต์ประจำตำแหน่งช่างวิดีโอ"></div>
+  <h1>คำคม → วิดีโอ — สูตร Ken Burns + เพลง + สคริปต์ใช้ซ้ำ</h1>
+  <p class="lesson-lede">~40 นาที — จบแล้วโรงงานคุณจะมี make_video.sh ที่เรียกครั้งเดียวได้คลิปคำคมพร้อมโพสต์ และคุณจะรู้กติกาเรื่องเพลงก่อนโดนเพจโดนแจ้งลิขสิทธิ์</p>
+
+  <h2>อะไรทำให้คลิปคำคม "ดูมีชีวิต" — สูตร 3 ชั้น</h2>
+  <ol class="steps">
+    <li><strong>ซูมช้าๆ (Ken Burns)</strong> — ภาพนิ่งที่ขยับนิดๆ ตาคนจะหยุดดูนานกว่าภาพแช่ ชื่อเทคนิคมาจากผู้กำกับสารคดีที่ใช้จนเป็นลายเซ็น</li>
+    <li><strong>fade เข้า-ออก</strong> — เปิดนุ่ม ปิดนุ่ม ดูตั้งใจทำ ไม่ใช่ภาพหลุดมา</li>
+    <li><strong>เพลงพื้นหลังเบาๆ</strong> — เสียงคือครึ่งหนึ่งของอารมณ์คลิป</li>
+  </ol>
+  <p>ทั้ง 3 ชั้นรวมอยู่ในคำสั่งเดียว (สูตรเต็มอยู่ใน <a href="#commands">ffmpeg cheat sheet</a> — เปิดคู่กันได้เลย):</p>
+  <pre><code>ffmpeg -y -loop 1 -i quote.png -i /opt/data/home/.hermes/page/music/calm1.mp3 -t 8 \
+  -vf "scale=1080:1080,zoompan=z='min(zoom+0.001,1.15)':d=200:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s=1080x1080:fps=25,fade=t=in:st=0:d=0.8,fade=t=out:st=7:d=1" \
+  -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest out.mp4</code></pre>
+
+  <div class="callout warn">
+    <span class="label">⚠️ กติกาเพลง — อ่านก่อนเพจโดนใบเหลือง</span>
+    <p>เพลงดังๆ มีลิขสิทธิ์ — Facebook ตรวจอัตโนมัติ เจอแล้วเบาสุดคือ<strong>ปิดเสียงคลิป</strong> หนักสุดคือเพจโดนแจ้งละเมิดสะสม ใช้เฉพาะเพลงที่ประกาศให้ใช้ฟรีเชิงพาณิชย์: <a href="https://www.youtube.com/audiolibrary">YouTube Audio Library</a> หรือ <a href="https://pixabay.com/music/">Pixabay Music</a> ดาวน์โหลดมาเก็บไว้ที่ <code>/opt/data/home/.hermes/page/music/</code> สัก 3-5 เพลงโทนสงบ แล้วใช้วนไป — และ<strong>จดที่มาของทุกเพลง</strong>ไว้ในไฟล์ music/credits.txt เผื่อต้องยืนยันทีหลัง</p>
+  </div>
+
+  <h2>เปลี่ยนสูตรให้เป็นพนักงาน: make_video.sh</h2>
+  <p>คำสั่งยาวๆ ให้คนพิมพ์ทุกวันไม่ใช่ระบบ — เราจะห่อเป็นสคริปต์ให้ช่างวิดีโอ (cron) เรียกได้ ใช้เทคนิคเดียวกับบท 04: จ้าง Hermes เขียน พร้อมเข็มขัดนิรภัยครบ:</p>
+  <pre><code>สร้างสคริปต์ /opt/data/home/.hermes/page/make_video.sh ตามสเปกนี้เท่านั้น:
+1. รับ 3 arguments: (1) full path ภาพ .png (2) full path ไฟล์ .mp4 ปลายทาง
+   (3) full path เพลง (ถ้าไม่ใส่ = ไม่มีเพลง)
+2. ใช้สูตร ffmpeg นี้เป๊ะๆ: [วางสูตรจากด้านบน]
+   ถ้าไม่มีเพลง ตัด -i เพลง, -c:a aac, -shortest ออก
+3. จบสคริปต์ให้ echo path ไฟล์ที่ได้ + ความยาวจาก ffprobe
+4. ห้ามติดตั้งอะไรเพิ่ม ห้ามแก้ไฟล์อื่น ห้ามใช้ path แบบ ~ เด็ดขาด
+5. ทดสอบจริง: หยิบภาพล่าสุดจาก /opt/data/home/.hermes/page/out/
+   มาทำคลิป แล้วส่งคลิปเข้า Telegram ให้ผมตรวจ</code></pre>
+  <p>สังเกตข้อ 4-5: <strong>"สิ่งที่ห้ามทำ" + "พิสูจน์ด้วยหลักฐาน"</strong> — สองกฎจาก <a href="#playbook">Playbook</a> ที่ต้องติดทุก prompt งานระบบ</p>
+
+  <h2>ด่านตรวจคุณภาพ: ทุกคลิปผ่านตาคุณก่อนขึ้นเพจ</h2>
+  <p>ภาพนิ่งพลาดแล้วลบง่าย แต่วิดีโอพลาด (ตัวหนังสือล้นจอ เพลงดังกลบ อึดอัด) ดูไม่มืออาชีพกว่ามาก กติกาโรงงานเราจึงชัด: <strong>ช่างวิดีโอเรนเดอร์เสร็จ 17:00 → ส่งคลิปเข้า Telegram → คุณดู 10 วินาที</strong> ตอบ "ผ่าน" หรือสั่งแก้ — ไม่ตอบภายใน 18:30 ให้ถือว่าผ่าน (default-yes เพื่อไม่ให้เพจเงียบเพราะคุณติดธุระ) กติกานี้จะฝังลง skill ช่างวิดีโอในบท 09</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 07 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">1. เทคนิค "Ken Burns" คือ?</div>
+      <button class="quiz-opt">ซูม/แพนภาพนิ่งช้าๆ ให้ดูมีชีวิต</button>
+      <button class="quiz-opt">ใส่เพลงประกอบให้ตรงจังหวะ</button>
+      <button class="quiz-opt">ตัดสลับภาพเร็วๆ หลายใบ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. เพลงที่ปลอดภัยสำหรับคลิปของเพจ ต้องมาจากไหน?</div>
+      <button class="quiz-opt">เพลงฮิตติดชาร์ต — คนคุ้นหูดี</button>
+      <button class="quiz-opt">เพลงอะไรก็ได้ถ้าตัดสั้นกว่า 10 วินาที</button>
+      <button class="quiz-opt">แหล่งที่ประกาศให้ใช้ฟรีเชิงพาณิชย์ + จดที่มาไว้เสมอ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">3. กติกา "default-yes" ของด่านตรวจคลิปคือ?</div>
+      <button class="quiz-opt">ทุกคลิปโพสต์ได้เลยไม่ต้องตรวจ</button>
+      <button class="quiz-opt">คุณไม่ตอบภายในเวลาที่ตกลง = ถือว่าผ่าน เพจไม่เงียบเพราะคุณติดธุระ</button>
+      <button class="quiz-opt">คลิปไม่ผ่านให้โพสต์ภาพนิ่งแทนทันที</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 07</span>
+    <p>(1) หาเพลงฟรี 3 เพลงโทนสงบ อัปโหลดเข้า <code>/opt/data/home/.hermes/page/music/</code> (ใช้ <code>scp</code> จากคอม หรือให้ Hermes ช่วยดาวน์โหลดจากลิงก์ที่คุณเลือก) + สร้าง credits.txt (2) ส่ง prompt สร้าง make_video.sh (3) ตรวจคลิปทดสอบใน Telegram — ถ้าผ่านตาคุณ ส่งมาให้ครูดูด้วย</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 08 ─────────── -->
+<section class="lesson" id="lesson-08">
+  <p class="lesson-kicker">บทที่ 08 · Phase 3 — ★ ไลน์ผลิตวิดีโอ</p>
+  <div class="minimap" data-active="vidline,postjob,fb" data-note="บทนี้: พาคลิปขึ้นเพจ — /videos ทางหลัก, Reels ทางแยกขั้นสูง"></div>
+  <h1>โพสต์วิดีโอ + Reels ผ่าน Graph API</h1>
+  <p class="lesson-lede">~30 นาที — จบแล้วคลิปจาก make_video.sh จะขึ้นเพจจริงด้วย curl คำสั่งเดียว และคุณจะเข้าใจว่าทำไม Reels ถึงต้องใช้ 3 จังหวะ</p>
+
+  <h2>ทางหลัก: /videos — ง่ายพอๆ กับโพสต์รูป</h2>
+  <pre><code>curl -X POST "https://graph.facebook.com/v26.0/PAGE_ID/videos" \
+  -F "access_token=PAGE_TOKEN" \
+  -F "description=ล้มแล้วลุกช้าหน่อยก็ได้ ขอแค่ลุก 🌱 #บทเรียนชีวิต" \
+  -F "source=@/opt/data/home/.hermes/page/out/v0829.mp4"</code></pre>
+  <p>ต่างจากโพสต์รูปแค่ 2 จุด: endpoint เป็น <code>/videos</code> และใช้ <code>description</code> แทน <code>message</code> — token ตัวเดิม สิทธิ์ชุดเดิมจากคอร์ส 1 ใช้ได้เลย ไม่ต้องขออะไรเพิ่ม</p>
+  <div class="callout">
+    <span class="label">อาการปกติที่มือใหม่ตกใจ: "โพสต์แล้วแต่ยังไม่ขึ้นเพจ!"</span>
+    <p>วิดีโอไม่เหมือนรูป — Facebook ต้อง<strong>ประมวลผลก่อน</strong> (แปลงไฟล์หลายความละเอียด) คลิปสั้นใช้เวลาราวหนึ่งถึงห้านาที ได้ id ตอบกลับมา = สำเร็จแล้ว รอสักพักค่อยรีเฟรชเพจ อย่าเพิ่งยิงซ้ำ (ยิงซ้ำ = โพสต์ซ้ำ 2 คลิป)</p>
+  </div>
+
+  <h2>สเปกไฟล์ที่ผ่านฉลุย</h2>
+  <table>
+    <tr><th>เรื่อง</th><th>ค่าที่เราใช้</th><th>เหตุผล</th></tr>
+    <tr><td>รูปแบบไฟล์</td><td>.mp4 · H.264 + AAC</td><td>ชุดที่ FB แนะนำเอง — make_video.sh เราตั้งไว้แล้ว</td></tr>
+    <tr><td>สัดส่วน feed</td><td>1:1 (1080×1080)</td><td>เต็มตากว่าแนวนอนบนมือถือ และใช้ภาพคำคมเดิมได้พอดี</td></tr>
+    <tr><td>ความยาว</td><td>8–15 วินาที</td><td>อ่านคำคมทัน จบก่อนคนเบื่อ ไฟล์เล็กอัปเร็ว</td></tr>
+  </table>
+
+  <h2>ทางแยกขั้นสูง: Reels — ทำไมต้อง 3 จังหวะ</h2>
+  <p>Reels ต้องเป็น<strong>แนวตั้ง 9:16 (1080×1920) ยาว 3–90 วินาที</strong> และ API ของมันถูกออกแบบมาสำหรับไฟล์ใหญ่ จึงแยกเป็น 3 จังหวะ: <strong>จองคิว → ส่งไฟล์ → สั่งเผยแพร่</strong></p>
+  <pre><code># จังหวะ 1 — จองคิว (ได้ video_id + upload_url)
+curl -X POST "https://graph.facebook.com/v26.0/PAGE_ID/video_reels" \
+  -F "access_token=PAGE_TOKEN" -F "upload_phase=start"
+
+# จังหวะ 2 — ส่งไฟล์ขึ้นตามที่จองไว้
+curl -X POST "https://rupload.facebook.com/video-upload/v26.0/VIDEO_ID" \
+  -H "Authorization: OAuth PAGE_TOKEN" \
+  -H "offset: 0" -H "file_size: ขนาดไฟล์เป็นไบต์" \
+  --data-binary "@/opt/data/home/.hermes/page/out/reel.mp4"
+
+# จังหวะ 3 — สั่งเผยแพร่
+curl -X POST "https://graph.facebook.com/v26.0/PAGE_ID/video_reels" \
+  -F "access_token=PAGE_TOKEN" -F "upload_phase=finish" \
+  -F "video_id=VIDEO_ID" -F "video_state=PUBLISHED" \
+  -F "description=ล้มแล้วลุกช้าหน่อยก็ได้ 🌱"</code></pre>
+  <p>คำแนะนำตรงๆ จากครู: <strong>เริ่มจาก /videos ให้เดินนิ่งก่อนสักสัปดาห์</strong> แล้วค่อยเพิ่ม Reels — Reels มี 3 จุดพัง (จังหวะละจุด) ระบบที่เพิ่งเปิดสายพานไม่ควรมีของพังหลายจุดพร้อมกัน (สูตรแนวตั้ง 9:16 แปลงจากคลิปเดิมมีใน <a href="#commands">cheat sheet</a> ข้อ 4 แล้ว)</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 08 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. โพสต์วิดีโอธรรมดา ต่างจากโพสต์รูปตรงไหน?</div>
+      <button class="quiz-opt">ต้องขอสิทธิ์ App Review เพิ่ม</button>
+      <button class="quiz-opt">endpoint /videos + ใช้ description แทน message — ที่เหลือเหมือนเดิม</button>
+      <button class="quiz-opt">ต้องใช้ token คนละตัวกับรูป</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. ยิง /videos สำเร็จได้ id แล้ว แต่เพจยังไม่ขึ้นคลิป ควรทำยังไง?</div>
+      <button class="quiz-opt">ยิงซ้ำทันทีเผื่อครั้งแรกหาย</button>
+      <button class="quiz-opt">ลบโพสต์แล้วเริ่มใหม่</button>
+      <button class="quiz-opt">รอ FB ประมวลผลสักครู่ — ได้ id คือสำเร็จแล้ว ยิงซ้ำจะได้โพสต์ซ้ำ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. Reels ต่างจากวิดีโอธรรมดายังไง?</div>
+      <button class="quiz-opt">แนวตั้ง 9:16 + โพสต์ 3 จังหวะ (start → upload → finish)</button>
+      <button class="quiz-opt">แค่ตั้งชื่อโพสต์ให้มีคำว่า Reels</button>
+      <button class="quiz-opt">ต้องยาวเกิน 3 นาที</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 08 — วิดีโอแรกของเพจ</span>
+    <p>สั่ง Hermes ใน Telegram:</p>
+    <pre><code>โพสต์วิดีโอแรกของเพจ ตามขั้นตอนนี้เท่านั้น:
+1. ใช้คลิปที่ผมอนุมัติแล้วจากบท 07
+2. โพสต์ด้วย curl ไปที่ /v26.0/PAGE_ID/videos
+   ใช้ access token จาก /opt/data/.env แบบเดียวกับ skill post-facebook
+3. ใส่ description เป็นคำคมในคลิป + #บทเรียนชีวิต
+4. ห้ามยิงซ้ำแม้เพจยังไม่แสดงคลิป — ได้ id คือจบงาน
+5. รายงาน id ที่ได้ แล้วอัปเดตบรรทัดนั้นในคิวเป็น posted</code></pre>
+    <p>รอ 5 นาที เปิดเพจแบบ incognito — เห็นคลิปเล่นได้พร้อมเสียง = ไลน์ผลิตวิดีโอเปิดอย่างเป็นทางการ 🎉 ส่งลิงก์มาให้ครูดูด้วย</p>
+  </div>
+</section>
+
 <!-- ─────────── Reference: Glossary ─────────── -->
 <section class="lesson" id="glossary">
   <p class="lesson-kicker">Reference · เปิดดูได้ตลอด ไม่ต้องท่อง</p>
