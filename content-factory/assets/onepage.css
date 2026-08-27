@@ -1,0 +1,171 @@
+/* onepage.css — layout สำหรับคอร์สแบบหน้าเดียว (ใช้คู่กับ course.css) */
+
+html { scroll-behavior: smooth; }
+
+body { display: block; }
+
+.layout { display: flex; min-height: 100vh; }
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 270px;
+  background: #fff;
+  border-right: 1px solid var(--line);
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+  font-size: 0.9rem;
+}
+.sidebar .course-title {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 0.2rem;
+}
+.sidebar .course-sub {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+.sidebar .nav-group {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 1.1rem 0 0.3rem;
+}
+.sidebar a {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.32rem 0.6rem;
+  border-radius: 7px;
+  text-decoration: none;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.sidebar a:hover { background: var(--accent-soft); }
+.sidebar a.active { background: var(--accent-soft); font-weight: 700; }
+.sidebar a .dot {
+  flex: none;
+  width: 0.55rem; height: 0.55rem;
+  border-radius: 50%;
+  background: var(--line);
+  position: relative; top: -0.05rem;
+}
+.sidebar a .dot.done    { background: var(--good); }
+.sidebar a .dot.current { background: var(--accent); }
+.sidebar a.locked { color: #b8b2a6; pointer-events: none; }
+
+/* ---------- Content ---------- */
+.content {
+  margin-left: 270px;
+  flex: 1;
+  min-width: 0;
+}
+.content .page { max-width: 46rem; }
+
+section.lesson { scroll-margin-top: 1rem; }
+section.lesson + section.lesson {
+  margin-top: 3rem;
+  border-top: 3px double var(--line);
+  padding-top: 2.5rem;
+}
+
+/* ---------- ค้นหาในบทเรียน ---------- */
+.course-search {
+  width: 100%;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.6rem;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  margin: 0.2rem 0 0.6rem;
+  background: var(--paper);
+}
+.course-search:focus { outline: none; border-color: var(--accent); }
+.cs-results {
+  display: none;
+  max-height: 45vh;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  margin-bottom: 0.8rem;
+}
+.cs-result { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--line); cursor: pointer; }
+.cs-result:last-child { border-bottom: none; }
+.cs-result:hover { background: var(--accent-soft); }
+.cs-loc { font-size: 0.68rem; font-weight: 700; color: var(--accent); margin-bottom: 0.15rem; }
+.cs-snip { font-size: 0.75rem; line-height: 1.5; color: var(--ink); }
+.cs-snip mark { background: #fde68a; padding: 0 0.1em; border-radius: 3px; }
+.cs-none { padding: 0.6rem; font-size: 0.78rem; color: var(--ink-soft); }
+.search-hit { animation: hitflash 2.5s ease-out; }
+@keyframes hitflash {
+  0% { background: #fde68a; box-shadow: 0 0 0 6px #fde68a; }
+  100% { background: transparent; box-shadow: none; }
+}
+
+/* ---------- ปุ่มปลดล็อกบทต่อไป + reference ---------- */
+.next-wrap { margin: 3rem 0 1rem; text-align: center; }
+.next-btn {
+  font: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.6rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(180, 83, 9, 0.3);
+}
+.next-btn:hover { filter: brightness(1.1); }
+.next-hint { font-size: 0.82rem; color: var(--ink-soft); margin-top: 0.5rem; }
+
+.sidebar a.locked-js { color: #b8b2a6; cursor: default; }
+.sidebar a.locked-js:hover { background: none; }
+
+.ref-close {
+  font: inherit;
+  font-size: 0.85rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+.ref-close:hover { border-color: var(--accent); }
+
+/* ---------- จอแคบ: เมนูกลายเป็นแถบบน ---------- */
+@media (max-width: 900px) {
+  .sidebar {
+    position: sticky;
+    width: auto;
+    height: auto;
+    bottom: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding: 0.6rem 1rem;
+    z-index: 10;
+  }
+  .sidebar details summary {
+    cursor: pointer;
+    font-weight: 700;
+    list-style: none;
+  }
+  .sidebar details summary::before { content: '☰ '; color: var(--accent); }
+  .content { margin-left: 0; }
+}
+@media (min-width: 901px) {
+  .sidebar details { display: contents; }
+  .sidebar details summary { display: none; }
+}
+
+@media print {
+  .sidebar { display: none; }
+  .content { margin-left: 0; }
+}

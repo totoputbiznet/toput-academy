@@ -1,0 +1,336 @@
+/* course.css — สไตล์กลางของคอร์ส Hermes VPS (ใช้ร่วมทุกบทเรียนและ reference) */
+
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --ink: #1a1a1a;
+  --ink-soft: #555;
+  --paper: #fdfcf8;
+  --accent: #b45309;        /* ส้มอิฐ — สีหลักของคอร์ส */
+  --accent-soft: #fef3e2;
+  --line: #e5e0d5;
+  --good: #15803d;
+  --good-soft: #ecfdf3;
+  --bad: #b91c1c;
+  --bad-soft: #fef2f2;
+  --info: #1d4ed8;
+  --info-soft: #eff6ff;
+  --code-bg: #f4f1ea;
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 17px; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Sarabun', 'Noto Sans Thai', system-ui, sans-serif;
+  line-height: 1.75;
+}
+
+.page {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+/* ---------- หัวบท ---------- */
+.lesson-kicker {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+}
+
+.lesson-lede {
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  margin: 0 0 0.8rem;
+}
+
+.lesson-meta {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin: 2.5rem 0 0.8rem;
+  font-weight: 700;
+}
+
+h3 { font-size: 1.1rem; margin: 1.8rem 0 0.5rem; }
+
+p { margin: 0 0 1rem; }
+
+a { color: var(--info); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+strong { font-weight: 700; }
+
+/* ---------- กล่องต่างๆ ---------- */
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 0.9rem 1.1rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.2rem 0;
+}
+.callout.info  { border-color: var(--info); background: var(--info-soft); }
+.callout.good  { border-color: var(--good); background: var(--good-soft); }
+.callout .label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+.callout p:last-child { margin-bottom: 0; }
+
+/* ---------- โค้ด ---------- */
+code {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 0.85em;
+  background: var(--code-bg);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+pre code { background: none; padding: 0; }
+
+/* ---------- ตาราง ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2rem 0;
+  font-size: 0.95rem;
+}
+th, td {
+  text-align: left;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+th {
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ---------- แผนผัง ---------- */
+.diagram {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.2rem;
+  margin: 1.4rem 0;
+  overflow-x: auto;
+}
+.diagram svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.diagram figcaption {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: 0.8rem;
+}
+
+/* ---------- Quiz ---------- */
+.quiz {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  margin: 1.4rem 0;
+  overflow: hidden;
+}
+.quiz-head {
+  background: var(--accent-soft);
+  padding: 0.7rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.quiz-q { padding: 1rem 1.2rem 1.2rem; border-top: 1px solid var(--line); }
+.quiz-q:first-of-type { border-top: none; }
+.quiz-q .q-text { font-weight: 600; margin-bottom: 0.7rem; }
+.quiz-opt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  font-size: 0.95rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  margin: 0.4rem 0;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.quiz-opt:hover { border-color: var(--accent); }
+.quiz-opt.correct { background: var(--good-soft); border-color: var(--good); font-weight: 600; }
+.quiz-opt.wrong   { background: var(--bad-soft);  border-color: var(--bad); }
+.quiz-opt:disabled { cursor: default; }
+.quiz-feedback { font-size: 0.9rem; margin-top: 0.5rem; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.ok  { color: var(--good); }
+.quiz-feedback.no  { color: var(--bad); }
+
+/* ---------- เช็คลิสต์ / ขั้นตอน ---------- */
+ol.steps { counter-reset: step; list-style: none; padding-left: 0; }
+ol.steps > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 2.6rem;
+  margin-bottom: 1rem;
+}
+ol.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0; top: 0.1rem;
+  width: 1.8rem; height: 1.8rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- แผนผังระบบ (minimap — ดีไซน์กล่อง) ---------- */
+.minimap {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0 1.3rem;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+.sm-grid { display: flex; gap: 0.9rem; align-items: stretch; }
+.sm-vps {
+  flex: 1.4;
+  border: 2px solid var(--accent);
+  background: #fff7ed;
+  border-radius: 12px;
+  padding: 0.7rem;
+}
+.sm-vps-title { font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
+.sm-domain {
+  font-size: 0.7rem; font-weight: 600;
+  border: 1px solid var(--accent); border-radius: 999px;
+  padding: 0 0.45rem; margin-left: 0.3rem; color: var(--accent); background: #fff;
+  display: inline-block;
+}
+.sm-docker {
+  border: 1.5px solid var(--info);
+  background: var(--info-soft);
+  border-radius: 10px;
+  padding: 0.55rem;
+  margin-bottom: 0.55rem;
+}
+.sm-docker-title { font-weight: 700; color: var(--info); margin-bottom: 0.35rem; }
+.sm-hermes { background: #fff; border: 1px solid #94a3b8; border-radius: 8px; padding: 0.5rem 0.6rem; }
+.sm-hermes-title { font-weight: 700; margin-bottom: 0.15rem; }
+.sm-b { color: var(--ink-soft); }
+.sm-job {
+  border: 1.5px solid var(--accent);
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.5rem 0.6rem;
+  margin-bottom: 0.55rem;
+}
+.sm-job b { color: var(--accent); }
+.sm-job:last-child { margin-bottom: 0; }
+.sm-queue {
+  border: 1.5px dashed var(--accent);
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+  margin-bottom: 0.55rem;
+  font-weight: 600;
+}
+.sm-side { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 0.4rem; }
+.sm-arrow { font-size: 0.72rem; color: var(--ink-soft); text-align: center; }
+.sm-arrow2 { margin-top: 0.8rem; }
+.sm-you {
+  border: 2px solid var(--good);
+  background: var(--good-soft);
+  border-radius: 12px;
+  padding: 0.55rem 0.7rem;
+}
+.sm-you b { color: var(--good); }
+.sm-fb {
+  border: 2px solid var(--info);
+  background: var(--info-soft);
+  border-radius: 12px;
+  padding: 0.55rem 0.7rem;
+}
+.sm-fb b { color: var(--info); }
+.sm-soft { color: var(--ink-soft); font-size: 0.72rem; }
+.sm-caption {
+  text-align: center;
+  color: var(--good);
+  font-size: 0.82rem;
+  margin-top: 0.8rem;
+}
+.sm-note {
+  font-size: 0.82rem;
+  color: var(--accent);
+  font-weight: 700;
+  margin-top: 0.7rem;
+  text-align: center;
+}
+.minimap .dim { opacity: 0.32; filter: grayscale(0.7); }
+.minimap:not(.minimap-hero) { font-size: 0.72rem; }
+@media (max-width: 700px) {
+  .sm-grid { flex-direction: column; }
+  .sm-arrow2 { margin-top: 0; }
+}
+
+/* ---------- ท้ายบท ---------- */
+.lesson-footer {
+  margin-top: 3rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+  font-size: 0.95rem;
+}
+.lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; }
+.lesson-nav a {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  text-decoration: none;
+  color: var(--ink);
+}
+.lesson-nav a:hover { border-color: var(--accent); }
+
+/* ---------- พิมพ์ ---------- */
+@media print {
+  body { background: #fff; }
+  .quiz, .no-print { display: none; }
+  .page { padding: 0; }
+}

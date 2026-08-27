@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คอร์ส 2 — โรงงานคอนเทนต์: หลายบอท + ภาพ + วิดีโอ</title>
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/onepage.css">
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════════ เมนู ═══════════ -->
+<nav class="sidebar">
+  <details open>
+    <summary>สารบัญคอร์ส</summary>
+    <div class="course-title">🏭 โรงงานคอนเทนต์</div>
+    <div class="course-sub">หลายบอท + ภาพ + วิดีโอ<br>ในเพจเดียวกัน (ต่อจากคอร์ส 1)</div>
+
+    <input id="course-search" class="course-search" type="text" placeholder="🔍 ค้นในบทเรียน… เช่น ffmpeg">
+    <div id="course-search-results" class="cs-results"></div>
+
+    <div class="nav-group">Phase 0 — เปิดโรงงาน</div>
+    <a href="#lesson-01"><span class="dot current"></span>01 · จากพนักงานเดี่ยว สู่ทีมบอท</a>
+
+    <div class="nav-group">Phase 1 — ทีมบอท</div>
+    <a href="#lesson-02"><span class="dot"></span>02 · คิวกลาง v2</a>
+    <a href="#lesson-03"><span class="dot"></span>03 · ตั้งทีมบอท</a>
+
+    <div class="nav-group">Phase 2 — ไลน์ผลิตภาพ</div>
+    <a href="#lesson-04"><span class="dot"></span>04 · ภาพหลายเทมเพลต</a>
+    <a href="#lesson-05"><span class="dot"></span>05 · ภาพชุด + อัลบั้ม</a>
+
+    <div class="nav-group">Phase 3 — ★ ไลน์ผลิตวิดีโอ</div>
+    <a href="#lesson-06"><span class="dot"></span>06 · ffmpeg 101 บน VPS</a>
+    <a href="#lesson-07"><span class="dot"></span>07 · คำคม → วิดีโอ</a>
+    <a href="#lesson-08"><span class="dot"></span>08 · โพสต์วิดีโอ + Reels</a>
+
+    <div class="nav-group">Phase 4 — ประสานทีม</div>
+    <a href="#lesson-09"><span class="dot"></span>09 · ตารางเวรของทีม</a>
+    <a href="#lesson-10"><span class="dot"></span>10 · ห้องควบคุม</a>
+    <a href="#lesson-11"><span class="dot"></span>11 · กันพังเป็นทีม</a>
+
+    <div class="nav-group">Phase 5 — เปิดสายพาน</div>
+    <a href="#lesson-12"><span class="dot"></span>12 · สัปดาห์แรกของโรงงาน</a>
+
+    <div class="nav-group">Reference</div>
+    <a href="#glossary"><span class="dot done"></span>📚 Glossary ศัพท์</a>
+    <a href="#commands"><span class="dot done"></span>⌨️ ffmpeg cheat sheet</a>
+    <a href="#playbook"><span class="dot done"></span>🛠 เทคนิค &amp; Workflow</a>
+  </details>
+</nav>
+
+<!-- ═══════════ เนื้อหา ═══════════ -->
+<main class="content">
+<div class="page">
+
+<!-- ─────────── บทที่ 01 ─────────── -->
+<section class="lesson" id="lesson-01">
+  <p class="lesson-kicker">บทที่ 01 · Phase 0 — เปิดโรงงาน</p>
+  <h1>จากพนักงานเดี่ยว สู่ทีมบอทในเพจเดียวกัน</h1>
+  <p class="lesson-lede">~15 นาที — จบแล้วคุณจะชี้ผังโรงงานคอนเทนต์ได้ทุกชิ้น และตอบได้ว่า "หลายบอท" ในคอร์สนี้แปลว่าอะไรกันแน่ (คำตอบอาจไม่ใช่แบบที่คิด)</p>
+
+  <div class="callout warn">
+    <span class="label">ก่อนเริ่ม — คอร์สนี้ต่อยอดจากคอร์ส 1</span>
+    <p>คุณต้องมีของครบจาก <a href="../hermes-vps/">คอร์ส 1</a> แล้ว: VPS ที่ SSH เข้าได้ · Hermes รันใน Docker · ต่อ Telegram แล้ว · เพจ Facebook พร้อม Page token ถาวร · ระบบโพสต์รูปวันละ 2 เวลาเดินอยู่ ถ้ายังไม่ครบ กลับไปเก็บคอร์ส 1 ให้จบก่อน — ทุกบทในนี้ยืนบนของพวกนั้นทั้งหมด</p>
+  </div>
+
+  <h2>เพจเดิม แต่เมนูคอนเทนต์ใหญ่ขึ้น 3 เท่า</h2>
+  <p>คอร์ส 1 จบด้วยเพจ "บทเรียนชีวิต" ที่โพสต์<strong>ภาพคำคม</strong>เองวันละ 2 โพสต์ คอร์สนี้เราจะทำให้เพจเดียวกันนั้นเสิร์ฟได้ 3 เมนู:</p>
+  <table>
+    <tr><th>เมนู</th><th>คืออะไร</th><th>สร้างในบท</th></tr>
+    <tr><td>🎨 ภาพเดี่ยว (อัปเกรด)</td><td>ภาพคำคมแบบเดิม แต่หลายเทมเพลต หลายสไตล์ ไม่จำเจ</td><td>04</td></tr>
+    <tr><td>🖼 ภาพชุด (carousel) + อัลบั้ม</td><td>โพสต์เดียวหลายภาพ เลื่อนดูได้ + จัดเก็บเข้าอัลบั้มเป็นระบบ</td><td>05</td></tr>
+    <tr><td>🎬 วิดีโอ / Reels</td><td>คำคมกลายเป็นคลิปสั้น ภาพซูมช้าๆ + ตัวหนังสือ + เพลง</td><td>06–08</td></tr>
+  </table>
+
+  <h2>"หลายบอท" ที่แปลว่า "หลายบทบาท"</h2>
+  <p>ข่าวที่อาจเซอร์ไพรส์: เราจะ<strong>ไม่ติดตั้ง Hermes เพิ่มสักตัว</strong> — Hermes ตัวเดิมของคุณนั่นแหละจะกลายเป็นทีมทั้งทีม</p>
+  <p>กลับไปดูสิ่งที่คุณสร้างในคอร์ส 1: งาน morning-quotes, งาน post-morning, งาน post-evening — สังเกตไหมว่าจริงๆ แล้วมันคือ "พนักงานคนละคน" อยู่แล้ว? แต่ละงานตื่นมาทำหน้าที่ของตัวเอง เสร็จแล้วหายไป ไม่รู้จักกันด้วยซ้ำ สิ่งเดียวที่เชื่อมพวกมันคือ<strong>คิวกลาง</strong> (queue.jsonl)</p>
+  <div class="callout">
+    <span class="label">นิยามที่ใช้ทั้งคอร์ส</span>
+    <p><strong>บอท 1 ตัว = บทบาท 1 บทบาท = งานประจำ (cron) 1 งาน + ทักษะ (skill) 1 ชุด</strong> ที่ทำหน้าที่เดียวให้เก่ง แล้วส่งไม้ต่อผ่านคิวกลาง — ไม่ใช่โปรแกรมแยกตัวใหม่ เหมือนพนักงานร้านอาหารคนเดียวที่สลับหมวก: หมวกเชฟ หมวกแคชเชียร์ หมวกเด็กเสิร์ฟ ใส่ทีละใบตามเวลา แต่มองจากลูกค้าเหมือนมีทีมทั้งร้าน</p>
+  </div>
+  <p>วิธีนี้ได้ทีมโดย<strong>ไม่จ่ายเพิ่มสักบาท ไม่กิน RAM เพิ่ม</strong> และของทุกชิ้นจากคอร์ส 1 ใช้ต่อได้หมด (แบบแยกโปรแกรมจริงก็มีเหตุให้ทำ — บท 03 จะบอกว่าเมื่อไหร่)</p>
+
+  <h2>ผังโรงงาน — ภาพนี้คือทั้งคอร์ส</h2>
+  <div class="minimap minimap-hero" data-active="all"></div>
+  <p>เทียบกับผังคอร์ส 1: กล่องส้ม (VPS/Docker/Hermes) และกล่องเขียว (คุณ) อยู่ครบที่เดิม สิ่งที่งอกคือ<strong>บทบาทในทีม</strong> (นักวางแผน/ช่างภาพ/ช่างวิดีโอ), <strong>คิวกลางฉลาดขึ้น</strong> (รู้จักชนิดงาน), และ<strong>ปลายทางหลากขึ้น</strong> (ภาพ/ภาพชุด/วิดีโอ ลงเพจเดิม)</p>
+
+  <h2>แต่ละบทสร้างชิ้นไหน</h2>
+  <table>
+    <tr><th>ชิ้นส่วนในผัง</th><th>บทที่สร้าง</th></tr>
+    <tr><td>คิวกลาง v2 + กติกาทีม</td><td>02–03</td></tr>
+    <tr><td>ไลน์ผลิตภาพ (หลายเทมเพลต + ภาพชุด)</td><td>04–05</td></tr>
+    <tr><td>ไลน์ผลิตวิดีโอ (ffmpeg + โพสต์วิดีโอ)</td><td>06–08</td></tr>
+    <tr><td>ตารางเวร + ห้องควบคุม + กันพัง</td><td>09–11</td></tr>
+    <tr><td>เปิดสายพานจริงทั้งสัปดาห์</td><td>12</td></tr>
+  </table>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 01 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. "หลายบอท" ในคอร์สนี้ สร้างด้วยวิธีไหน?</div>
+      <button class="quiz-opt">ติดตั้ง Hermes เพิ่มอีก 2–3 ตัวใน Docker</button>
+      <button class="quiz-opt">Hermes ตัวเดิม แต่แบ่งเป็นหลายบทบาทด้วย cron + skill</button>
+      <button class="quiz-opt">สมัคร Telegram bot เพิ่มหลายบัญชี</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. สิ่งที่เชื่อม "บอท" ทุกบทบาทเข้าด้วยกันคือ?</div>
+      <button class="quiz-opt">ทุกบอทส่งข้อความคุยกันใน Telegram</button>
+      <button class="quiz-opt">ทุกบอทรันพร้อมกันตลอดเวลา</button>
+      <button class="quiz-opt">คิวกลาง queue.jsonl ที่ทุกบทบาทอ่าน/ส่งไม้ต่อ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. คอร์สนี้โพสต์คอนเทนต์ใหม่ทั้ง 3 ชนิด ลงที่ไหน?</div>
+      <button class="quiz-opt">เพจเดิม "บทเรียนชีวิต" เพจเดียว</button>
+      <button class="quiz-opt">เปิดเพจใหม่แยกชนิดละเพจ</button>
+      <button class="quiz-opt">ย้ายไปโพสต์ลง Reels เท่านั้น</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 01</span>
+    <p>ยังไม่ต้องแตะเครื่อง — เปิดเพจของคุณ แล้วเขียนตอบ 2 ข้อลงกระดาษ/โน้ต: (1) ถ้าเพจมีวิดีโอเพิ่มวันละ 1 คลิป คนดูจะได้อะไรที่ภาพนิ่งให้ไม่ได้? (2) งานไหนที่คุณ<em>ยังอยากเคาะเองก่อนโพสต์</em> — คำตอบข้อนี้จะกำหนดจุด human-in-the-loop ของทั้งโรงงานในบท 09</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 02 ─────────── -->
+<section class="lesson" id="lesson-02">
+  <p class="lesson-kicker">บทที่ 02 · Phase 1 — ทีมบอท</p>
+  <div class="minimap" data-active="queue" data-note="บทนี้: อัปเกรดคิวกลางให้รู้จักชนิดงาน และวางกติกาว่าใครแตะอะไรได้"></div>
+  <h1>คิวกลาง v2 — สมุดงานกลางที่ทีมทั้งทีมยึดถือ</h1>
+  <p class="lesson-lede">~20 นาที — จบแล้วคิวของคุณจะรองรับงานภาพและวิดีโอในไฟล์เดียว และคุณจะรู้กติกาทองที่กันทีมบอท "เหยียบเท้ากัน"</p>
+
+  <h2>ทำไมต้องอัปเกรดคิว</h2>
+  <p>คิวจากคอร์ส 1 มีสมมติฐานซ่อนอยู่ข้อหนึ่ง: <em>ทุกงานคือภาพคำคม</em> พอโรงงานมี 3 เมนู สมมติฐานนี้พัง — นักโพสต์ตอน 19:00 ต้องรู้ว่าคิววันนี้เป็นภาพหรือวิดีโอ ช่างวิดีโอต้องรู้ว่างานไหนของตัวเอง วิธีแก้คือเพิ่ม field ให้แต่ละบรรทัดในคิว "ประกาศชนิดตัวเอง"</p>
+
+  <h2>โครงบรรทัดคิว v2</h2>
+  <pre><code>{"text": "ล้มแล้วลุกช้าหน่อยก็ได้ ขอแค่ลุก",
+ "author": "",
+ "type": "video",
+ "status": "ready",
+ "added": "2026-08-27",
+ "slot": "2026-08-29 19:00",
+ "asset": ""}</code></pre>
+  <table>
+    <tr><th>field</th><th>ความหมาย</th><th>ใหม่ใน v2?</th></tr>
+    <tr><td><code>text</code> / <code>author</code></td><td>คำคม + เจ้าของคำ (ว่าง = ออริจินัล)</td><td>เดิม</td></tr>
+    <tr><td><code>type</code></td><td><code>image</code> | <code>video</code> — เมนูของงานนี้</td><td>✅ ใหม่</td></tr>
+    <tr><td><code>status</code></td><td>วงจรชีวิตงาน: <code>ready → rendering → rendered → posted</code> (หรือ <code>cancelled</code>)</td><td>ขยายจากเดิม</td></tr>
+    <tr><td><code>slot</code></td><td>วัน+เวลาที่จะโพสต์ (จากแผนสัปดาห์)</td><td>เดิม</td></tr>
+    <tr><td><code>asset</code></td><td>full path ไฟล์ผลงานที่เรนเดอร์เสร็จ เช่น <code>/opt/data/home/.hermes/page/out/v0829.mp4</code></td><td>✅ ใหม่</td></tr>
+  </table>
+  <div class="callout">
+    <span class="label">ความเข้ากันได้กับของเดิม (สำคัญ)</span>
+    <p>กติกา: <strong>บรรทัดที่ไม่มี <code>type</code> ให้ทุกบอทถือว่าเป็น <code>image</code></strong> — งานเก่าในคิวของคุณจึงไม่ต้องไล่แก้สักบรรทัด ระบบเดิมเดินต่อได้ระหว่างที่เราค่อยๆ ต่อเติม นี่คือวิธีอัปเกรดระบบที่กำลังรันจริง: เพิ่มของใหม่แบบที่ของเก่าไม่รู้สึกตัว</p>
+  </div>
+
+  <h2>สถานะคือไม้ผลัด (baton) — ภาพวงจรชีวิตงานวิดีโอ</h2>
+  <figure class="diagram">
+    <svg viewBox="0 0 660 190" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <rect x="10" y="60" width="130" height="56" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="75" y="84" font-size="14" font-weight="bold" fill="#1d4ed8" text-anchor="middle">ready</text>
+      <text x="75" y="104" font-size="11.5" fill="#555" text-anchor="middle">คุณอนุมัติแผนแล้ว</text>
+      <rect x="180" y="60" width="130" height="56" rx="10" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+      <text x="245" y="84" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">rendering</text>
+      <text x="245" y="104" font-size="11.5" fill="#555" text-anchor="middle">ช่างวิดีโอกำลังทำ</text>
+      <rect x="350" y="60" width="130" height="56" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+      <text x="415" y="84" font-size="14" font-weight="bold" fill="#15803d" text-anchor="middle">rendered</text>
+      <text x="415" y="104" font-size="11.5" fill="#555" text-anchor="middle">ไฟล์เสร็จ รอเวลาโพสต์</text>
+      <rect x="520" y="60" width="130" height="56" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
+      <text x="585" y="84" font-size="14" font-weight="bold" fill="#4338ca" text-anchor="middle">posted</text>
+      <text x="585" y="104" font-size="11.5" fill="#555" text-anchor="middle">ขึ้นเพจแล้ว</text>
+      <line x1="140" y1="88" x2="180" y2="88" stroke="#888" stroke-width="2" marker-end="url(#ar2)"/>
+      <line x1="310" y1="88" x2="350" y2="88" stroke="#888" stroke-width="2" marker-end="url(#ar2)"/>
+      <line x1="480" y1="88" x2="520" y2="88" stroke="#888" stroke-width="2" marker-end="url(#ar2)"/>
+      <text x="160" y="78" font-size="11" fill="#888" text-anchor="middle">17:00</text>
+      <text x="500" y="78" font-size="11" fill="#888" text-anchor="middle">19:00</text>
+      <text x="330" y="150" font-size="12" fill="#666" text-anchor="middle">งาน type:image ข้ามขั้นกลาง: ready → posted (นักโพสต์ทำรูปเองตอนโพสต์ เหมือนคอร์ส 1)</text>
+      <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#888"/></marker></defs>
+    </svg>
+  </figure>
+  <p>ทำไมวิดีโอต้องมีขั้น <code>rendering/rendered</code> คั่นกลาง? เพราะเรนเดอร์วิดีโอกินเวลาหลายนาที ถ้าให้นักโพสต์ 19:00 ทำเองสดๆ โพสต์จะเลท และถ้าเรนเดอร์พังเราจะรู้ตัวตอน 19:00 พอดี — สายเกินแก้ การให้ช่างวิดีโอทำล่วงหน้าตอน 17:00 คือการซื้อเวลา 2 ชั่วโมงไว้กู้สถานการณ์ (หลักคิดเดียวกับ "ซ้อมด้วย cron run ก่อนของจริง" ในคอร์ส 1)</p>
+
+  <h2>กติกาทอง: หนึ่ง field หนึ่งเจ้าของ (single-writer)</h2>
+  <p>ปัญหาคลาสสิกของระบบหลายคนทำงานไฟล์เดียว: สองบอทเขียนพร้อมกันแล้วข้อมูลทับกัน (ศัพท์เรียก <a href="#glossary">race condition</a>) วิธีกันที่ง่ายและได้ผลสุดสำหรับโรงงานขนาดเรา: <strong>กำหนดเจ้าของการเขียนให้ชัด — สถานะแต่ละช่วงมีบอทเดียวที่มีสิทธิ์เปลี่ยน</strong></p>
+  <table>
+    <tr><th>การเปลี่ยนสถานะ</th><th>เจ้าของสิทธิ์ (คนเดียวเท่านั้น)</th></tr>
+    <tr><td>เพิ่มบรรทัดใหม่ <code>ready</code></td><td>🧠 นักวางแผน (หลังคุณพิมพ์ "อนุมัติแผน")</td></tr>
+    <tr><td><code>ready → rendering → rendered</code> + เติม <code>asset</code></td><td>🎬 ช่างวิดีโอ</td></tr>
+    <tr><td><code>ready/rendered → posted</code></td><td>📮 นักโพสต์</td></tr>
+    <tr><td>อะไรก็ได้ → <code>cancelled</code></td><td>📱 คุณ (สั่งผ่านแชท) เท่านั้น</td></tr>
+  </table>
+  <p>กติกานี้จะถูกฝังลงใน skill ของทุกบทบาทที่เราสร้างในบทถัดๆ ไป — บอทที่ไม่ใช่เจ้าของ ห้ามแก้ ต่อให้เห็นว่า "น่าจะผิด" ก็ให้รายงานคุณแทนการแก้เอง</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 02 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">1. บรรทัดเก่าในคิวที่ไม่มี field <code>type</code> ทุกบอทต้องถือว่าเป็น?</div>
+      <button class="quiz-opt">image — ของเก่าเดินต่อได้ไม่ต้องแก้</button>
+      <button class="quiz-opt">video — เพราะเป็นของใหม่กว่า</button>
+      <button class="quiz-opt">error — ต้องลบทิ้งทันที</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. ทำไมงานวิดีโอต้องเรนเดอร์ล่วงหน้า 17:00 แทนที่จะทำสดตอนโพสต์ 19:00?</div>
+      <button class="quiz-opt">เพราะ ffmpeg ทำงานได้เฉพาะช่วงเย็น</button>
+      <button class="quiz-opt">เพราะคิวถูกล็อกตอน 19:00</button>
+      <button class="quiz-opt">เพราะเรนเดอร์กินเวลา ถ้าพังยังเหลือ 2 ชม.ให้กู้ก่อนถึงเวลาโพสต์</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">3. กติกา single-writer แปลว่า?</div>
+      <button class="quiz-opt">ทั้งระบบมีบอทได้ตัวเดียว</button>
+      <button class="quiz-opt">การเปลี่ยนสถานะแต่ละช่วง มีบอทเดียวที่มีสิทธิ์เขียน</button>
+      <button class="quiz-opt">คิวเปิดให้อ่านได้ทีละบอท</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 02 — ลงมือกับเครื่องจริง</span>
+    <p>สั่ง Hermes ในแชท Telegram (ก๊อปได้เลย):</p>
+    <pre><code>อ่านไฟล์ /opt/data/home/.hermes/page/queue.jsonl แล้วรายงาน:
+1. จำนวนงานแยกตาม status
+2. จำนวนงานแยกตาม type (บรรทัดที่ไม่มี type ให้นับเป็น image)
+ห้ามแก้ไขไฟล์ แค่อ่านและรายงาน</code></pre>
+    <p>ถ้ารายงานกลับมาถูกต้อง (ตัวเลขตรงกับที่คุณรู้) แปลว่าคิวคุณพร้อมเป็น v2 แล้วโดยยังไม่ต้องแก้อะไรเลย — ส่งผลลัพธ์มาให้ครูดูด้วย</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 03 ─────────── -->
+<section class="lesson" id="lesson-03">
+  <p class="lesson-kicker">บทที่ 03 · Phase 1 — ทีมบอท</p>
+  <div class="minimap" data-active="team,plan,imgline,vidline" data-note="บทนี้: ตั้งชื่อทีม วางบทบาท และเช็กว่าเครื่องพร้อมรับงานเพิ่มไหม"></div>
+  <h1>ตั้งทีมบอท — บทบาท ชื่อเรียก และเส้นแบ่งหน้าที่</h1>
+  <p class="lesson-lede">~25 นาที — จบแล้วคุณจะมีผังทีมที่เขียนเป็นลายลักษณ์อักษร รู้ต้นทุนจริงของ "บอทแยกตัวจริง" และเช็กสุขภาพเครื่องก่อนเปิดไลน์ผลิตใหม่เป็น</p>
+
+  <h2>ทีมของโรงงานเรา — 4 บทบาท</h2>
+  <table>
+    <tr><th>บทบาท</th><th>ตื่นเมื่อไหร่</th><th>ทำอะไร</th><th>มาจากไหน</th></tr>
+    <tr><td>🧠 นักวางแผน</td><td>เสาร์ 10:00 (กริ่ง) + คุณเรียกในแชท</td><td>ร่างแผนสัปดาห์ระบุ type ภาพ/วิดีโอต่อ slot → คุณอนุมัติ → ลงคิว</td><td>อัปเกรดจากคอร์ส 1 (บทแถม 15)</td></tr>
+    <tr><td>🎨 ช่างภาพ</td><td>ตอนนักโพสต์เรียกใช้</td><td>ทำภาพจากเทมเพลตหลายสไตล์ (บท 04)</td><td>อัปเกรด make_image.py เดิม</td></tr>
+    <tr><td>🎬 ช่างวิดีโอ</td><td>ทุกวัน 17:00</td><td>หยิบงาน <code>type:video</code> ของวันนี้ → เรนเดอร์ → ส่งตัวอย่างให้คุณดูใน Telegram → <code>rendered</code></td><td>สร้างใหม่ (บท 06–07)</td></tr>
+    <tr><td>📮 นักโพสต์</td><td>08:00 / 19:00</td><td>หยิบงานตรง slot → ภาพโพสต์เอง วิดีโอหยิบไฟล์ <code>asset</code> ที่เสร็จแล้ว → โพสต์ → <code>posted</code></td><td>อัปเกรดจาก post-morning / post-evening เดิม</td></tr>
+  </table>
+
+  <h2>ตั้งชื่อให้เป็นระบบตั้งแต่วันแรก</h2>
+  <p>คอร์ส 1 เราตั้งชื่องานตามใจ (morning-quotes, post-morning…) พอทีมโตชื่อจะเริ่มจำยาก คอร์สนี้ใช้ convention: งานใหม่ของโรงงานขึ้นต้นด้วย <code>factory-</code></p>
+  <pre><code>factory-render-video   ← ช่างวิดีโอ 17:00 (สร้างในบท 07)
+factory-daily-report   ← รายงานสุขภาพ 21:00 (สร้างในบท 10)</code></pre>
+  <p>ส่วนงานเดิมจากคอร์ส 1 <strong>คงชื่อเดิมไว้</strong> — บทเรียนจากสนามจริง: อย่ารื้อของที่กำลังทำงานดีเพียงเพื่อความสวยงาม (กฎเดียวกับตอนเรา pause งาน weekly-plan แทนการลบ)</p>
+
+  <h2>แล้ว "บอทแยกตัวจริง" ล่ะ? — ทางแยกขั้นสูงที่ควรรู้จัก</h2>
+  <p>Hermes แยก container จริงทำได้: docker compose อีกชุด + Telegram bot token ใหม่ + โฟลเดอร์ /opt/data ของตัวเอง ได้บอทที่มีความจำแยก แชทแยก ตายแยก (ตัวหนึ่งล่มอีกตัวไม่สะเทือน)</p>
+  <table>
+    <tr><th></th><th>หลายบทบาทในตัวเดียว (คอร์สนี้)</th><th>แยก container จริง</th></tr>
+    <tr><td>ค่าใช้จ่าย/RAM</td><td>เท่าเดิม (ทีมทั้งทีมฟรี)</td><td>RAM เพิ่มต่อตัว + จัดการ API key แยก</td></tr>
+    <tr><td>คิว/ความจำ</td><td>แชร์กันเอง อยู่ไฟล์เดียว</td><td>แยกขาด ต้องออกแบบวิธีคุยกันเอง</td></tr>
+    <tr><td>เหมาะกับ</td><td>ทีมหลายหน้าที่ <strong>ในเพจเดียว</strong></td><td><strong>คนละเพจ/คนละธุรกิจ</strong> ที่ห้ามข้อมูลปนกัน</td></tr>
+  </table>
+  <div class="callout">
+    <span class="label">เกณฑ์ตัดสินใจจำง่าย</span>
+    <p>เพจเดียวกัน → บทบาทในตัวเดียว · คนละเพจ → ค่อยแยกตัวจริง (เพจที่สองของคุณในอนาคต ใช้สูตรนี้)</p>
+  </div>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 03 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">1. บทบาทไหน "ตื่น 17:00 ทุกวัน"?</div>
+      <button class="quiz-opt">นักโพสต์ — เตรียมตัวก่อนเวลาโพสต์</button>
+      <button class="quiz-opt">นักวางแผน — สรุปงานประจำวัน</button>
+      <button class="quiz-opt">ช่างวิดีโอ — เรนเดอร์งานเย็นล่วงหน้า</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">2. งานเดิมจากคอร์ส 1 (post-morning ฯลฯ) ควรทำยังไงกับชื่อมัน?</div>
+      <button class="quiz-opt">เปลี่ยนเป็น factory-* ให้หมดทันที</button>
+      <button class="quiz-opt">คงชื่อเดิม — อย่ารื้อของที่ทำงานดีอยู่</button>
+      <button class="quiz-opt">ลบแล้วสร้างใหม่ทั้งหมด</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. เมื่อไหร่จึงควรแยก Hermes เป็น container ตัวที่สองจริงๆ?</div>
+      <button class="quiz-opt">เมื่อทำคนละเพจ/คนละธุรกิจ ที่ข้อมูลห้ามปนกัน</button>
+      <button class="quiz-opt">เมื่ออยากให้เพจเดิมโพสต์ได้หลายชนิด</button>
+      <button class="quiz-opt">ทันทีที่มี cron เกิน 3 งาน</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 03 — เช็กเครื่องก่อนเปิดไลน์ผลิต</span>
+    <p>SSH เข้า VPS แล้วรัน 3 คำสั่ง (ทีละคำสั่ง ดูผลก่อนไปต่อ):</p>
+    <pre><code>free -h        # RAM เหลือพอไหม (ffmpeg ตอนเรนเดอร์กินชั่วคราว ~200-500MB)
+df -h /        # ดิสก์เหลือกี่ GB (ไฟล์วิดีโอใหญ่กว่าภาพ ~10 เท่า)
+docker exec -it hermes-agent-xxxx-hermes-agent-1 hermes cron list   # ทีมปัจจุบันมีใครบ้าง</code></pre>
+    <p>ส่งผลทั้ง 3 มาให้ครูดู — โดยเฉพาะตัวเลข RAM ว่าง กับดิสก์ว่าง เราจะใช้ตัดสินคุณภาพวิดีโอ (ความยาว/ความละเอียด) ในบท 07</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 04 ─────────── -->
+<section class="lesson" id="lesson-04">
+  <p class="lesson-kicker">บทที่ 04 · Phase 2 — ไลน์ผลิตภาพ</p>
+  <div class="minimap" data-active="imgline" data-note="บทนี้: อัปเกรดช่างภาพจาก 1 เทมเพลต เป็นหลายสไตล์ตามธีมวัน"></div>
+  <h1>โรงงานภาพหลายเทมเพลต — เพจเดิมแต่ไม่จำเจ</h1>
+  <p class="lesson-lede">~30 นาที — จบแล้ว make_image.py ของคุณจะทำภาพได้ 3 สไตล์ และคุณจะได้เทคนิคสำคัญ: วิธี "จ้าง Hermes อัปเกรดโค้ดของมันเอง" อย่างปลอดภัย</p>
+
+  <h2>ปัญหาที่คนตามเพจจะรู้สึกก่อนคุณ</h2>
+  <p>เทมเพลตเดียวทุกวัน ผ่านไปเดือนหนึ่ง feed ของเพจจะดูเหมือน "ภาพเดิมเปลี่ยนตัวหนังสือ" ความจำเจฆ่าเพจช้าๆ วิธีแก้ไม่ใช่สุ่มมั่ว แต่คือ<strong>ผูกสไตล์ภาพกับธีมของวัน</strong> ที่เราออกแบบไว้ตั้งแต่คอร์ส 1 (จันทร์-ความพยายาม, กลางสัปดาห์-ใจเย็นกับตัวเอง, ศุกร์-ปล่อยวาง ฯลฯ)</p>
+  <table>
+    <tr><th>สไตล์</th><th>หน้าตา</th><th>เหมาะกับธีม</th></tr>
+    <tr><td><code>classic</code></td><td>พื้นครีม ตัวหนังสือเข้ม (ตัวเดิมจากคอร์ส 1)</td><td>ความพยายาม / การเริ่มใหม่</td></tr>
+    <tr><td><code>night</code></td><td>พื้นเข้มเกือบดำ ตัวหนังสือสว่าง โทนสงบ</td><td>การปล่อยวาง / โพสต์เย็น 19:00</td></tr>
+    <tr><td><code>paper</code></td><td>โทนกระดาษโน้ต เส้นบรรทัดจางๆ อบอุ่น</td><td>ใจเย็นกับตัวเอง / คำสอนคนดัง</td></tr>
+  </table>
+
+  <h2>เทคนิคหลักของบทนี้: จ้าง Hermes แก้โค้ดตัวเอง — แบบมีเข็มขัดนิรภัย</h2>
+  <p>คุณไม่ต้องเขียน Python เอง — Hermes แก้ให้ได้ แต่การปล่อยให้ AI แก้สคริปต์ที่ระบบจริงใช้อยู่ มีกติกาความปลอดภัย 3 ข้อที่ต้องอยู่ใน prompt เสมอ:</p>
+  <ol class="steps">
+    <li><strong>สำรองก่อนแตะ</strong> — ให้มัน <code>cp</code> ไฟล์เดิมเก็บไว้ก่อนเสมอ พังเมื่อไหร่ย้อนได้ใน 1 คำสั่ง</li>
+    <li><strong>ของเดิมต้องเดินต่อได้</strong> — เรียกแบบไม่ระบุสไตล์ ต้องได้ผลแบบเดิมเป๊ะ (default = <code>classic</code>) เพราะงานโพสต์เช้า/เย็นตัวจริงกำลังเรียกใช้อยู่ทุกวัน</li>
+    <li><strong>พิสูจน์ด้วยตา ไม่ใช่คำพูด</strong> — จบงานต้องส่งภาพตัวอย่างครบทุกสไตล์เข้า Telegram ให้คุณดูจริง ไม่รับคำว่า "เสร็จแล้วครับ" เปล่าๆ</li>
+  </ol>
+  <div class="callout warn">
+    <span class="label">กฎจากสนามจริง (คอร์ส 1 สอนเราแล้ว)</span>
+    <p>AI ชอบ "over-engineer" — ขยันเกินสั่งจนพัง (เคสจริง: สร้าง path สคริปต์ซ้อนกันเอง) prompt ที่ดีจึงต้องมีทั้ง "สิ่งที่ให้ทำ" และ <strong>"สิ่งที่ห้ามทำ"</strong> เขียนชัดๆ ทุกครั้ง</p>
+  </div>
+
+  <h2>Prompt อัปเกรดช่างภาพ (แม่แบบใช้จริง)</h2>
+  <pre><code>อัปเกรดสคริปต์ทำภาพคำคม (make_image.py) ตามนี้:
+1. ก่อนแก้ ให้สำรองไฟล์เดิมเป็น make_image.py.bak ก่อน
+2. เพิ่ม argument --style รับค่า classic | night | paper
+   - classic: แบบเดิมทุกอย่าง และต้องเป็นค่า default เมื่อไม่ระบุ
+   - night: พื้นหลังโทนเข้ม (#1a1a2e) ตัวหนังสือสีครีม
+   - paper: พื้นหลังโทนกระดาษ (#f5efe0) เส้นบรรทัดจางๆ ตัวหนังสือน้ำตาลเข้ม
+3. ห้ามแก้ส่วนอื่นของสคริปต์ ห้ามเปลี่ยนขนาดภาพ ห้ามเปลี่ยนฟอนต์
+4. เสร็จแล้วทดสอบ: ทำภาพคำคมเดียวกันทั้ง 3 สไตล์
+   แล้วส่งทั้ง 3 ภาพเข้า Telegram ให้ผมดู</code></pre>
+
+  <h2>เชื่อมกับแผนสัปดาห์</h2>
+  <p>ต่อจากนี้ นักวางแผนจะใส่สไตล์ลงคิวได้ด้วย field เสริม <code>"style": "night"</code> — นักโพสต์อ่านแล้วส่งต่อให้ช่างภาพ ถ้าบรรทัดไหนไม่มี style นักโพสต์ใช้กติกาง่ายๆ: โพสต์เช้า = classic/paper สลับกัน, โพสต์เย็น = night (กติกานี้จะเขียนลง skill นักโพสต์ในบท 09)</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 04 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. ทำไม default ของ --style ต้องเป็น classic (แบบเดิม)?</div>
+      <button class="quiz-opt">เพราะสวยที่สุดใน 3 แบบ</button>
+      <button class="quiz-opt">เพราะงานโพสต์ตัวจริงเรียกสคริปต์แบบไม่ระบุสไตล์อยู่ทุกวัน — ของเดิมต้องไม่พัง</button>
+      <button class="quiz-opt">เพราะ Python บังคับให้มี default</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. ก่อนให้ AI แก้สคริปต์ที่ระบบจริงใช้อยู่ ต้องทำอะไรก่อนเสมอ?</div>
+      <button class="quiz-opt">ปิดระบบทั้งหมดก่อน</button>
+      <button class="quiz-opt">ลบไฟล์เดิมเพื่อกันสับสน</button>
+      <button class="quiz-opt">สำรองไฟล์เดิม (.bak) — พังแล้วย้อนได้ 1 คำสั่ง</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. หลักฐานว่างานอัปเกรด "เสร็จจริง" คือ?</div>
+      <button class="quiz-opt">ภาพตัวอย่างทั้ง 3 สไตล์ ส่งมาให้เห็นใน Telegram</button>
+      <button class="quiz-opt">ข้อความ "เสร็จแล้วครับ" จาก Hermes</button>
+      <button class="quiz-opt">ไฟล์ .bak ปรากฏในโฟลเดอร์</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 04</span>
+    <p>(1) ก๊อป prompt แม่แบบด้านบนส่งใน Telegram (2) รอภาพ 3 สไตล์ (3) ถ้าสไตล์ไหนไม่ถูกใจ สั่งแก้เฉพาะจุดเป็นภาษาคน เช่น "night ตัวหนังสือเล็กไป ขยายอีกนิด" (4) ได้ครบแล้วส่งภาพทั้ง 3 มาอวดครู — บทหน้าเราจะเอาไปทำภาพชุด</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 05 ─────────── -->
+<section class="lesson" id="lesson-05">
+  <p class="lesson-kicker">บทที่ 05 · Phase 2 — ไลน์ผลิตภาพ</p>
+  <div class="minimap" data-active="imgline,postjob,fb" data-note="บทนี้: โพสต์เดียวหลายภาพ (carousel) + จัดเก็บเข้าอัลบั้ม"></div>
+  <h1>ภาพชุด (carousel) + อัลบั้ม — โพสต์เดียวเล่าได้หลายจังหวะ</h1>
+  <p class="lesson-lede">~30 นาที — จบแล้วเพจคุณจะโพสต์ "ชุดคำคม 3 ภาพเลื่อนดู" ได้ และคำถามค้างจากคอร์ส 1 ("เก็บรูปเข้าอัลบั้มได้ไหม") จะได้คำตอบเป็นโพสต์จริง</p>
+
+  <h2>carousel ทำงานยังไงใน Graph API — เทคนิค 2 จังหวะ</h2>
+  <p>Facebook ไม่มีปุ่ม "โพสต์หลายภาพ" ตรงๆ ใน API แต่ใช้ท่ามาตรฐาน 2 จังหวะ:</p>
+  <ol class="steps">
+    <li><strong>อัปโหลดภาพแบบ "ยังไม่เผยแพร่"</strong> — ยิง <code>/photos</code> ทีละภาพพร้อม <code>published=false</code> ภาพจะขึ้นไปรอบนเซิร์ฟเวอร์เงียบๆ ไม่โผล่บนเพจ แต่เราได้ <code>id</code> ของแต่ละภาพกลับมา</li>
+    <li><strong>ประกอบร่างเป็นโพสต์เดียว</strong> — ยิง <code>/feed</code> หนึ่งครั้ง แนบรายการ id ทั้งหมดผ่าน <code>attached_media</code> → กลายเป็นโพสต์ carousel โพสต์เดียว</li>
+  </ol>
+  <pre><code># จังหวะ 1 — อัปโหลดเงียบ ทีละภาพ (ทำซ้ำ 3 ครั้ง เก็บ id ทุกใบ)
+curl -X POST "https://graph.facebook.com/v26.0/PAGE_ID/photos" \
+  -F "access_token=PAGE_TOKEN" \
+  -F "published=false" \
+  -F "source=@/opt/data/home/.hermes/page/out/q1.png"
+# ตอบกลับ: {"id":"111111"}  ← จดไว้
+
+# จังหวะ 2 — ประกอบเป็นโพสต์เดียว
+curl -X POST "https://graph.facebook.com/v26.0/PAGE_ID/feed" \
+  -F "access_token=PAGE_TOKEN" \
+  -F "message=3 บทเรียนสั้นๆ ก่อนเริ่มสัปดาห์ 🌱" \
+  -F 'attached_media[0]={"media_fbid":"111111"}' \
+  -F 'attached_media[1]={"media_fbid":"222222"}' \
+  -F 'attached_media[2]={"media_fbid":"333333"}'</code></pre>
+  <div class="callout">
+    <span class="label">จุดพลาดยอดฮิต</span>
+    <p>ค่าใน <code>attached_media[n]</code> ต้องเป็นก้อน JSON ในเครื่องหมายคำพูด (สังเกต single quote ครอบทั้งก้อน) — ถ้าใส่ id เปล่าๆ จะได้ error 100 · และต้องใช้ <strong>Page token ตัว Never expire จากคอร์ส 1</strong> เหมือนเดิมทุกจังหวะ</p>
+  </div>
+
+  <h2>อัลบั้ม — คำตอบของคำถามค้างจากคอร์ส 1</h2>
+  <p>อัลบั้มคือ "โฟลเดอร์ภาพบนเพจ" สร้างครั้งเดียวได้ id ถาวร แล้วโพสต์ภาพเข้าอัลบั้มนั้นตรงๆ ได้เลย:</p>
+  <pre><code># สร้างอัลบั้ม (ทำครั้งเดียว) — ได้ ALBUM_ID เก็บไว้ใช้ตลอด
+curl -X POST "https://graph.facebook.com/v26.0/PAGE_ID/albums" \
+  -F "access_token=PAGE_TOKEN" \
+  -F "name=คำคมประจำสัปดาห์" \
+  -F "message=รวมคำคมรายสัปดาห์ของเพจ"
+
+# โพสต์ภาพเข้าอัลบั้มนั้นโดยตรง (ใช้ ALBUM_ID แทน PAGE_ID)
+curl -X POST "https://graph.facebook.com/v26.0/ALBUM_ID/photos" \
+  -F "access_token=PAGE_TOKEN" \
+  -F "message=คำคมวันจันทร์" \
+  -F "source=@/opt/data/home/.hermes/page/out/q1.png"</code></pre>
+  <p>ไอเดียใช้จริงกับเพจเรา: ให้นักโพสต์เก็บภาพ "ตัวท็อปประจำสัปดาห์" (โพสต์ที่คนไลก์สุด) เข้าอัลบั้มรวมทุกวันอาทิตย์ — คนมาใหม่เปิดอัลบั้มเดียวเจอของดีย้อนหลังครบ</p>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 05 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. <code>published=false</code> ในจังหวะแรกทำหน้าที่อะไร?</div>
+      <button class="quiz-opt">ทำให้ภาพเป็นส่วนตัวถาวร ไม่มีใครเห็นตลอดไป</button>
+      <button class="quiz-opt">อัปโหลดภาพขึ้นไปรอโดยยังไม่โผล่บนเพจ เพื่อเอา id ไปประกอบโพสต์เดียว</button>
+      <button class="quiz-opt">ประหยัดโควตา API</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">2. โพสต์ carousel จริงๆ เกิดขึ้นตอนยิง endpoint ไหน?</div>
+      <button class="quiz-opt">/photos ครั้งสุดท้าย</button>
+      <button class="quiz-opt">/albums</button>
+      <button class="quiz-opt">/feed พร้อม attached_media</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">3. จะโพสต์ภาพเข้าอัลบั้มที่สร้างไว้ ต้องยิง /photos ไปที่ id ของใคร?</div>
+      <button class="quiz-opt">ALBUM_ID ของอัลบั้มนั้น</button>
+      <button class="quiz-opt">PAGE_ID ตามปกติ</button>
+      <button class="quiz-opt">id ของโพสต์ล่าสุด</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 05 — carousel แรกของเพจ</span>
+    <p>สั่ง Hermes ใน Telegram (สังเกตว่าเราปักหมุดวิธีที่พิสูจน์แล้ว + บอกสิ่งที่ห้ามทำ — สูตรจากสนามจริง):</p>
+    <pre><code>ทำโพสต์ carousel ชุดแรกของเพจ ตามขั้นตอนนี้เท่านั้น:
+1. เลือกคำคมธีมเดียวกัน 3 ข้อจากคิว (status ready, type image)
+2. ทำภาพ 3 ใบด้วยสไตล์ paper ทั้งชุด
+3. ส่ง 3 ภาพให้ผมดูใน Telegram ก่อน — รอผมตอบ "โพสต์ได้"
+4. โพสต์ด้วยท่า 2 จังหวะ: /photos published=false ทีละใบ
+   แล้ว /feed พร้อม attached_media ด้วย curl แบบใน skill post-facebook (v26.0)
+5. ห้ามสร้างสคริปต์ใหม่ ห้ามใช้วิธีอื่นนอกจากที่ระบุ
+เสร็จแล้วส่งลิงก์โพสต์มายืนยัน อย่าลืมอัปเดต status เป็น posted ทั้ง 3 บรรทัด</code></pre>
+    <p>ได้ลิงก์โพสต์ carousel แล้วส่งมาให้ครูดู — เปิด incognito เช็กด้วยว่าคนนอกเห็นครบ 3 ภาพ</p>
+  </div>
+</section>
+
+<!-- ─────────── Reference: Glossary ─────────── -->
+<section class="lesson" id="glossary">
+  <p class="lesson-kicker">Reference · เปิดดูได้ตลอด ไม่ต้องท่อง</p>
+  <h1>📚 Glossary — ศัพท์คอร์ส 2</h1>
+  <p class="lesson-lede">ศัพท์ใหม่ของโรงงานคอนเทนต์ (ศัพท์พื้นฐาน VPS/Docker/Hermes อยู่ใน Glossary ของ<a href="../hermes-vps/">คอร์ส 1</a>)</p>
+
+  <h2>ทีมบอท &amp; คิว</h2>
+  <table>
+    <tr><th>ศัพท์</th><th>ความหมาย</th></tr>
+    <tr><td><strong>บทบาท (role)</strong></td><td>"บอท" หนึ่งตัวในคอร์สนี้ = งานประจำ (cron) 1 งาน + skill 1 ชุด ทำหน้าที่เดียว เช่น ช่างวิดีโอ</td></tr>
+    <tr><td><strong>คิวกลาง v2</strong></td><td>queue.jsonl ที่เพิ่ม field <code>type</code> (image/video) และ <code>asset</code> (path ไฟล์ผลงาน)</td></tr>
+    <tr><td><strong>baton (ไม้ผลัด)</strong></td><td>การใช้ field <code>status</code> ส่งงานต่อระหว่างบอท: ready → rendering → rendered → posted</td></tr>
+    <tr><td><strong>race condition</strong></td><td>อาการสองโปรแกรมเขียนข้อมูลเดียวกันพร้อมกันจนข้อมูลพัง/หาย — ศัตรูเบอร์หนึ่งของระบบหลายบอท</td></tr>
+    <tr><td><strong>single-writer</strong></td><td>กติกากัน race condition: สถานะแต่ละช่วงมี "เจ้าของสิทธิ์เขียน" เพียงบอทเดียว</td></tr>
+    <tr><td><strong>render (เรนเดอร์)</strong></td><td>การประมวลผลสร้างไฟล์ผลงานจริง (ภาพ/วิดีโอ) — วิดีโอใช้เวลานาน จึงต้องทำล่วงหน้า</td></tr>
+    <tr><td><strong>asset</strong></td><td>ไฟล์ผลงานที่เรนเดอร์เสร็จ พร้อมใช้โพสต์ เก็บ path ไว้ในคิว</td></tr>
+  </table>
+
+  <h2>ภาพ &amp; Facebook API</h2>
+  <table>
+    <tr><th>ศัพท์</th><th>ความหมาย</th></tr>
+    <tr><td><strong>carousel</strong></td><td>โพสต์เดียวที่มีหลายภาพเลื่อนดูได้ — สร้างด้วยท่า 2 จังหวะ (อัปโหลดเงียบ → ประกอบ)</td></tr>
+    <tr><td><strong>published=false</strong></td><td>พารามิเตอร์อัปโหลดภาพขึ้นเซิร์ฟเวอร์ FB โดยยังไม่โผล่บนเพจ เพื่อเอา id ไปใช้ต่อ</td></tr>
+    <tr><td><strong>attached_media</strong></td><td>พารามิเตอร์ของ /feed ที่แนบรายการ id ภาพ (media_fbid) ให้รวมเป็นโพสต์ carousel เดียว</td></tr>
+    <tr><td><strong>album</strong></td><td>โฟลเดอร์ภาพบนเพจ สร้างได้ทาง API (/albums) แล้วโพสต์ภาพเข้าอัลบั้มด้วย ALBUM_ID/photos</td></tr>
+    <tr><td><strong>เทมเพลต/สไตล์</strong></td><td>ชุดหน้าตาภาพ (classic / night / paper) เลือกตามธีมวัน ผ่าน --style ของ make_image.py</td></tr>
+  </table>
+
+  <h2>วิดีโอ</h2>
+  <table>
+    <tr><th>ศัพท์</th><th>ความหมาย</th></tr>
+    <tr><td><strong>ffmpeg</strong></td><td>เครื่องมือฟรีจัดการวิดีโอ/เสียงผ่านบรรทัดคำสั่ง — มีดสวิสของงานวิดีโอทั้งโลก</td></tr>
+    <tr><td><strong>codec / H.264</strong></td><td>วิธีบีบอัดวิดีโอ — H.264 (libx264) คือมาตรฐานที่ Facebook และแทบทุกที่รองรับ</td></tr>
+    <tr><td><strong>yuv420p</strong></td><td>รูปแบบสีของวิดีโอที่เข้ากันได้กว้างสุด — ลืมใส่แล้ววิดีโอมักเปิดไม่ได้ในบางแอป</td></tr>
+    <tr><td><strong>fps</strong></td><td>เฟรมต่อวินาที — คลิปคำคมใช้ 25 พอ (ตากรรมการดูไม่ออกจาก 30)</td></tr>
+    <tr><td><strong>aspect ratio</strong></td><td>สัดส่วนภาพ: 1:1 (จัตุรัส, feed) · 4:5 (feed มือถือ) · 9:16 (แนวตั้งเต็มจอ, Reels)</td></tr>
+    <tr><td><strong>zoompan / Ken Burns</strong></td><td>เทคนิคทำภาพนิ่งให้ "มีชีวิต" ด้วยการซูม/แพนช้าๆ — หัวใจของคลิปคำคมเรา</td></tr>
+    <tr><td><strong>-shortest</strong></td><td>ตัวเลือก ffmpeg ให้คลิปจบตามสายที่สั้นสุด (เช่น ภาพ 8 วิ + เพลง 3 นาที → คลิป 8 วิ)</td></tr>
+    <tr><td><strong>Reels</strong></td><td>วิดีโอสั้นแนวตั้ง 9:16 ของ FB/IG — โพสต์ผ่าน API ต้องใช้ท่า 3 จังหวะ (start → upload → finish)</td></tr>
+  </table>
+</section>
+
+<!-- ─────────── Reference: ffmpeg cheat sheet ─────────── -->
+<section class="lesson" id="commands">
+  <p class="lesson-kicker">Reference · เปิดดูได้ตลอด ไม่ต้องท่อง</p>
+  <h1>⌨️ ffmpeg + คำสั่งโรงงาน — cheat sheet</h1>
+  <p class="lesson-lede">คำสั่งที่ใช้บ่อยในคอร์สนี้ ก๊อปไปแก้ path/ชื่อไฟล์ได้เลย (คำสั่ง Linux พื้นฐานอยู่ใน cheat sheet คอร์ส 1)</p>
+
+  <h2>ffmpeg — สูตรสำเร็จของโรงงาน</h2>
+  <pre><code># 1) ภาพนิ่ง → คลิป 8 วินาที (แบบเรียบสุด ไม่มีลูกเล่น)
+ffmpeg -y -loop 1 -i quote.png -t 8 \
+  -c:v libx264 -pix_fmt yuv420p -r 25 out.mp4
+
+# 2) + ซูมช้า (Ken Burns) + จอ 1:1
+ffmpeg -y -loop 1 -i quote.png -t 8 \
+  -vf "scale=1080:1080,zoompan=z='min(zoom+0.001,1.15)':d=200:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s=1080x1080:fps=25" \
+  -c:v libx264 -pix_fmt yuv420p out.mp4
+
+# 3) + เพลงพื้นหลัง (คลิปจบตามภาพเพราะ -shortest)
+ffmpeg -y -loop 1 -i quote.png -i music.mp3 -t 8 \
+  -vf "scale=1080:1080,fade=t=in:st=0:d=0.8,fade=t=out:st=7:d=1" \
+  -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest out.mp4
+
+# 4) แปลงเป็นแนวตั้ง 9:16 สำหรับ Reels (ขยายเบลอเป็นพื้นหลัง)
+ffmpeg -y -i out.mp4 \
+  -vf "split[a][b];[a]scale=1080:1920,boxblur=20[bg];[b]scale=1080:-2[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2" \
+  -c:v libx264 -pix_fmt yuv420p -c:a copy reel.mp4
+
+# ดูข้อมูลไฟล์วิดีโอ (ยาวกี่วิ ขนาดเท่าไหร่ codec อะไร)
+ffprobe -hide_banner out.mp4</code></pre>
+
+  <h2>คำสั่งดูแลโรงงาน</h2>
+  <pre><code># เข้าไปในกล่อง Hermes (จาก SSH บน VPS)
+docker exec -it hermes-agent-xxxx-hermes-agent-1 bash
+
+# ติดตั้ง ffmpeg ในกล่อง (ทำใหม่ถ้ากล่องถูกสร้างใหม่ — ดูบท 06)
+apt-get update && apt-get install -y ffmpeg
+
+# พื้นที่ที่โฟลเดอร์ผลงานกินอยู่ / ลบวิดีโอเก่าเกิน 30 วัน
+du -sh /opt/data/home/.hermes/page/out/
+find /opt/data/home/.hermes/page/out/ -name "*.mp4" -mtime +30 -delete
+
+# ดูทีม cron ทั้งหมด / สั่งซ้อมงานหนึ่งตัว
+hermes cron list
+hermes cron run factory-render-video</code></pre>
+
+  <h2>Graph API — ท่าโพสต์ทั้ง 3 เมนู (สรุปย่อ)</h2>
+  <pre><code># ภาพเดี่ยว (ท่าเดิมคอร์ส 1)
+curl -X POST "https://graph.facebook.com/v26.0/PAGE_ID/photos" \
+  -F "access_token=TOKEN" -F "message=..." -F "source=@img.png"
+
+# ภาพชุด: /photos published=false ทีละใบ → /feed + attached_media (เต็มๆ ดูบท 05)
+# วิดีโอ:  /videos + source=@file.mp4 (เต็มๆ ดูบท 08)
+# Reels:  /video_reels 3 จังหวะ start → upload → finish (เต็มๆ ดูบท 08)</code></pre>
+</section>
+
+<!-- ─────────── Reference: Playbook ─────────── -->
+<section class="lesson" id="playbook">
+  <p class="lesson-kicker">Reference · เทคนิคที่ผ่านสนามจริงแล้วเท่านั้น</p>
+  <h1>🛠 Playbook โรงงานคอนเทนต์</h1>
+  <p class="lesson-lede">กติกาเดิมจากคอร์ส 1: หน้านี้รับเฉพาะเทคนิคที่<strong>ผ่านสนามจริง</strong>มาแล้ว — เทคนิคใหม่ของคอร์ส 2 จะถูกเลื่อนขั้นเข้ามาเมื่อภารกิจของคุณพิสูจน์มันแล้ว</p>
+
+  <h2>ยกมาจากสนามคอร์ส 1 (ใช้กับโรงงานทุกวัน)</h2>
+  <table>
+    <tr><th>เทคนิค</th><th>ใช้เมื่อ</th><th>ทำไม</th></tr>
+    <tr><td><strong>กริ่ง + แชท</strong>: cron ทำหน้าที่แค่ "เตือนเวลา" งานหนักที่ต้องมีมนุษย์รีวิวทำในแชท</td><td>งานสร้างสรรค์ชิ้นใหญ่ เช่น แผนสัปดาห์</td><td>cron รันโดดเดี่ยว พังแล้วไม่มีใครช่วยกลางทาง — แชทมีคุณคอยเคาะ</td></tr>
+    <tr><td><strong>ปักหมุดท่าที่พิสูจน์แล้ว</strong>ลง skill (เช่น curl v26.0 เป๊ะๆ)</td><td>งานที่เคยทำสำเร็จแล้วอยากให้ซ้ำได้</td><td>ปล่อยให้ AI แต่งท่าเองเมื่อไหร่ ได้ 403/สคริปต์หลอนเมื่อนั้น (เคสจริง post-morning)</td></tr>
+    <tr><td><strong>เขียน "สิ่งที่ห้ามทำ" ในทุก prompt งานอัตโนมัติ</strong></td><td>ทุกงาน cron / งานแก้โค้ด</td><td>AI over-engineer เก่งมาก (เคสจริง: สร้าง path สคริปต์ซ้อนเอง)</td></tr>
+    <tr><td><strong>full path เสมอ ห้ามใช้ ~</strong></td><td>ทุก skill ทุกสคริปต์</td><td>cron กับ shell ตีความ ~ คนละที่ (เคสจริง: cron หาคิวไม่เจอ)</td></tr>
+    <tr><td><strong>ซ้อมด้วย cron run ก่อนถึงเวลาจริง</strong></td><td>ของใหม่ทุกชิ้นก่อนเข้าตาราง</td><td>ให้บั๊กเจอตอนซ้อม ไม่ใช่ตอน 19:00</td></tr>
+    <tr><td><strong>พิสูจน์ด้วยหลักฐาน ไม่รับคำว่า "เสร็จแล้ว"</strong> (ภาพจริง/ลิงก์จริง/ผลรันจริง)</td><td>ทุกงานที่มอบหมาย</td><td>ป้าย [ยืนยันแล้ว] ของ AI เชื่อไม่ได้ (เคสจริง: คำคมกุ + คนกุ)</td></tr>
+    <tr><td><strong>cron.model ปักหมุดโมเดลเสถียร</strong> + fallback ห้ามซ้ำตัว</td><td>ตั้ง/แก้โมเดลทุกครั้ง</td><td>timeout ไม่ trigger fallback — โมเดลตายตัวเดียวพางานล้มทั้งกระดาน (เคสจริง weekly-plan)</td></tr>
+    <tr><td><strong>สำรอง .bak ก่อนให้ AI แก้ไฟล์ที่ระบบใช้อยู่</strong></td><td>งานอัปเกรดโค้ด/สคริปต์ทุกครั้ง</td><td>ย้อนกลับได้ใน 1 คำสั่ง ระบบจริงไม่มีวันหยุดรอเรา</td></tr>
+  </table>
+
+  <h2>เทคนิคใหม่คอร์ส 2 (เข้าประจำการเมื่อภารกิจคุณพิสูจน์แล้ว)</h2>
+  <table>
+    <tr><th>เทคนิค</th><th>สถานะ</th></tr>
+    <tr><td><strong>single-writer</strong>: หนึ่งช่วงสถานะ หนึ่งเจ้าของสิทธิ์เขียนในคิว</td><td>⏳ รอพิสูจน์ (บท 09)</td></tr>
+    <tr><td><strong>เรนเดอร์ล่วงหน้า 2 ชม.</strong>: งานช้าทำก่อนเวลาจริง เผื่อเวลากู้</td><td>⏳ รอพิสูจน์ (บท 07/09)</td></tr>
+    <tr><td><strong>ตรวจงานผ่าน Telegram ก่อนโพสต์</strong>: วิดีโอ/ภาพชุดทุกชิ้นส่งตัวอย่างก่อน</td><td>⏳ รอพิสูจน์ (บท 07)</td></tr>
+    <tr><td><strong>ท่า 2 จังหวะ carousel</strong>: published=false → attached_media</td><td>⏳ รอพิสูจน์ (ภารกิจบท 05)</td></tr>
+  </table>
+</section>
+
+</div>
+</main>
+</div>
+
+<script src="assets/quiz.js"></script>
+<script src="assets/progress.js"></script>
+<script src="assets/minimap.js"></script>
+<script src="assets/search.js"></script>
+</body>
+</html>
