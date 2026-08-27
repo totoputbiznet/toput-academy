@@ -699,6 +699,232 @@ curl -X POST "https://graph.facebook.com/v26.0/PAGE_ID/video_reels" \
   </div>
 </section>
 
+<!-- ─────────── บทที่ 09 ─────────── -->
+<section class="lesson" id="lesson-09">
+  <p class="lesson-kicker">บทที่ 09 · Phase 4 — ประสานทีม</p>
+  <div class="minimap" data-active="team,vidline,postjob,queue" data-note="บทนี้: ตารางเวรทั้งโรงงาน + บรรจุช่างวิดีโอเข้าตำแหน่งจริง"></div>
+  <h1>ตารางเวรของทีม — ทุกบอทรู้เวลาตัวเอง ไม่เหยียบกัน</h1>
+  <p class="lesson-lede">~40 นาที — จบแล้วช่างวิดีโอจะเข้าเวรจริง (skill + cron) และนักโพสต์จะรู้จักงานวิดีโอ ทั้งทีมเดินด้วยตารางเดียว</p>
+
+  <h2>ตารางเวรทั้งโรงงาน — หนึ่งภาพจบ</h2>
+  <table>
+    <tr><th>เวลา</th><th>บทบาท</th><th>งาน</th><th>หลักคิด</th></tr>
+    <tr><td>เสาร์ 10:00</td><td>🔔 กริ่งวางแผน</td><td>เตือนคุณมาวางแผนสัปดาห์ในแชท (ระบุ type ภาพ/วิดีโอต่อ slot)</td><td>กริ่ง + แชท — งานที่ต้องมีมนุษย์รีวิว ไม่รันไร้คน</td></tr>
+    <tr><td>ทุกวัน 07:00</td><td>🧠 งานเช้าเดิม</td><td>เสนอคำคมเติมคิว (ของเดิมคอร์ส 1 ไม่แตะ)</td><td>ของที่ทำงานดี อย่ารื้อ</td></tr>
+    <tr><td>ทุกวัน 08:00</td><td>📮 นักโพสต์</td><td>โพสต์เช้า (ภาพ)</td><td>เวลาเดิมที่คนตามเพจชิน</td></tr>
+    <tr><td>ทุกวัน 17:00</td><td>🎬 ช่างวิดีโอ</td><td>เรนเดอร์งาน video ของ slot 19:00 วันนี้ → ส่งตรวจ → rendered</td><td>เรนเดอร์ล่วงหน้า 2 ชม. เผื่อเวลากู้</td></tr>
+    <tr><td>ทุกวัน 19:00</td><td>📮 นักโพสต์</td><td>โพสต์เย็น (ภาพ หรือวิดีโอตาม type ในคิว)</td><td>คนเล่นเฟซช่วงค่ำเยอะสุด</td></tr>
+    <tr><td>ทุกวัน 21:00</td><td>🩺 หมอเวร</td><td>รายงานสุขภาพโรงงาน (สร้างบท 10)</td><td>รู้ปัญหาคืนนี้ ไม่ใช่เช้าพรุ่งนี้</td></tr>
+  </table>
+  <div class="callout">
+    <span class="label">ทำไมต้อง "เวลาเหลื่อม"</span>
+    <p>สังเกตว่าไม่มีงานหนักสองตัวชนนาทีเดียวกันเลย — Hermes ทำได้ทีละเรื่องดีที่สุด งานชนกันคือคิวยาว คิวยาวคือ timeout และช่องว่าง 17:00→19:00 คือ "เวลากันชน" ของสายวิดีโอทั้งสาย ถ้าอนาคตเพิ่มงานใหม่ ให้หาช่องว่างในตารางนี้ก่อนเสมอ</p>
+  </div>
+
+  <h2>บรรจุช่างวิดีโอเข้าตำแหน่ง — skill ก่อน cron ทีหลัง</h2>
+  <p>ลำดับสำคัญ: สร้าง skill (คู่มือประจำตำแหน่ง) ก่อน แล้วค่อยตั้ง cron (นาฬิกาปลุก) — เหมือนคอร์ส 1: พนักงานต้องมีคู่มือก่อนถูกปลุกมาทำงาน</p>
+  <p><strong>👣 ก้าว 1 — สร้าง skill ช่างวิดีโอ</strong> (ก๊อปส่งใน Telegram):</p>
+  <pre><code>สร้าง skill ชื่อ video-maker เนื้อหาตามนี้:
+หน้าที่: เรนเดอร์วิดีโอคำคมล่วงหน้าสำหรับ slot 19:00 ของวันนี้
+ขั้นตอน:
+1. อ่าน /opt/data/home/.hermes/page/queue.jsonl
+   หางานที่ type=video, status=ready, slot ตรงกับวันนี้ 19:00
+   ถ้าไม่มี ให้จบงานเงียบๆ ("วันนี้ไม่มีคิววิดีโอ")
+2. ทำภาพคำคมของงานนั้นด้วย make_image.py สไตล์ night
+3. เรนเดอร์ด้วยคำสั่งนี้เท่านั้น:
+   bash /opt/data/home/.hermes/page/make_video.sh <ภาพ> <ไฟล์ mp4 ปลายทาง> <เพลงสุ่มจาก /opt/data/home/.hermes/page/music/>
+   ไฟล์ปลายทางตั้งชื่อ v + วันที่ เช่น /opt/data/home/.hermes/page/out/v20260829.mp4
+4. อัปเดตบรรทัดนั้นในคิว: status=rendered, asset=path ไฟล์
+5. ส่งคลิปเข้า Telegram พร้อมข้อความ "คลิปคิว 19:00 วันนี้ — ตอบ 'แก้' ภายใน 18:30 ถ้าต้องแก้ ไม่ตอบ = ผ่าน"
+ข้อห้าม: ห้ามโพสต์เอง (หน้าที่นักโพสต์) ห้ามสร้างสคริปต์ใหม่
+ห้ามแตะงาน type=image ห้ามแก้ status อื่นนอกจาก ready→rendering→rendered
+ห้ามใช้ path แบบ ~ ทุก path ต้องเต็ม</code></pre>
+  <p><strong>👣 ก้าว 2 — ตั้งนาฬิกาปลุก</strong> (รอก้าว 1 สำเร็จก่อน):</p>
+  <pre><code>สร้างงานประจำชื่อ factory-render-video: ทุกวัน 17:00 เวลาไทย
+ทำงานตาม skill video-maker ทุกขั้นตอน ห้ามทำอย่างอื่นนอกเหนือจากนั้น</code></pre>
+  <p><strong>👣 ก้าว 3 — สอนนักโพสต์ให้รู้จักวิดีโอ</strong>:</p>
+  <pre><code>อัปเดต skill post-facebook เพิ่มกติกาวิดีโอ:
+- ก่อนโพสต์ ดู type ของงานใน slot: ไม่มี type หรือ type=image → ทำแบบเดิม
+- type=video และ status=rendered → โพสต์ไฟล์จาก field asset
+  ด้วย curl ไปที่ /v26.0/PAGE_ID/videos (description = text ของงาน + #บทเรียนชีวิต)
+- type=video แต่ status ไม่ใช่ rendered (เรนเดอร์ไม่เสร็จ/พัง) →
+  ห้ามรอ ห้ามเรนเดอร์เอง ให้ทำภาพนิ่งจากคำคมเดียวกันโพสต์แทน
+  แล้วรายงานใน Telegram ว่า "คิววิดีโอไม่พร้อม โพสต์ภาพแทนแล้ว"
+- เสร็จแล้วอัปเดต status=posted เหมือนเดิมทุกกรณี</code></pre>
+  <div class="callout">
+    <span class="label">บรรทัดที่สำคัญที่สุดของบทนี้</span>
+    <p>กติกา "วิดีโอไม่พร้อม → โพสต์ภาพแทน" คือหัวใจของระบบที่ไม่ล่มทั้งกระดาน (ศัพท์วิศวกรเรียก graceful degradation — พังอย่างสง่างาม) เพจอาจได้ของรองแทนของหลักในวันซวย แต่<strong>เพจไม่มีวันเงียบ</strong> — บทที่ 11 จะขยายหลักนี้ทั้งบท</p>
+  </div>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 09 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. ทำไมต้องสร้าง skill ก่อนตั้ง cron?</div>
+      <button class="quiz-opt">เพราะ cron สร้างก่อนไม่ได้ ระบบล็อกไว้</button>
+      <button class="quiz-opt">พนักงานต้องมีคู่มือประจำตำแหน่งก่อนถูกปลุกมาทำงาน</button>
+      <button class="quiz-opt">เพราะ skill ราคาถูกกว่า cron</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. 19:00 คิวเป็นวิดีโอแต่ยังไม่ rendered นักโพสต์ต้อง?</div>
+      <button class="quiz-opt">โพสต์ภาพนิ่งจากคำคมเดียวกันแทน + รายงานคุณ</button>
+      <button class="quiz-opt">รอจนกว่าจะ rendered แล้วค่อยโพสต์</button>
+      <button class="quiz-opt">เรนเดอร์เองให้เสร็จตรงนั้น</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">3. หลัก "เวลาเหลื่อม" ในตารางเวรมีไว้เพื่อ?</div>
+      <button class="quiz-opt">ให้ตารางดูสวยเป็นระเบียบ</button>
+      <button class="quiz-opt">ประหยัดค่าไฟ VPS</button>
+      <button class="quiz-opt">กันงานหนักชนกันจนคิวยาวและ timeout</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 09 — ซ้อมใหญ่ทั้งสาย</span>
+    <p>(1) ทำครบ 3 ก้าว (2) เติมงานทดสอบ 1 บรรทัดในคิว: <code>type=video, status=ready, slot=วันนี้ 19:00</code> (สั่งนักวางแผนเพิ่มให้ หรือให้ Hermes เติมตามที่คุณพิมพ์) (3) ซ้อมด้วย <code>hermes cron run factory-render-video</code> ใน terminal (4) เช็กครบวงจร: ได้คลิปใน Telegram → คิวเปลี่ยนเป็น rendered → asset มี path จริง ส่งผลทุกจุดมาให้ครูดู — <strong>อย่าลืมกฎซ้อมก่อนจริงเสมอ</strong></p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 10 ─────────── -->
+<section class="lesson" id="lesson-10">
+  <p class="lesson-kicker">บทที่ 10 · Phase 4 — ประสานทีม</p>
+  <div class="minimap" data-active="you,team" data-note="บทนี้: คุมโรงงานทั้งหมดจากแชทเดียว + หมอเวรรายงานทุกคืน"></div>
+  <h1>ห้องควบคุม — โรงงานทั้งหลังในแชทเดียว</h1>
+  <p class="lesson-lede">~30 นาที — จบแล้วคุณจะเช็กสถานะทั้งโรงงานได้ใน 1 นาที มีหมอเวรรายงานทุก 21:00 และรู้ชุดคำสั่งฉุกเฉินครบมือ</p>
+
+  <h2>Dashboard ที่มีอยู่แล้ว — แค่ใช้ให้เป็น</h2>
+  <p>ไม่ต้องสร้างหน้าจอใหม่ — เครื่องมือ 3 ชิ้นจากคอร์ส 1 คือ dashboard ของโรงงานอยู่แล้ว:</p>
+  <table>
+    <tr><th>อยากรู้อะไร</th><th>สั่งอะไร (ที่ไหน)</th></tr>
+    <tr><td>ทีมมีใคร ใครทำงานล่าสุดเมื่อไหร่ ใครพัก</td><td><code>hermes cron list</code> (terminal) — คอลัมน์ Last Run/Status คือชีพจรทีม</td></tr>
+    <tr><td>คิวเหลืออะไร กี่งาน ชนิดไหน</td><td>สั่งในแชท: "รายงานคิว แยกตาม status และ type"</td></tr>
+    <tr><td>งานที่กำลังรันอยู่ตอนนี้</td><td>ดูข้อความ Working ใน Telegram · ค้างนาน = <code>/stop</code></td></tr>
+    <tr><td>เครื่องเหลือแรงแค่ไหน</td><td><code>free -h</code> + <code>df -h /</code> (SSH)</td></tr>
+  </table>
+
+  <h2>หมอเวร 21:00 — บอทตัวสุดท้ายของทีม</h2>
+  <p>ทุกคำสั่งข้างบนคุณต้อง "นึกได้เอง" ถึงจะสั่ง — วันยุ่งๆ ก็ลืม หมอเวรกลับด้านให้: <strong>ระบบเดินมาบอกคุณเอง ทุกคืน สั้นๆ 6 บรรทัด</strong></p>
+  <pre><code>สร้างงานประจำชื่อ factory-daily-report: ทุกวัน 21:00 เวลาไทย
+รายงานสุขภาพโรงงานเป็นข้อความเดียว 6 บรรทัด:
+1. โพสต์วันนี้: เช้า/เย็น สำเร็จไหม ชนิดอะไร (ดูจาก status ในคิว)
+2. คิวคงเหลือ: กี่งาน ready แยก image/video — ต่ำกว่า 4 ให้ขึ้น ⚠️
+3. วิดีโอพรุ่งนี้: มีคิว type=video ไหม และ ffmpeg -version ยังใช้ได้ไหม
+4. ดิสก์: du -sh /opt/data/home/.hermes/page/out/ — เกิน 2GB ให้ขึ้น ⚠️
+5. งานที่ Last Run เป็น error (ถ้ามี ให้บอกชื่องาน)
+6. สรุปบรรทัดเดียว: ✅ ปกติ หรือ ⚠️ มีเรื่องต้องดู
+อ่านข้อมูลจริงจากไฟล์และคำสั่งเท่านั้น ห้ามเดา ห้ามแต่งตัวเลข
+ห้ามสร้างหรือเรียกใช้สคริปต์ใดๆ ห้ามแก้ไขไฟล์ใดๆ ทั้งสิ้น</code></pre>
+  <p>สังเกตข้อ 3: หมอเวรเช็ก ffmpeg ทุกคืน — กับดัก "กล่องสร้างใหม่แล้ว ffmpeg หาย" จากบท 06 จะถูกจับได้<strong>ก่อน</strong>คิววิดีโอถัดไปเสมอ ไม่ใช่ตอน 17:00 ที่งานพังแล้ว</p>
+
+  <h2>ชุดคำสั่งฉุกเฉิน — ท่องให้ขึ้นใจ</h2>
+  <table>
+    <tr><th>สถานการณ์</th><th>ทำอะไร</th></tr>
+    <tr><td>งานค้าง Working นานผิดปกติ</td><td><code>/stop</code> ในแชท → ถ้าแชทเอ๋อต่อ <code>/new</code> (ความจำถาวรอยู่ใน skills ไม่หาย)</td></tr>
+    <tr><td>อยากหยุดสายวิดีโอชั่วคราว (เช่น ไปเที่ยว ไม่มีคนตรวจคลิป)</td><td><code>hermes cron pause factory-render-video</code> — นักโพสต์จะ degrade เป็นภาพเองตามกติกาบท 09 · กลับมา <code>resume</code></td></tr>
+    <tr><td>อยากทดสอบงานไหนตอนนี้เลย</td><td><code>hermes cron run ชื่องาน</code> — ซ้อมนอกรอบได้เสมอ</td></tr>
+    <tr><td>สงสัยว่าโมเดลเพี้ยน (ภาษาแปลก/ค้างบ่อย)</td><td>เช็ก <code>hermes fallback ls</code> + ทดสอบ "ตอบคำเดียว: ok" — สูตรบทแถม 17 คอร์ส 1</td></tr>
+  </table>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 10 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">1. "ชีพจรของทีม" ดูได้จากที่ไหน?</div>
+      <button class="quiz-opt">เปิดดูโพสต์บนเพจย้อนหลัง</button>
+      <button class="quiz-opt">นับข้อความใน Telegram</button>
+      <button class="quiz-opt">hermes cron list — คอลัมน์ Last Run/Status ของทุกงาน</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. ทำไมหมอเวรต้องเช็ก ffmpeg ทุกคืน?</div>
+      <button class="quiz-opt">จับกับดัก "กล่องสร้างใหม่แล้ว ffmpeg หาย" ก่อนถึงคิววิดีโอถัดไป</button>
+      <button class="quiz-opt">ffmpeg หมดอายุทุก 24 ชั่วโมง</button>
+      <button class="quiz-opt">เพื่อให้รายงานยาวขึ้น</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">3. จะไปเที่ยว 3 วัน ไม่มีเวลาตรวจคลิป ควรทำยังไง?</div>
+      <button class="quiz-opt">ปิด VPS ไปเลย กลับมาค่อยเปิด</button>
+      <button class="quiz-opt">pause เฉพาะ factory-render-video — เพจยังโพสต์ภาพต่อเองทุกวัน</button>
+      <button class="quiz-opt">ลบ cron ทั้งหมดแล้วค่อยสร้างใหม่</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 10</span>
+    <p>(1) สร้างหมอเวรด้วย prompt ด้านบน (2) ซ้อมทันที: <code>hermes cron run factory-daily-report</code> (3) อ่านรายงานแล้วตรวจกลับ 1 จุด: ตัวเลข "คิวคงเหลือ" ตรงกับที่คุณนับเองจากคิวไหม (กฎ Playbook: ไม่รับรายงานที่ไม่ได้ตรวจ) ส่งรายงานคืนแรกมาให้ครูดู</p>
+  </div>
+</section>
+
+<!-- ─────────── บทที่ 11 ─────────── -->
+<section class="lesson" id="lesson-11">
+  <p class="lesson-kicker">บทที่ 11 · Phase 4 — ประสานทีม</p>
+  <div class="minimap" data-active="all" data-note="บทนี้: ทุกจุดพังของโรงงาน + แผนรับมือที่เขียนไว้ล่วงหน้า"></div>
+  <h1>กันพังเป็นทีม — เพจต้องไม่เงียบ แม้วันที่ทุกอย่างแกล้งเรา</h1>
+  <p class="lesson-lede">~30 นาที — บทนี้กลั่นจากของพังจริงทุกเคสในคอร์ส 1 บวกจุดพังใหม่ของสายวิดีโอ จบแล้วคุณจะมี "แผนที่จุดพัง" ทั้งโรงงาน และรู้ว่าแต่ละจุดใครรับมือ</p>
+
+  <h2>หลักคิดเดียวที่คุมทั้งบท</h2>
+  <div class="callout">
+    <span class="label">ปรัชญาโรงงานของเรา</span>
+    <p><strong>ของพังเป็นเรื่องปกติ — เพจเงียบต่างหากคือความล้มเหลว</strong> ทุกจุดพังต้องมีคำตอบล่วงหน้าว่า "แล้วเพจยังโพสต์ได้ยังไง" ถ้าตอบไม่ได้ = ยังออกแบบไม่เสร็จ</p>
+  </div>
+
+  <h2>แผนที่จุดพัง — จากสนามจริงทั้งหมด</h2>
+  <table>
+    <tr><th>จุดพัง</th><th>เคยเกิดจริงไหม</th><th>ใคร/อะไรรับมือ</th></tr>
+    <tr><td>โมเดลฟรีตาย/ภาษาเพี้ยน/ค้าง</td><td>✅ หลายรอบ (คอร์ส 1)</td><td>cron.model ปักหมุดโมเดลเสถียร + fallback chain ห้ามซ้ำตัว + ทดสอบ "ตอบคำเดียว: ok" ก่อนเปลี่ยนตัวจริง</td></tr>
+    <tr><td>งานใหญ่ timeout 90 วิ (fallback ไม่ช่วย)</td><td>✅ weekly-plan (คอร์ส 1)</td><td>สถาปัตยกรรมกริ่ง+แชท — งานหนักที่มีมนุษย์รีวิว ย้ายมาทำในแชท</td></tr>
+    <tr><td>เรนเดอร์วิดีโอพัง/ไม่ทัน 19:00</td><td>🆕 จุดใหม่คอร์สนี้</td><td>เรนเดอร์ล่วงหน้า 17:00 (มีเวลากู้ 2 ชม.) + นักโพสต์ degrade เป็นภาพนิ่ง</td></tr>
+    <tr><td>ffmpeg หายหลังกล่องสร้างใหม่</td><td>🆕 จุดใหม่คอร์สนี้</td><td>หมอเวรเช็กทุกคืน + ลงซ้ำ 1 คำสั่ง (จดไว้ใน NOTES แล้ว)</td></tr>
+    <tr><td>คิวหมด เพจไม่มีของโพสต์</td><td>เกือบ (เคยเหลือน้อย)</td><td>หมอเวรเตือน ⚠️ เมื่อต่ำกว่า 4 + งานเช้า 07:00 เติมทุกวัน + แผนสัปดาห์เติมล็อตใหญ่</td></tr>
+    <tr><td>ดิสก์เต็มเพราะไฟล์วิดีโอสะสม</td><td>🆕 จุดใหม่คอร์สนี้</td><td>หมอเวรเตือนเกิน 2GB + คำสั่งลบ mp4 เก่า 30 วันใน cheat sheet</td></tr>
+    <tr><td>AI มั่ว: over-engineer / แหล่งกุ / [ยืนยันแล้ว] ปลอม</td><td>✅ หลายรอบ (คอร์ส 1)</td><td>ข้อห้ามในทุก prompt + ปักหมุดท่าที่พิสูจน์แล้ว + พิสูจน์ด้วยหลักฐาน + คุณ Google ก่อนเลือกคำคมคนดัง</td></tr>
+    <tr><td>เครื่อง/ข้อมูลหายทั้งก้อน</td><td>ยังไม่เคย (แตะไม้)</td><td>Backup 2 ชั้นจากคอร์ส 1: tar /opt/data + snapshot ใน hPanel — ตอนนี้ยิ่งสำคัญเพราะมี make_video.sh, เพลง, skill ทีมเพิ่มเข้ามา</td></tr>
+  </table>
+
+  <h2>ซ้อมหนีไฟ — พิสูจน์ว่าแผนใช้ได้จริง ไม่ใช่แค่สวยบนกระดาษ</h2>
+  <p>แผนรับมือที่ไม่เคยซ้อม = ไม่มีแผน เราจะซ้อม 2 ฉากที่สำคัญสุด:</p>
+  <ol class="steps">
+    <li><strong>ฉาก "วิดีโอไม่พร้อม"</strong> — เติมงานทดสอบ type=video, status=ready (ตั้งใจไม่เรนเดอร์) แล้ว <code>hermes cron run post-evening</code> → ผลที่ถูก: ได้ภาพนิ่งขึ้นแทน + รายงานเตือนใน Telegram</li>
+    <li><strong>ฉาก "ffmpeg หาย"</strong> — ยังไม่ต้องถอนจริง แค่ถามหมอเวร: "ถ้า ffmpeg -version พัง รายงานจะหน้าตายังไง" แล้วดูว่าคำตอบมันเช็กจริงหรือเดา (จับโกหก AI เป็นทักษะที่คุณฝึกมาทั้งคอร์ส 1 แล้ว)</li>
+  </ol>
+
+  <h2>ทบทวนความจำ</h2>
+  <div class="quiz" data-quiz>
+    <div class="quiz-head">Quiz บทที่ 11 — 3 ข้อ</div>
+    <div class="quiz-q" data-answer="1">
+      <div class="q-text">1. ปรัชญาโรงงานของเราคือ?</div>
+      <button class="quiz-opt">ระบบที่ดีต้องไม่มีวันพัง</button>
+      <button class="quiz-opt">ของพังเป็นเรื่องปกติ — เพจเงียบต่างหากคือความล้มเหลว</button>
+      <button class="quiz-opt">พังแล้วค่อยคิดหน้างานเอา</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="0">
+      <div class="q-text">2. ทำไม "เรนเดอร์ล่วงหน้า 17:00" ถึงเป็นแผนกันพัง ไม่ใช่แค่เรื่องสะดวก?</div>
+      <button class="quiz-opt">พังตอน 17:00 ยังมี 2 ชม.ให้กู้ — พังตอน 19:00 คือสายไปแล้ว</button>
+      <button class="quiz-opt">เพราะค่าไฟตอนเย็นถูกกว่า</button>
+      <button class="quiz-opt">เพราะ FB ห้ามอัปโหลดตอน 19:00 พอดี</button>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-q" data-answer="2">
+      <div class="q-text">3. "แผนรับมือที่ไม่เคยซ้อม" มีค่าเท่ากับ?</div>
+      <button class="quiz-opt">แผนสำรองชั้นสอง</button>
+      <button class="quiz-opt">แผนที่ประหยัดเวลา</button>
+      <button class="quiz-opt">ไม่มีแผน — ต้องซ้อมให้เห็นผลจริงอย่างน้อยฉากสำคัญ</button>
+      <div class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div class="callout mission">
+    <span class="label">🎯 ภารกิจบทที่ 11 — ซ้อมหนีไฟ 2 ฉาก</span>
+    <p>ทำซ้อมทั้ง 2 ฉากตามหัวข้อด้านบน แล้วส่งหลักฐานมาให้ครู: (1) ภาพนิ่งที่ขึ้นแทนวิดีโอ + ข้อความรายงานของนักโพสต์ (2) คำตอบของหมอเวรเรื่อง ffmpeg พร้อมคำตัดสินของคุณว่ามัน "เช็กจริง" หรือ "เดา" — ผ่านทั้งสอง = โรงงานคุณพร้อมเปิดสายพานจริงในบทสุดท้าย</p>
+  </div>
+</section>
+
 <!-- ─────────── Reference: Glossary ─────────── -->
 <section class="lesson" id="glossary">
   <p class="lesson-kicker">Reference · เปิดดูได้ตลอด ไม่ต้องท่อง</p>
