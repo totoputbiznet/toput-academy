@@ -488,9 +488,13 @@ curl -X POST "https://graph.facebook.com/v26.0/ALBUM_ID/photos" \
   <p>มันจึงเกิดมาเพื่องานเรา: <strong>ตัดวิดีโอบนเซิร์ฟเวอร์ที่ไม่มีหน้าจอ สั่งด้วยสคริปต์ ทำซ้ำได้ไม่จำกัด</strong></p>
 
   <h2>ติดตั้งในกล่อง Hermes — ทีละก้าว</h2>
-  <p>👣 <strong>ก้าว 1</strong> — SSH เข้า VPS แล้วเข้าไปในกล่อง:</p>
+  <p>👣 <strong>ก้าว 1</strong> — SSH เข้า VPS แล้วเข้าไปในกล่อง (แทน <code>xxxx</code> ด้วยชื่อกล่องจริงของคุณ — ดูได้จาก <code>docker ps</code>):</p>
   <pre><code>docker exec -it hermes-agent-xxxx-hermes-agent-1 bash</code></pre>
-  <p>👣 <strong>ก้าว 2</strong> — ติดตั้ง (ประมาณ 1-2 นาที):</p>
+  <div class="callout">
+    <span class="label">ก้าว 0 ที่ประหยัดเวลา: เช็กก่อนติดตั้ง (เคสจริงจากสนาม)</span>
+    <p>พอเข้ากล่องแล้ว ลอง <code>ffmpeg -version</code> ก่อนเลย — กล่อง Hermes บางรุ่น<strong>มี ffmpeg ติดมาให้แล้ว</strong> (เครื่องต้นแบบของคอร์สนี้เจอ 7.1.5 พร้อมใช้) ถ้าขึ้นเวอร์ชัน = ข้ามก้าว 2 ไปทำคลิปแรกได้ทันที · และระวังจุดหลงทาง: ต้องเช็ก<strong>ในกล่อง</strong> (prompt เป็น <code>root@&lt;รหัสกล่อง&gt;</code>) ไม่ใช่บน VPS ชั้นนอก (prompt <code>root@srv…</code>) — ffmpeg ชั้นนอกช่วยงาน cron ของเราไม่ได้</p>
+  </div>
+  <p>👣 <strong>ก้าว 2</strong> — ติดตั้ง เฉพาะกรณีก้าว 0 ไม่เจอ (ประมาณ 1-2 นาที):</p>
   <pre><code>apt-get update && apt-get install -y ffmpeg</code></pre>
   <p>👣 <strong>ก้าว 3</strong> — พิสูจน์ว่ามาแล้วจริง:</p>
   <pre><code>ffmpeg -version</code></pre>
