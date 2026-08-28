@@ -735,7 +735,7 @@ docker ps -a    # เห็น container ที่รันจบแล้ว (�
   <h3>การตั้งค่า — สามระดับที่ต้องแยกให้ออก</h3>
   <table>
     <tr><th>ระดับ</th><th>วิธีตั้ง</th><th>มีผลกับใคร</th></tr>
-    <tr><td><strong>ครั้งเดียว</strong></td><td>flag ตอนเรียก: <code>hermes -m "stealth/ox-alpha" -c "..."</code></td><td>เฉพาะคำสั่งนั้นครั้งนั้น</td></tr>
+    <tr><td><strong>ครั้งเดียว</strong></td><td>flag ตอนเรียก: <code>hermes chat -q "..." -m "ชื่อโมเดล"</code></td><td>เฉพาะคำสั่งนั้นครั้งนั้น</td></tr>
     <tr><td><strong>เฉพาะ session</strong></td><td>คำสั่งในแชท เช่น <code>/model</code>, <code>/reasoning max</code> — ขึ้นป้าย <em>"(session only)"</em></td><td>บทสนทนานั้น — ⚠️ <strong>แชท Telegram เป็น session เดียวยาวไม่มีวันจบ ค่านี้จึงติดถาวรโดยพฤตินัย</strong> (บทเรียนราคา $5 — ดูใน 🛠 playbook) และไม่ส่งผลถึงงาน cron ที่เป็น session สดเสมอ</td></tr>
     <tr><td><strong>ถาวร (global)</strong></td><td><code>hermes model</code> เลือกแล้วกด Switch (เขียนลง config.yaml) · fallback: <code>hermes fallback add</code> หรือสั่งในแชทแบบที่คุณทำ</td><td>ทุก session รวมถึงงาน cron</td></tr>
   </table>
@@ -1710,7 +1710,7 @@ hermes cron run &lt;id&gt;    # สั่งรันเดี๋ยวนี้
   <p>อย่าเลือกจากรีวิวหรือ benchmark — งานเราคือคำคมไทย ให้คำคมไทยเป็นกรรมการ:</p>
   <ol class="steps">
     <li>เลือกผู้ท้าชิง 2–3 ตัวจากหน้า models (ฟรี + Weekly Tokens สูง + ไม่ใช่ stealth)</li>
-    <li>ให้แต่ละตัวทำ<strong>งานจริงชิ้นเดียวกัน</strong> ด้วย flag ครั้งเดียว (ไม่แตะ config): <pre><code>hermes -m "ชื่อโมเดล:free" -c "ใช้ skill quote-style เขียนคำคม 3 ข้อ ธีมความพยายาม"</code></pre></li>
+    <li>ให้แต่ละตัวทำ<strong>งานจริงชิ้นเดียวกัน</strong> ด้วย flag ครั้งเดียว (ไม่แตะ config): <pre><code>hermes chat -q "ใช้ skill quote-style เขียนคำคม 3 ข้อ ธีมความพยายาม" -m "ชื่อโมเดล:free"</code></pre></li>
     <li><strong>ตัดสินแบบไม่ดูชื่อ</strong> — รวมผลทุกตัวปนกัน เลือกข้อที่ดีสุดก่อน แล้วค่อยเปิดเฉลยว่าใครเขียน (กันใจเอนเอียงเข้าข้างชื่อดัง)</li>
     <li>ผู้ชนะ → ทดสอบความทน: รันงานจริง <code>hermes cron run</code> สัก 2–3 รอบดูว่าเสถียรไหม → ค่อยตั้งเป็น <code>cron.model</code> ตัวใหม่ · ตัวรอง → เข้า fallback chain</li>
   </ol>
